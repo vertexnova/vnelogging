@@ -48,6 +48,16 @@ Benchmarks sync vs async logging performance:
 
 **Run:** `./bin/04_Benchmark`
 
+### 05_multithreaded - Concurrent Logging
+
+Demonstrates thread-safe logging from multiple threads:
+- 4 threads logging simultaneously
+- Thread ID tracking in output
+- Sync vs async under concurrent load
+- No message corruption or interleaving
+
+**Run:** `./bin/05_Multithreaded`
+
 ## Quick Reference
 
 | Example | Focus | Key Concepts |
@@ -56,3 +66,4 @@ Benchmarks sync vs async logging performance:
 | 02_subsystem_logging | Architecture | Multiple loggers, custom macros |
 | 03_spdlog_integration | Integration | spdlog interop, shared output |
 | 04_benchmark | Performance | Async vs sync, benchmarking |
+| 05_multithreaded | Thread safety | Concurrent threads, thread IDs |

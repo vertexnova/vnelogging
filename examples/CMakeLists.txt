@@ -13,3 +13,6 @@ add_subdirectory(03_spdlog_integration)
 
 # 04 - Benchmark: Performance testing sync vs async logging
 add_subdirectory(04_benchmark)
+
+# 05 - Multithreaded: Thread-safe logging from concurrent threads
+add_subdirectory(05_multithreaded)
