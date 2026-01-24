@@ -38,7 +38,7 @@ namespace {
  * @return Home directory path, or empty string if not found.
  */
 std::string getHomeDirectory() {
-#if defined(VNE_PLATFORM_WINDOWS)
+#if defined(VNE_PLATFORM_WIN) || defined(_WIN32)
     if (const char* userprofile = std::getenv("USERPROFILE")) {
         return std::string(userprofile);
     }
@@ -55,7 +55,7 @@ std::string getHomeDirectory() {
  * @return Path separator ("/" or "\\").
  */
 constexpr const char* getPathSeparator() {
-#if defined(VNE_PLATFORM_WINDOWS)
+#if defined(VNE_PLATFORM_WIN) || defined(_WIN32)
     return "\\";
 #else
     return "/";
@@ -254,7 +254,7 @@ std::string Logging::getPlatformSpecificLogDirectory() {
     const std::string sep = getPathSeparator();
     const std::string home = getHomeDirectory();
 
-#if defined(VNE_PLATFORM_WINDOWS)
+#if defined(VNE_PLATFORM_WIN) || defined(_WIN32)
     // Windows: Use LocalAppData
     if (const char* appdata = std::getenv("LOCALAPPDATA")) {
         return std::string(appdata) + sep + "VertexNova" + sep + "logs";
@@ -319,7 +319,7 @@ std::string Logging::createLoggingFolder(const std::string& base_dir, const std:
     auto time = std::chrono::system_clock::to_time_t(now);
     std::tm timeinfo{};
 
-#if defined(VNE_PLATFORM_WINDOWS)
+#if defined(VNE_PLATFORM_WIN) || defined(_WIN32)
     localtime_s(&timeinfo, &time);
 #else
     localtime_r(&time, &timeinfo);

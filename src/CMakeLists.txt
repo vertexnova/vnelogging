@@ -83,6 +83,11 @@ elseif(VNE_TARGET_PLATFORM STREQUAL "iOS")
     target_link_libraries(vnelogging PRIVATE Foundation)
 endif()
 
+# MSVC-specific: Suppress getenv deprecation warning (C4996)
+if(MSVC)
+    target_compile_definitions(vnelogging PRIVATE _CRT_SECURE_NO_WARNINGS)
+endif()
+
 # Set compile features
 target_compile_features(vnelogging PUBLIC cxx_std_20)
 
