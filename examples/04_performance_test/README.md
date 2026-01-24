@@ -32,6 +32,18 @@ cmake --build . --config Release
 ./bin/04_PerformanceTest
 ```
 
+## Benchmark Environment
+
+The results below were captured on the following system:
+
+| Component | Details |
+|-----------|---------|
+| OS | macOS (Darwin 24.5.0) |
+| Architecture | arm64 |
+| CPU | Apple M3 Pro |
+| Compiler | Apple Clang 17.0.0 |
+| Build Type | Release |
+
 ## Expected Output
 
 ```
