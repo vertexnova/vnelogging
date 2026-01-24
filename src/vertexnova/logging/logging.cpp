@@ -9,7 +9,7 @@
  * ----------------------------------------------------------------------
  */
 
-#include "logging.h"
+#include <vertexnova/logging/logging.h>
 
 #include "core/log_level.h"
 #include "core/time_stamp.h"

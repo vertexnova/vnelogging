@@ -226,7 +226,13 @@ install(TARGETS vnelogging Warnings BuildSettings
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-# Install headers from src/vertexnova to vertexnova in include directory
+# Install public headers from include/
+install(DIRECTORY include/vertexnova/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova
+    FILES_MATCHING PATTERN "*.h"
+)
+
+# Install internal headers from src/ (needed for implementation)
 install(DIRECTORY src/vertexnova/
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova
     FILES_MATCHING PATTERN "*.h"

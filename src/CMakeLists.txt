@@ -8,7 +8,7 @@
 # Autodoc:   yes
 #==============================================================================
 
-# Define header files
+# Define header files (internal headers in src/)
 set(INCLUDE_FILES
     vertexnova/logging/core/log_level.h
     vertexnova/logging/core/time_stamp.h
@@ -26,7 +26,13 @@ set(INCLUDE_FILES
     vertexnova/logging/core/sync_logger.h
     vertexnova/logging/core/async_logger.h
     vertexnova/logging/log_manager.h
-    vertexnova/logging/logging.h
+)
+
+# Public headers in include/ directory
+set(PUBLIC_HEADERS
+    ${VNE_INCLUDE_DIR}/vertexnova/logging/logging.h
+    ${VNE_INCLUDE_DIR}/vertexnova/utils/macros.h
+    ${VNE_INCLUDE_DIR}/vertexnova/utils/path_utils.h
 )
 
 # Define source files
@@ -51,7 +57,7 @@ set(SOURCE_FILES
 #==============================================================================
 
 # Create a static library from the source and header files
-add_library(vnelogging STATIC ${SOURCE_FILES} ${INCLUDE_FILES})
+add_library(vnelogging STATIC ${SOURCE_FILES} ${INCLUDE_FILES} ${PUBLIC_HEADERS})
 
 # Alias for the library
 add_library(vne::logging ALIAS vnelogging)
