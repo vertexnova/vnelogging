@@ -11,6 +11,7 @@
  */
 
 #include <vertexnova/logging/logging.h>
+#include <vertexnova/utils/macros.h>
 
 #include <chrono>
 #include <filesystem>
@@ -23,8 +24,8 @@ namespace {
 
 constexpr const char* kSyncLoggerName = "sync_perf";
 constexpr const char* kAsyncLoggerName = "async_perf";
-constexpr int kWarmupIterations = 1000;
-constexpr int kBenchmarkIterations = 10000;
+constexpr size_t kWarmupIterations = 1000;
+constexpr size_t kBenchmarkIterations = 10000;
 
 }  // namespace
 
@@ -47,21 +48,23 @@ struct BenchmarkResult {
 };
 
 template<typename LogFunc>
-BenchmarkResult runBenchmark(const std::string& name, int iterations, LogFunc log_func) {
+BenchmarkResult runBenchmark(const std::string& name, size_t iterations, LogFunc log_func) {
+    VNE_UNUSED(name);
+
     std::vector<double> times;
     times.reserve(iterations);
 
     // Warmup
-    for (int i = 0; i < kWarmupIterations; ++i) {
-        log_func(i);
+    for (size_t i = 0; i < kWarmupIterations; ++i) {
+        log_func(static_cast<int>(i));
     }
 
     // Benchmark
     auto total_start = std::chrono::high_resolution_clock::now();
 
-    for (int i = 0; i < iterations; ++i) {
+    for (size_t i = 0; i < iterations; ++i) {
         auto start = std::chrono::high_resolution_clock::now();
-        log_func(i);
+        log_func(static_cast<int>(i));
         auto end = std::chrono::high_resolution_clock::now();
 
         double time_us = std::chrono::duration<double, std::micro>(end - start).count();
@@ -72,10 +75,10 @@ BenchmarkResult runBenchmark(const std::string& name, int iterations, LogFunc lo
 
     BenchmarkResult result;
     result.total_time_ms = std::chrono::duration<double, std::milli>(total_end - total_start).count();
-    result.avg_time_us = std::accumulate(times.begin(), times.end(), 0.0) / times.size();
+    result.avg_time_us = std::accumulate(times.begin(), times.end(), 0.0) / static_cast<double>(times.size());
     result.min_time_us = *std::min_element(times.begin(), times.end());
     result.max_time_us = *std::max_element(times.begin(), times.end());
-    result.throughput_per_sec = (iterations / result.total_time_ms) * 1000.0;
+    result.throughput_per_sec = (static_cast<double>(iterations) / result.total_time_ms) * 1000.0;
 
     return result;
 }
