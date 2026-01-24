@@ -11,28 +11,119 @@
 
 #include "logging.h"
 
-#include <chrono>
-#include <iomanip>
-#include <iostream>
-#include <sstream>
-#include <string>
-
-#ifdef VNE_PLATFORM_IOS
-#include <unistd.h>
-#include <limits.h>
-#else
-#include <filesystem>
-#endif
-#include <ctime>
-#include <exception>
 #include "core/log_level.h"
 #include "core/time_stamp.h"
 
-namespace vne {
-namespace log {
+#include <chrono>
+#include <cstdlib>
+#include <ctime>
+#include <iomanip>
+#include <sstream>
+#include <string>
 
-// kDefaultLoggerName is now defined inline constexpr in logging.h
+#ifndef VNE_PLATFORM_WEB
+#include <filesystem>
+#endif
+
+namespace vne::log {
+
+namespace {
+
+//==============================================================================
+// Platform-specific path helpers
+//==============================================================================
+
+/**
+ * @brief Gets the home directory for the current user.
+ * @return Home directory path, or empty string if not found.
+ */
+std::string getHomeDirectory() {
+#if defined(VNE_PLATFORM_WINDOWS)
+    if (const char* userprofile = std::getenv("USERPROFILE")) {
+        return std::string(userprofile);
+    }
+#else
+    if (const char* home = std::getenv("HOME")) {
+        return std::string(home);
+    }
+#endif
+    return "";
+}
+
+/**
+ * @brief Gets the platform-specific path separator.
+ * @return Path separator ("/" or "\\").
+ */
+constexpr const char* getPathSeparator() {
+#if defined(VNE_PLATFORM_WINDOWS)
+    return "\\";
+#else
+    return "/";
+#endif
+}
+
+/**
+ * @brief Checks if a path looks like a build directory.
+ * @param path The path to check.
+ * @return True if the path appears to be a build directory.
+ */
+bool isBuildDirectory(const std::string& path) {
+    return path.find("build") != std::string::npos 
+        || path.find("out") != std::string::npos
+        || path.find("bin") != std::string::npos
+        || path.find("cmake-build") != std::string::npos;
+}
+
+/**
+ * @brief Gets the current working directory.
+ * @return Current working directory path.
+ */
+std::string getCurrentDirectory() {
+#ifdef VNE_PLATFORM_WEB
+    return ".";
+#else
+    try {
+        return std::filesystem::current_path().string();
+    } catch (...) {
+        return ".";
+    }
+#endif
+}
+
+/**
+ * @brief Creates directories recursively (portable).
+ * @param path The directory path to create.
+ * @return True if successful or directory already exists.
+ */
+bool createDirectories(const std::string& path) {
+#ifdef VNE_PLATFORM_WEB
+    return true;  // No filesystem on web
+#else
+    try {
+        if (path.empty()) {
+            return false;
+        }
+        if (std::filesystem::exists(path)) {
+            return true;
+        }
+        return std::filesystem::create_directories(path);
+    } catch (...) {
+        return false;
+    }
+#endif
+}
+
+}  // namespace
+
+//==============================================================================
+// Static member initialization
+//==============================================================================
+
 std::shared_ptr<LogManager> Logging::s_log_manager = nullptr;
+
+//==============================================================================
+// Core logging functions
+//==============================================================================
 
 void Logging::initialize(const std::string& name, bool async) {
     if (!s_log_manager) {
@@ -50,7 +141,7 @@ void Logging::shutdown() {
 
 bool Logging::isLoggerAsync(const std::string& logger_name) {
     if (!s_log_manager) {
-        return false;  // If log manager is not initialized, assume sync
+        return false;
     }
     return s_log_manager->isLoggerAsync(logger_name);
 }
@@ -97,43 +188,38 @@ void Logging::setFlushLevel(const std::string& logger_name, LogLevel level) {
     s_log_manager->setFlushLevel(logger_name, level);
 }
 
+//==============================================================================
+// Configuration functions
+//==============================================================================
+
 LoggerConfig Logging::defaultLoggerConfig() {
     LoggerConfig config;
-    config.name = kDefaultLoggerName;  // Use the default logger name
+    config.name = kDefaultLoggerName;
     config.console_pattern = "%x [%l] %v";
     config.file_pattern = "%x [%n] [%l] [%!] %v";
-
-#ifdef VNE_PLATFORM_WEB
-    // Web platform: console-only logging
-    config.sink = LogSinkType::eConsole;
-    config.file_path = "";  // No file path for web
-    config.log_level = LogLevel::eInfo;
-    config.flush_level = LogLevel::eError;
-    config.async = false;  // Synchronous logging for web
-#else
-    // Desktop platforms: use platform-specific configuration
-    config.sink = LogSinkType::eConsole;
-
-    // Use platform-specific log directory detection
-    std::string log_dir = getPlatformSpecificLogDirectory();
-    config.file_path = log_dir + "/vne.log";
-
-    // Ensure the log directory exists
-    ensureLogDirectoryExists(log_dir);
-
     config.log_level = LogLevel::eInfo;
     config.flush_level = LogLevel::eError;
     config.async = false;
+
+#ifdef VNE_PLATFORM_WEB
+    config.sink = LogSinkType::eConsole;
+    config.file_path = "";
+#else
+    config.sink = LogSinkType::eConsole;
+    std::string log_dir = getPlatformSpecificLogDirectory();
+    if (!log_dir.empty()) {
+        config.file_path = log_dir + getPathSeparator() + "vne.log";
+        ensureLogDirectoryExists(log_dir);
+    }
 #endif
 
     return config;
 }
 
 void Logging::configureLogger(const LoggerConfig& cfg) {
-    // Ensure the log manager is initialized and create the logger with the specified async setting
     initialize(cfg.name, cfg.async);
 
-    // Configure the logger with the rest of the settings
+    // Configure console sink
     if (cfg.sink == LogSinkType::eConsole || cfg.sink == LogSinkType::eBoth) {
         addConsoleSink(cfg.name);
         if (!cfg.console_pattern.empty()) {
@@ -141,21 +227,14 @@ void Logging::configureLogger(const LoggerConfig& cfg) {
         }
     }
 
-#ifdef VNE_PLATFORM_WEB
-    // Web platform: ignore file sink configuration
+    // Configure file sink (not on web)
+#ifndef VNE_PLATFORM_WEB
     if (cfg.sink == LogSinkType::eFile || cfg.sink == LogSinkType::eBoth) {
-        // Force console-only logging on web platform
-        addConsoleSink(cfg.name);
-        if (!cfg.console_pattern.empty()) {
-            setConsolePattern(cfg.name, cfg.console_pattern);
-        }
-    }
-#else
-    // Desktop platforms: allow file sink configuration
-    if (cfg.sink == LogSinkType::eFile || cfg.sink == LogSinkType::eBoth) {
-        addFileSink(cfg.name, cfg.file_path);
-        if (!cfg.file_pattern.empty()) {
-            setFilePattern(cfg.name, cfg.file_pattern);
+        if (!cfg.file_path.empty()) {
+            addFileSink(cfg.name, cfg.file_path);
+            if (!cfg.file_pattern.empty()) {
+                setFilePattern(cfg.name, cfg.file_pattern);
+            }
         }
     }
 #endif
@@ -164,312 +243,106 @@ void Logging::configureLogger(const LoggerConfig& cfg) {
     setFlushLevel(cfg.name, cfg.flush_level);
 }
 
+//==============================================================================
+// Path utility functions
+//==============================================================================
+
 std::string Logging::getLogDirectory() {
-    // Platform-specific log directory detection following best practices
-
-#ifdef VNE_PLATFORM_WIN
-    // Windows: Use AppData\Local for logs (persistent, user-specific)
-    const char* appdata = std::getenv("LOCALAPPDATA");
-    if (appdata) {
-        return std::string(appdata) + "\\VertexNova\\logs";
-    }
-    // Fallback to APPDATA if LOCALAPPDATA is not available
-    const char* roaming_appdata = std::getenv("APPDATA");
-    if (roaming_appdata) {
-        return std::string(roaming_appdata) + "\\VertexNova\\logs";
-    }
-    // Final fallback to user profile
-    const char* userprofile = std::getenv("USERPROFILE");
-    if (userprofile) {
-        return std::string(userprofile) + "\\AppData\\Local\\VertexNova\\logs";
-    }
-
-#elif defined(VNE_PLATFORM_MAC) || defined(VNE_PLATFORM_IOS)
-    // macOS/iOS: Use ~/Library/Logs for logs (standard location)
-    const char* home = std::getenv("HOME");
-    if (home) {
-        return std::string(home) + "/Library/Logs/VertexNova";
-    }
-
-#elif defined(VNE_PLATFORM_ANDROID)
-    // Android: Use app's internal storage for logs
-    // This will be handled by the Android-specific implementation
-    // For now, return a placeholder that will be overridden
-    return "/data/data/com.vertexnova.app/logs";
-
-#elif defined(VNE_PLATFORM_LINUX)
-    // Linux: Use XDG Base Directory Specification
-    // Priority: XDG_DATA_HOME, then ~/.local/share
-    const char* xdg_data_home = std::getenv("XDG_DATA_HOME");
-    if (xdg_data_home) {
-        return std::string(xdg_data_home) + "/VertexNova/logs";
-    }
-
-    // Fallback to ~/.local/share
-    const char* home = std::getenv("HOME");
-    if (home) {
-        return std::string(home) + "/.local/share/VertexNova/logs";
-    }
-
-#else
-    // Generic Unix-like systems
-    const char* home = std::getenv("HOME");
-    if (home) {
-        return std::string(home) + "/.vertexnova/logs";
-    }
-#endif
-
-    // Development/fallback paths
-#ifdef VNE_BUILD_DIR
-    return std::string(VNE_BUILD_DIR) + "/logs";
-#else
-    // Try to detect if we're in a build directory
-#ifdef VNE_PLATFORM_IOS
-    // iOS: use basic string operations instead of std::filesystem
-    char cwd[PATH_MAX];
-    if (getcwd(cwd, sizeof(cwd)) != nullptr) {
-        std::string current_dir_str(cwd);
-
-        // Check if current directory looks like a build directory
-        if (current_dir_str.find("build") != std::string::npos || current_dir_str.find("out") != std::string::npos
-            || current_dir_str.find("bin") != std::string::npos) {
-            return current_dir_str + "/logs";
-        }
-    }
-#else
-    // Use std::filesystem for platforms that support it
-    std::filesystem::path current_dir = std::filesystem::current_path();
-    std::string current_dir_str = current_dir.string();
-
-    // Check if current directory looks like a build directory
-    if (current_dir_str.find("build") != std::string::npos || current_dir_str.find("out") != std::string::npos
-        || current_dir_str.find("bin") != std::string::npos) {
-        return current_dir_str + "/logs";
-    }
-#endif
-
-    // Final fallback for development
-    return "logfiles";
-#endif
+    // Delegate to platform-specific implementation
+    return getPlatformSpecificLogDirectory();
 }
 
 std::string Logging::getPlatformSpecificLogDirectory() {
-    // Enhanced platform-specific log directory with better mobile support
+    const std::string sep = getPathSeparator();
+    const std::string home = getHomeDirectory();
 
-#ifdef VNE_PLATFORM_WEB
-    // Web platform: no file logging, return empty string
-    return "";
-#elif defined(VNE_PLATFORM_ANDROID)
-    // Android: Use app's internal storage (private to the app)
-    // In a real Android app, you would use JNI to get the actual app directory
-    // For now, we'll use a placeholder that should be replaced with actual Android API calls
-    return "/data/data/com.vertexnova.app/files/logs";
+#if defined(VNE_PLATFORM_WINDOWS)
+    // Windows: Use LocalAppData
+    if (const char* appdata = std::getenv("LOCALAPPDATA")) {
+        return std::string(appdata) + sep + "VertexNova" + sep + "logs";
+    }
+    if (!home.empty()) {
+        return home + sep + "AppData" + sep + "Local" + sep + "VertexNova" + sep + "logs";
+    }
+
+#elif defined(VNE_PLATFORM_MACOS)
+    // macOS: Use ~/Library/Logs
+    if (!home.empty()) {
+        return home + "/Library/Logs/VertexNova";
+    }
 
 #elif defined(VNE_PLATFORM_IOS)
-    // iOS: Use app's Documents directory (persistent, backed up)
-    // In a real iOS app, you would use Objective-C/Swift to get the actual path
-    // For now, we'll use a placeholder that should be replaced with actual iOS API calls
-    const char* home = std::getenv("HOME");
-    if (home) {
-        return std::string(home) + "/Documents/VertexNova/logs";
+    // iOS: Use ~/Documents (app sandbox)
+    if (!home.empty()) {
+        return home + "/Documents/VertexNova/logs";
     }
 
-#elif defined(VNE_PLATFORM_WIN)
-    // Windows: Use AppData\Local for logs (persistent, user-specific)
-    const char* appdata = std::getenv("LOCALAPPDATA");
-    if (appdata) {
-        return std::string(appdata) + "\\VertexNova\\logs";
-    }
-    // Fallback to APPDATA if LOCALAPPDATA is not available
-    const char* roaming_appdata = std::getenv("APPDATA");
-    if (roaming_appdata) {
-        return std::string(roaming_appdata) + "\\VertexNova\\logs";
-    }
-    // Final fallback to user profile
-    const char* userprofile = std::getenv("USERPROFILE");
-    if (userprofile) {
-        return std::string(userprofile) + "\\AppData\\Local\\VertexNova\\logs";
-    }
-
-#elif defined(VNE_PLATFORM_MAC)
-    // macOS: Use ~/Library/Logs for logs (standard location)
-    const char* home = std::getenv("HOME");
-    if (home) {
-        return std::string(home) + "/Library/Logs/VertexNova";
-    }
+#elif defined(VNE_PLATFORM_ANDROID)
+    // Android: App internal storage
+    return "/data/data/com.vertexnova.app/files/logs";
 
 #elif defined(VNE_PLATFORM_LINUX)
-    // Linux: Use XDG Base Directory Specification
-    // Priority: XDG_DATA_HOME, then ~/.local/share
-    const char* xdg_data_home = std::getenv("XDG_DATA_HOME");
-    if (xdg_data_home) {
-        return std::string(xdg_data_home) + "/VertexNova/logs";
+    // Linux: XDG Base Directory Specification
+    if (const char* xdg = std::getenv("XDG_DATA_HOME")) {
+        return std::string(xdg) + "/VertexNova/logs";
+    }
+    if (!home.empty()) {
+        return home + "/.local/share/VertexNova/logs";
     }
 
-    // Fallback to ~/.local/share
-    const char* home = std::getenv("HOME");
-    if (home) {
-        return std::string(home) + "/.local/share/VertexNova/logs";
-    }
+#elif defined(VNE_PLATFORM_WEB)
+    // Web: No file logging
+    return "";
 
-#else
-    // Generic Unix-like systems
-    const char* home = std::getenv("HOME");
-    if (home) {
-        return std::string(home) + "/.vertexnova/logs";
-    }
 #endif
 
-    // Development/fallback paths
-#ifdef VNE_BUILD_DIR
-    return std::string(VNE_BUILD_DIR) + "/logs";
-#else
-    // Try to detect if we're in a build directory
-#ifdef VNE_PLATFORM_IOS
-    // iOS: use basic string operations instead of std::filesystem
-    char cwd[PATH_MAX];
-    if (getcwd(cwd, sizeof(cwd)) != nullptr) {
-        std::string current_dir_str(cwd);
-
-        // Check if current directory looks like a build directory
-        if (current_dir_str.find("build") != std::string::npos || current_dir_str.find("out") != std::string::npos
-            || current_dir_str.find("bin") != std::string::npos) {
-            return current_dir_str + "/logs";
-        }
+    // Fallback: Check if we're in a build directory
+    std::string cwd = getCurrentDirectory();
+    if (isBuildDirectory(cwd)) {
+        return cwd + sep + "logs";
     }
-#else
-    std::filesystem::path current_dir = std::filesystem::current_path();
-    std::string current_dir_str = current_dir.string();
 
-    // Check if current directory looks like a build directory
-    if (current_dir_str.find("build") != std::string::npos || current_dir_str.find("out") != std::string::npos
-        || current_dir_str.find("bin") != std::string::npos) {
-        return current_dir_str + "/logs";
-    }
-#endif
-
-    // Final fallback for development
-    return "logfiles";
-#endif
+    // Final fallback
+    return "logs";
 }
 
 bool Logging::ensureLogDirectoryExists(const std::string& log_dir) {
-    try {
-#ifdef VNE_PLATFORM_IOS
-        // iOS: use basic file operations
-        // For iOS, we'll assume the directory exists or create it with basic operations
-        // In a real iOS app, you would use NSFileManager to handle this properly
-        return true;  // Simplified for iOS compatibility
-#else
-        if (!std::filesystem::exists(log_dir)) {
-            std::error_code ec;
-            bool created = std::filesystem::create_directories(log_dir, ec);
-            if (!created && ec) {
-                // Use logging system instead of std::cout
-                if (s_log_manager) {
-                    auto logger = s_log_manager->getLogger(kDefaultLoggerName);
-                    if (logger) {
-                        logger->log(kDefaultLoggerName,
-                                    LogLevel::eWarn,
-                                    TimeStampType::eLocal,
-                                    "Failed to create log directory: " + log_dir + " - Error: " + ec.message(),
-                                    __FILE__,
-                                    __FUNCTION__,
-                                    __LINE__);
-                    }
-                }
-                return false;
-            }
-        }
-        return true;
-#endif
-    } catch (const std::exception& e) {
-        // Use logging system instead of std::cout
-        if (s_log_manager) {
-            auto logger = s_log_manager->getLogger(kDefaultLoggerName);
-            if (logger) {
-                logger->log(kDefaultLoggerName,
-                            LogLevel::eError,
-                            TimeStampType::eLocal,
-                            "Exception in ensureLogDirectoryExists: " + std::string(e.what()),
-                            __FILE__,
-                            __FUNCTION__,
-                            __LINE__);
-            }
-        }
+    if (log_dir.empty()) {
         return false;
     }
+    return createDirectories(log_dir);
 }
 
 std::string Logging::createLoggingFolder(const std::string& base_dir, const std::string& filename) {
-    try {
-        auto now = std::chrono::system_clock::now();
-        auto time = std::chrono::system_clock::to_time_t(now);
-        struct tm timeinfo;
+    const std::string sep = getPathSeparator();
 
-#if defined(_WIN32) || defined(_WIN64)
-        localtime_s(&timeinfo, &time);
-        std::string slash = "\\";
+    // Generate timestamp folder name
+    auto now = std::chrono::system_clock::now();
+    auto time = std::chrono::system_clock::to_time_t(now);
+    std::tm timeinfo{};
+
+#if defined(VNE_PLATFORM_WINDOWS)
+    localtime_s(&timeinfo, &time);
 #else
-        localtime_r(&time, &timeinfo);
-        std::string slash = "/";
+    localtime_r(&time, &timeinfo);
 #endif
 
-        std::stringstream ss;
-        ss << std::put_time(&timeinfo, "%Y-%m-%d_%H-%M-%S");
-        std::string log_path = base_dir + slash + ss.str();
+    std::ostringstream ss;
+    ss << std::put_time(&timeinfo, "%Y-%m-%d_%H-%M-%S");
+    std::string timestamped_dir = base_dir + sep + ss.str();
 
-        // Try to create the directory with error handling
-#ifdef VNE_PLATFORM_IOS
-        // iOS: simplified directory handling
-        // In a real iOS app, you would use NSFileManager to handle this properly
-        // For now, we'll just use the base directory
-        log_path = base_dir;
-#else
-        if (!std::filesystem::exists(log_path)) {
-            std::error_code ec;
-            bool created = std::filesystem::create_directories(log_path, ec);
-            if (!created && ec) {
-                // If timestamped directory creation fails, fall back to base directory
-                // Use logging system instead of std::cout
-                if (s_log_manager) {
-                    auto logger = s_log_manager->getLogger(kDefaultLoggerName);
-                    if (logger) {
-                        logger->log(
-                            kDefaultLoggerName,
-                            LogLevel::eWarn,
-                            TimeStampType::eLocal,
-                            "Failed to create timestamped log directory: " + log_path + " - Error: " + ec.message(),
-                            __FILE__,
-                            __FUNCTION__,
-                            __LINE__);
-                    }
-                }
-                log_path = base_dir;
-            }
-        }
-#endif
-
-        std::string log_file_path = log_path + slash + filename;
-        return log_file_path;
-    } catch (const std::exception& e) {
-        // If anything fails, return a simple fallback path
-        // Use logging system instead of std::cout
-        if (s_log_manager) {
-            auto logger = s_log_manager->getLogger(kDefaultLoggerName);
-            if (logger) {
-                logger->log(kDefaultLoggerName,
-                            LogLevel::eError,
-                            TimeStampType::eLocal,
-                            "Exception in createLoggingFolder: " + std::string(e.what()),
-                            __FILE__,
-                            __FUNCTION__,
-                            __LINE__);
-            }
-        }
-        return base_dir + "/vne.log";
+    // Try to create timestamped directory
+    if (createDirectories(timestamped_dir)) {
+        return timestamped_dir + sep + filename;
     }
+
+    // Fallback to base directory
+    if (createDirectories(base_dir)) {
+        return base_dir + sep + filename;
+    }
+
+    // Final fallback
+    return filename;
 }
 
-}  // namespace log
-}  // namespace vne
+}  // namespace vne::log

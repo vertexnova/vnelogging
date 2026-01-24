@@ -36,9 +36,47 @@ This library is the **first component** of [VertexNova](https://github.com/verte
 - **Cross-Platform**: Linux, macOS, and Windows support
 - **Header-Only Option**: Easy integration into existing projects
 
-## Quick Start
+## Installation
 
-### Building
+### Option 1: Git Submodule (Recommended)
+
+```bash
+# Add as submodule
+git submodule add https://github.com/vertexnova/vnelogging.git external/vnelogging
+
+# In your CMakeLists.txt
+add_subdirectory(external/vnelogging)
+target_link_libraries(your_target PRIVATE vne::logging)
+```
+
+### Option 2: FetchContent
+
+```cmake
+include(FetchContent)
+FetchContent_Declare(
+    vnelogging
+    GIT_REPOSITORY https://github.com/vertexnova/vnelogging.git
+    GIT_TAG main
+)
+FetchContent_MakeAvailable(vnelogging)
+target_link_libraries(your_target PRIVATE vne::logging)
+```
+
+### Option 3: System Install
+
+```bash
+git clone --recursive https://github.com/vertexnova/vnelogging.git
+cd vnelogging
+cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local
+cmake --build build
+sudo cmake --install build
+
+# In your CMakeLists.txt
+find_package(VneLogging REQUIRED)
+target_link_libraries(your_target PRIVATE vne::logging)
+```
+
+## Building
 
 ```bash
 git clone --recursive https://github.com/vertexnova/vnelogging.git
@@ -47,7 +85,15 @@ cmake -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ```
 
-### Basic Usage
+### CMake Options
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `BUILD_TESTS` | `ON` | Build unit tests |
+| `BUILD_EXAMPLES` | `OFF` | Build example applications |
+| `ENABLE_COVERAGE` | `OFF` | Enable code coverage (Debug only) |
+
+## Quick Start
 
 ```cpp
 #include <vertexnova/logging/logging.h>
@@ -103,15 +149,66 @@ Benchmarked on Apple M3 Pro (Release build):
 | Synchronous | ~500K logs/sec | ~2 μs/log |
 | Asynchronous | ~1.2M logs/sec | ~0.8 μs/log |
 
+## API Design
+
+The library follows modern C++ design principles:
+
+- **RAII**: Automatic resource management via `LogStream` destructor
+- **Interface Segregation**: `ILogger` and `ILogSink` abstract interfaces
+- **Composition**: Loggers compose sinks, not inherit from them
+- **Thread Safety**: All public APIs are thread-safe by default
+
+### Macro-Based API
+
+```cpp
+VNE_LOG_INFO << "Message";           // Default logger
+VNE_LOG_DEBUG_L("physics") << "Msg"; // Named logger
+```
+
+### Programmatic API
+
+```cpp
+vne::log::Logging::configureLogger(config);
+vne::log::Logging::setLogLevel("physics", LogLevel::eDebug);
+auto logger = vne::log::Logging::getLogger("physics");
+```
+
+## Library Type
+
+The library builds as a **static library** by default (`libvnelogging.a` / `vnelogging.lib`).
+
+| Platform | Library File |
+|----------|--------------|
+| Linux/macOS | `lib/libvnelogging.a` |
+| Windows | `lib/vnelogging.lib` |
+
+### Why Static?
+
+- **Zero runtime dependencies**: Single binary deployment
+- **Link-time optimization**: Better inlining and dead code elimination
+- **Simpler deployment**: No DLL/SO versioning issues
+- **Game engine use case**: Typically statically linked for performance
+
 ## Documentation
 
 - [API Documentation](docs/README.md) — Generated with Doxygen
 - [Architecture](docs/vertexnova/logging/logging.md) — Design and components
 - [Coding Guidelines](CODING_GUIDELINES.md) — Project conventions
 
+## Platform Support
+
+| Platform | Status | Notes |
+|----------|--------|-------|
+| Linux | Tested | GCC 9+, Clang 10+ |
+| macOS | Tested | Xcode 12+, Apple Clang |
+| Windows | Tested | MSVC 2019+, MinGW |
+| iOS | Supported | Xcode toolchain |
+| Android | Supported | NDK r21+ |
+| Web | Supported | Emscripten |
+
 ## Requirements
 
-- C++17 or later
+- C++17 or later (C++20 preferred)
 - CMake 3.16+
 - Compiler: GCC 9+, Clang 10+, MSVC 2019+
 

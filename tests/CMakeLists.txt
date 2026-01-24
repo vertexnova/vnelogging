@@ -84,6 +84,7 @@ set(TEST_SOURCES
     core/logger_performance_test.cpp
     log_manager_test.cpp
     logging_system_test.cpp
+    logging_path_test.cpp
     log_test.cpp
     main.cpp
 )
