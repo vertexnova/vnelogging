@@ -15,6 +15,7 @@
 
 #include <iostream>
 #include <memory>
+#include <sstream>
 
 namespace vne {  // Outer namespace
 namespace log {  // Inner namespace
@@ -60,9 +61,11 @@ void ConsoleLogSink::log(const std::string& name,
             break;
     }
 
-    // Output the formatted log with color (use '\n' instead of std::endl for performance)
-    // TextColor and getResetSequence() automatically handle unsupported terminals
-    std::cout << color << formatted_log << getResetSequence() << '\n';
+    std::ostringstream oss;
+    oss << color << formatted_log << getResetSequence() << '\n';
+
+    // Single atomic write to stdout
+    std::cout << oss.str();
 }
 
 void ConsoleLogSink::flush() {
