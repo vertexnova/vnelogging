@@ -11,6 +11,12 @@
 
 #include "log_queue_worker.h"
 
+namespace {
+
+constexpr size_t kBatchSize = 32;  //!< Number of messages to process per batch
+
+}  // namespace
+
 namespace vne {  // Outer namespace
 namespace log {  // Inner namespace
 
@@ -44,9 +50,14 @@ void LogQueueWorker::flush() {
 
 void LogQueueWorker::run() {
     while (running_) {
-        auto log_task = queue_.pop();
-        if (log_task) {
-            log_task();
+        // Drain multiple tasks at once to reduce lock contention
+        auto batch = queue_.drain(kBatchSize);
+
+        // Execute all tasks in the batch
+        for (auto& log_task : batch) {
+            if (log_task) {
+                log_task();
+            }
         }
     }
 }

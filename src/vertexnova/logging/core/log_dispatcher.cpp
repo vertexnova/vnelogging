@@ -24,14 +24,22 @@ LogDispatcher::~LogDispatcher() {
 }
 
 void LogDispatcher::dispatch(const std::vector<std::unique_ptr<ILogSink>>& log_sinks,
-                             const std::string& name,
+                             std::string name,
                              LogLevel level,
                              TimeStampType time_stamp_type,
-                             const std::string& message,
-                             const std::string& file,
-                             const std::string& function,
+                             std::string message,
+                             std::string file,
+                             std::string function,
                              uint32_t line) {
-    log_queue_.push([&log_sinks, name, level, time_stamp_type, message, file, function, line] {
+    // Move strings into the lambda capture to avoid copies
+    log_queue_.push([&log_sinks,
+                     name = std::move(name),
+                     level,
+                     time_stamp_type,
+                     message = std::move(message),
+                     file = std::move(file),
+                     function = std::move(function),
+                     line] {
         for (auto& sink : log_sinks) {
             sink->log(name, level, time_stamp_type, message, file, function, line);
         }

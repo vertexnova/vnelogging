@@ -61,14 +61,16 @@ class LogDispatcher {
      * @param file The file name where the log was generated.
      * @param function The function name where the log was generated.
      * @param line The line number where the log was generated.
+     *
+     * @note Parameters are taken by value to enable move semantics for better performance.
      */
     void dispatch(const std::vector<std::unique_ptr<ILogSink>>& log_sinks,
-                  const std::string& name,
+                  std::string name,
                   LogLevel level,
                   TimeStampType time_stamp_type,
-                  const std::string& message,
-                  const std::string& file,
-                  const std::string& function,
+                  std::string message,
+                  std::string file,
+                  std::string function,
                   uint32_t line);
 
     /**

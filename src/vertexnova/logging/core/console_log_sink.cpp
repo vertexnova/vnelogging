@@ -34,7 +34,7 @@ void ConsoleLogSink::log(const std::string& name,
     std::string formatted_log =
         LogFormatter::format(name, level, time_stamp_type, message, file, function, line, pattern_);
 #ifdef VNE_PLATFORM_WEB
-    std::cout << formatted_log << std::endl;
+    std::cout << formatted_log << '\n';
 #else
     // Define colors for each log level
     TextColor color;
@@ -62,8 +62,8 @@ void ConsoleLogSink::log(const std::string& name,
             break;
     }
 
-    // Output the formatted log with color
-    std::cout << color << formatted_log << "\033[0m" << std::endl;
+    // Output the formatted log with color (use '\n' instead of std::endl for performance)
+    std::cout << color << formatted_log << "\033[0m\n";
 #endif
 }
 

@@ -14,6 +14,7 @@
 #include <mutex>
 #include <functional>
 #include <condition_variable>
+#include <vector>
 
 /**
  * @file log_queue.h
@@ -27,9 +28,9 @@ class LogQueue {
    public:
     /**
      * @brief Pushes a new log task onto the queue.
-     * @param log_task The log task to push.
+     * @param log_task The log task to push (moved for efficiency).
      */
-    void push(const std::function<void()>& log_task);
+    void push(std::function<void()> log_task);
 
     /**
      * @brief Pops a log task from the queue.
@@ -42,6 +43,15 @@ class LogQueue {
      * @return True if the queue is empty, false otherwise.
      */
     bool empty() const;
+
+    /**
+     * @brief Drains up to max_items tasks from the queue into a vector.
+     * @param max_items Maximum number of items to drain (default: 32).
+     * @return Vector of log tasks.
+     *
+     * This is more efficient than multiple pop() calls as it only locks once.
+     */
+    std::vector<std::function<void()>> drain(size_t max_items = 32);
 
    private:
     std::queue<std::function<void()>> queue_;  //!< The queue of log tasks.

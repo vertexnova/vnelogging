@@ -20,22 +20,19 @@
 namespace vne {  // Outer namespace
 namespace log {  // Inner namespace
 std::string LogFormatter::getThreadID() {
-    static std::mutex mtx;
-    static std::map<std::thread::id, std::string> thread_ids;
-    static int next_id = 1;
+    // Use thread_local to cache the thread ID string per thread - no mutex needed for reads
+    thread_local std::string s_cached_id;
 
-    std::lock_guard<std::mutex> lock(mtx);
-    auto this_id = std::this_thread::get_id();
+    if (s_cached_id.empty()) {
+        // Only lock when assigning a new ID (once per thread)
+        static std::mutex s_id_mutex;
+        static int s_next_id = 1;
 
-    auto it = thread_ids.find(this_id);
-    if (it != thread_ids.end()) {
-        return it->second;
-    } else {
-        std::ostringstream oss;
-        oss << "Thread-" << next_id++;
-        thread_ids[this_id] = oss.str();
-        return oss.str();
+        std::lock_guard<std::mutex> lock(s_id_mutex);
+        s_cached_id = "Thread-" + std::to_string(s_next_id++);
     }
+
+    return s_cached_id;
 }
 
 std::string LogFormatter::format(const std::string& name,
