@@ -96,35 +96,35 @@ void simulateAppStartup() {
 
 void simulatePhysicsUpdate(float delta_time) {
     PHYSICS_LOG_DEBUG << "Physics update started, dt=" << delta_time;
-    
+
     // Simulate some physics calculations
     float gravity = 9.81f;
     float velocity = gravity * delta_time;
-    
+
     PHYSICS_LOG_DEBUG << "Calculated velocity: " << velocity << " m/s";
-    
+
     // Simulate a collision detection
     bool collision_detected = (delta_time > 0.01f);
     if (collision_detected) {
         PHYSICS_LOG_INFO << "Collision detected between objects";
     }
-    
+
     PHYSICS_LOG_DEBUG << "Physics update completed";
 }
 
 void simulateRenderFrame(int frame_number) {
     RENDER_LOG_TRACE << "Begin frame " << frame_number;
-    
+
     // Simulate render operations
     RENDER_LOG_TRACE << "Clearing buffers...";
     RENDER_LOG_DEBUG << "Drawing 1000 objects";
     RENDER_LOG_TRACE << "Submitting draw calls...";
-    
+
     // Simulate occasional GPU warning
     if (frame_number % 100 == 0) {
         RENDER_LOG_WARN << "High VRAM usage detected at frame " << frame_number;
     }
-    
+
     RENDER_LOG_TRACE << "End frame " << frame_number;
 }
 

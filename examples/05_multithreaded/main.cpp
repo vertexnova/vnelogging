@@ -32,33 +32,27 @@ std::atomic<int> g_completed_threads{0};
 /**
  * @brief Worker function that logs messages from a thread
  */
-void workerThread(int thread_id, bool use_async)
-{
+void workerThread(int thread_id, bool use_async) {
     const std::string mode = use_async ? "ASYNC" : "SYNC";
 
     for (int i = 0; i < kLogsPerThread; ++i) {
         // Vary log levels to show thread safety across all levels
         switch (i % 5) {
-        case 0:
-            VNE_LOG_TRACE << "[" << mode << "] Thread " << thread_id << " - Message " << i
-                          << " (trace)";
-            break;
-        case 1:
-            VNE_LOG_DEBUG << "[" << mode << "] Thread " << thread_id << " - Message " << i
-                          << " (debug)";
-            break;
-        case 2:
-            VNE_LOG_INFO << "[" << mode << "] Thread " << thread_id << " - Message " << i
-                         << " (info)";
-            break;
-        case 3:
-            VNE_LOG_WARN << "[" << mode << "] Thread " << thread_id << " - Message " << i
-                         << " (warn)";
-            break;
-        case 4:
-            VNE_LOG_ERROR << "[" << mode << "] Thread " << thread_id << " - Message " << i
-                          << " (error)";
-            break;
+            case 0:
+                VNE_LOG_TRACE << "[" << mode << "] Thread " << thread_id << " - Message " << i << " (trace)";
+                break;
+            case 1:
+                VNE_LOG_DEBUG << "[" << mode << "] Thread " << thread_id << " - Message " << i << " (debug)";
+                break;
+            case 2:
+                VNE_LOG_INFO << "[" << mode << "] Thread " << thread_id << " - Message " << i << " (info)";
+                break;
+            case 3:
+                VNE_LOG_WARN << "[" << mode << "] Thread " << thread_id << " - Message " << i << " (warn)";
+                break;
+            case 4:
+                VNE_LOG_ERROR << "[" << mode << "] Thread " << thread_id << " - Message " << i << " (error)";
+                break;
         }
 
         // Small delay to increase thread interleaving
@@ -73,13 +67,12 @@ void workerThread(int thread_id, bool use_async)
 /**
  * @brief Run a test with multiple threads
  */
-void runThreadedTest(bool use_async)
-{
+void runThreadedTest(bool use_async) {
     const std::string mode_name = use_async ? "Async" : "Sync";
     const std::string file_name = use_async ? "logs/threaded_async.log" : "logs/threaded_sync.log";
 
-    std::cout << "\n=== " << mode_name << " Mode: " << kNumThreads << " threads x "
-              << kLogsPerThread << " logs each ===\n";
+    std::cout << "\n=== " << mode_name << " Mode: " << kNumThreads << " threads x " << kLogsPerThread
+              << " logs each ===\n";
 
     // Configure logger
     LoggerConfig config;
@@ -119,8 +112,7 @@ void runThreadedTest(bool use_async)
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 
     int total_logs = kNumThreads * kLogsPerThread;
-    std::cout << "\n" << mode_name << " completed: " << total_logs << " logs in " << duration.count()
-              << " ms\n";
+    std::cout << "\n" << mode_name << " completed: " << total_logs << " logs in " << duration.count() << " ms\n";
     std::cout << "Throughput: " << (total_logs * 1000.0 / duration.count()) << " logs/sec\n";
     std::cout << "Log file: " << file_name << "\n";
 
@@ -129,11 +121,9 @@ void runThreadedTest(bool use_async)
 
 }  // namespace
 
-int main()
-{
+int main() {
     std::cout << "=== VNE Logging: Multithreaded Example ===\n";
-    std::cout << "Demonstrates thread-safe logging from " << kNumThreads
-              << " concurrent threads\n";
+    std::cout << "Demonstrates thread-safe logging from " << kNumThreads << " concurrent threads\n";
 
     // Create logs directory
     std::filesystem::create_directories("logs");

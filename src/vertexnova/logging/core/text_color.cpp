@@ -15,11 +15,11 @@
 #include <cstdlib>
 #include <type_traits>
 
-#if !defined(VNE_PLATFORM_WEB) && !defined(VNE_PLATFORM_WINDOWS)
+#if !defined(VNE_PLATFORM_WEB) && !defined(VNE_PLATFORM_WIN)
 #include <unistd.h>  // For isatty
 #endif
 
-#ifdef VNE_PLATFORM_WINDOWS
+#ifdef VNE_PLATFORM_WIN
 #include <io.h>  // For _isatty
 #ifndef STDIN_FILENO
 #define STDIN_FILENO 0
@@ -80,8 +80,7 @@ bool detectColorSupport() {
 
     // Check if running in Xcode debugger (macOS)
     // Xcode sets __XCODE_BUILT_PRODUCTS_DIR_PATHS or XCODE_VERSION_ACTUAL
-    if (std::getenv("__XCODE_BUILT_PRODUCTS_DIR_PATHS") != nullptr
-        || std::getenv("XCODE_VERSION_ACTUAL") != nullptr) {
+    if (std::getenv("__XCODE_BUILT_PRODUCTS_DIR_PATHS") != nullptr || std::getenv("XCODE_VERSION_ACTUAL") != nullptr) {
         return false;
     }
 
@@ -92,7 +91,7 @@ bool detectColorSupport() {
     }
 
     // Check if stdout is a TTY
-#ifdef VNE_PLATFORM_WINDOWS
+#ifdef VNE_PLATFORM_WIN
     if (_isatty(STDOUT_FILENO) == 0) {
         return false;
     }

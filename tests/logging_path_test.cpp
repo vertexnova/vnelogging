@@ -59,8 +59,8 @@ TEST_F(LoggingPathTest, GetPlatformSpecificLogDirectory_ContainsVertexNova) {
 
 #ifndef VNE_PLATFORM_WEB
     // Should contain VertexNova or logs in the path
-    bool contains_expected = log_dir.find("VertexNova") != std::string::npos
-                          || log_dir.find("logs") != std::string::npos;
+    bool contains_expected =
+        log_dir.find("VertexNova") != std::string::npos || log_dir.find("logs") != std::string::npos;
     EXPECT_TRUE(contains_expected) << "Log directory: " << log_dir;
 #endif
 }
@@ -130,8 +130,7 @@ TEST_F(LoggingPathTest, CreateLoggingFolder_TimestampedDirContainsDate) {
     std::string log_path = Logging::createLoggingFolder(base_dir, filename);
 
     // Should contain a date pattern like "2026-01-24"
-    EXPECT_TRUE(log_path.find("202") != std::string::npos)
-        << "Path should contain year: " << log_path;
+    EXPECT_TRUE(log_path.find("202") != std::string::npos) << "Path should contain year: " << log_path;
 }
 
 //==============================================================================
@@ -158,8 +157,7 @@ TEST_F(LoggingPathTest, FileLogging_CreatesAndWritesToFile) {
     auto logger = Logging::getLogger("test_logger");
     ASSERT_NE(logger, nullptr);
 
-    logger->log("test", LogLevel::eInfo, TimeStampType::eLocal,
-                "Test message", __FILE__, __FUNCTION__, __LINE__);
+    logger->log("test", LogLevel::eInfo, TimeStampType::eLocal, "Test message", __FILE__, __FUNCTION__, __LINE__);
     logger->flush();
 
     // Verify file was created
@@ -191,8 +189,13 @@ TEST_F(LoggingPathTest, FileLogging_MultipleMessages) {
 
     // Log multiple messages
     for (int i = 0; i < 10; ++i) {
-        logger->log("test", LogLevel::eInfo, TimeStampType::eLocal,
-                    "Message " + std::to_string(i), __FILE__, __FUNCTION__, __LINE__);
+        logger->log("test",
+                    LogLevel::eInfo,
+                    TimeStampType::eLocal,
+                    "Message " + std::to_string(i),
+                    __FILE__,
+                    __FUNCTION__,
+                    __LINE__);
     }
     logger->flush();
 

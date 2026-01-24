@@ -1,5 +1,5 @@
-#ifndef VNE_LOGGING_COMMON_MACROS_H
-#define VNE_LOGGING_COMMON_MACROS_H
+#ifndef VNE_LOGGING_UTILS_MACROS_H
+#define VNE_LOGGING_UTILS_MACROS_H
 /* ---------------------------------------------------------------------
  * Copyright (c) 2024 Ajeet Singh Yadav. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License")
@@ -124,7 +124,7 @@
  * @brief Detects the platform and defines corresponding macros for Windows, macOS, iOS, Android, Web, and Linux.
  */
 #if defined(_WIN32) || defined(_WIN64)
-// VNE_PLATFORM_WINDOWS is defined by CMake
+// VNE_PLATFORM_WIN is defined by CMake
 #elif defined(__APPLE__) && defined(__MACH__)
 #include <TargetConditionals.h>
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
@@ -166,4 +166,4 @@
 #error "Unknown compiler!"
 #endif
 
-#endif  // VNE_LOGGING_COMMON_MACROS_H
+#endif  // VNE_LOGGING_UTILS_MACROS_H

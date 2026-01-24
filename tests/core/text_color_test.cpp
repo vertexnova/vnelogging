@@ -93,9 +93,7 @@ class TextColorTest : public ::testing::Test {
         log::setColorEnabled(true);
     }
 
-    void TearDown() override {
-        log::setColorEnabled(true);
-    }
+    void TearDown() override { log::setColorEnabled(true); }
 };
 
 // Test default constructor

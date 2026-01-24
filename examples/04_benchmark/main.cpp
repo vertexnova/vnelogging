@@ -46,7 +46,7 @@ struct BenchmarkResult {
     double throughput_per_sec;
 };
 
-template <typename LogFunc>
+template<typename LogFunc>
 BenchmarkResult runBenchmark(const std::string& name, int iterations, LogFunc log_func) {
     std::vector<double> times;
     times.reserve(iterations);
@@ -124,20 +124,18 @@ int main() {
     std::cout << "\nRunning sync logging benchmark..." << std::endl;
 
     // Benchmark sync logging
-    auto sync_result = runBenchmark(
-        "Sync Logging",
-        kBenchmarkIterations,
-        [](int i) { SYNC_LOG_INFO << "Benchmark message #" << i << " with some additional data for realistic size"; });
+    auto sync_result = runBenchmark("Sync Logging", kBenchmarkIterations, [](int i) {
+        SYNC_LOG_INFO << "Benchmark message #" << i << " with some additional data for realistic size";
+    });
 
     printResult("Sync Logging", sync_result, kBenchmarkIterations);
 
     std::cout << "\nRunning async logging benchmark..." << std::endl;
 
     // Benchmark async logging
-    auto async_result = runBenchmark(
-        "Async Logging",
-        kBenchmarkIterations,
-        [](int i) { ASYNC_LOG_INFO << "Benchmark message #" << i << " with some additional data for realistic size"; });
+    auto async_result = runBenchmark("Async Logging", kBenchmarkIterations, [](int i) {
+        ASYNC_LOG_INFO << "Benchmark message #" << i << " with some additional data for realistic size";
+    });
 
     printResult("Async Logging", async_result, kBenchmarkIterations);
 

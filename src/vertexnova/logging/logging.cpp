@@ -68,10 +68,8 @@ constexpr const char* getPathSeparator() {
  * @return True if the path appears to be a build directory.
  */
 bool isBuildDirectory(const std::string& path) {
-    return path.find("build") != std::string::npos 
-        || path.find("out") != std::string::npos
-        || path.find("bin") != std::string::npos
-        || path.find("cmake-build") != std::string::npos;
+    return path.find("build") != std::string::npos || path.find("out") != std::string::npos
+           || path.find("bin") != std::string::npos || path.find("cmake-build") != std::string::npos;
 }
 
 /**
