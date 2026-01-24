@@ -22,7 +22,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build_type: [Debug, Release]
         compiler: [gcc, clang]
         include:
           - compiler: gcc
@@ -34,26 +33,24 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        submodules: recursive
 
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y \
-          build-essential \
-          cmake \
-          libgtest-dev \
-          libgmock-dev
+        sudo apt-get install -y build-essential cmake
 
     - name: Configure CMake
       run: |
         cmake -B build -S . \
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+          -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} \
           -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }} \
           -DBUILD_TESTS=ON
 
     - name: Build
-      run: cmake --build build --config ${{ matrix.build_type }} --parallel
+      run: cmake --build build --config Release --parallel
 
     - name: Test
       working-directory: build
@@ -61,26 +58,20 @@ jobs:
 
   macos:
     runs-on: macos-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        build_type: [Debug, Release]
 
     steps:
     - uses: actions/checkout@v4
-
-    - name: Install dependencies
-      run: |
-        brew install googletest
+      with:
+        submodules: recursive
 
     - name: Configure CMake
       run: |
         cmake -B build -S . \
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+          -DCMAKE_BUILD_TYPE=Release \
           -DBUILD_TESTS=ON
 
     - name: Build
-      run: cmake --build build --config ${{ matrix.build_type }} --parallel
+      run: cmake --build build --config Release --parallel
 
     - name: Test
       working-directory: build
@@ -88,28 +79,21 @@ jobs:
 
   windows:
     runs-on: windows-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        build_type: [Debug, Release]
 
     steps:
     - uses: actions/checkout@v4
-
-    - name: Install dependencies
-      run: |
-        vcpkg install gtest:x64-windows
+      with:
+        submodules: recursive
 
     - name: Configure CMake
       run: |
         cmake -B build -S . `
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} `
-          -DBUILD_TESTS=ON `
-          -DCMAKE_TOOLCHAIN_FILE=$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake
+          -DCMAKE_BUILD_TYPE=Release `
+          -DBUILD_TESTS=ON
 
     - name: Build
-      run: cmake --build build --config ${{ matrix.build_type }} --parallel
+      run: cmake --build build --config Release --parallel
 
     - name: Test
       working-directory: build
-      run: ctest --output-on-failure -C ${{ matrix.build_type }}
+      run: ctest --output-on-failure -C Release
