@@ -1,4 +1,4 @@
-# 01 - Basic Logging Example
+# 01 - Hello Logging
 
 This example demonstrates the fundamental usage of the VNE Logging library.
 
@@ -20,7 +20,7 @@ cmake --build .
 ## Running
 
 ```bash
-./bin/01_BasicLogging
+./bin/01_HelloLogging
 ```
 
 ## Expected Output

@@ -1,4 +1,4 @@
-# 04 - Performance Test Example
+# 04 - Benchmark
 
 This example benchmarks the performance of synchronous vs asynchronous logging to help you choose the right mode for your application.
 
@@ -29,7 +29,7 @@ cmake --build . --config Release
 ## Running
 
 ```bash
-./bin/04_PerformanceTest
+./bin/04_Benchmark
 ```
 
 ## Benchmark Environment

@@ -1,4 +1,4 @@
-# 02 - Multiple Loggers Example
+# 02 - Subsystem Logging
 
 This example demonstrates how to set up multiple loggers with different configurations, simulating a game engine architecture with separate logging for different subsystems.
 
@@ -29,7 +29,7 @@ cmake --build .
 ## Running
 
 ```bash
-./bin/02_MultipleLoggers
+./bin/02_SubsystemLogging
 ```
 
 ## Expected Output

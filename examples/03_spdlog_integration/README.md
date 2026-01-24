@@ -1,4 +1,4 @@
-# Combined Logging Example
+# 03 - spdlog Integration
 
 This example demonstrates a common real-world scenario where:
 
@@ -17,7 +17,7 @@ cmake -B build -DBUILD_EXAMPLES=ON
 cmake --build build
 
 # Run the example
-./build/examples/01_combined_logging/myapp/01_ExampleCombinedLogging
+./build/bin/03_SpdlogIntegration
 ```
 
 ## What You'll See
@@ -67,7 +67,7 @@ This pattern is useful when:
 ## File Structure
 
 ```
-01_combined_logging/
+03_spdlog_integration/
 ├── mylib/               # Library using vne::logging
 │   ├── my_library.h
 │   ├── my_library.cpp

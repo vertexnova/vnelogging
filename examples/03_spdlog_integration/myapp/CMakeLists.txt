@@ -4,7 +4,7 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-project(03_ExampleCombinedLogging)
+project(03_SpdlogIntegration)
 
 # Find or use spdlog from external
 if(EXISTS "${CMAKE_SOURCE_DIR}/external/spdlog/CMakeLists.txt")
@@ -21,22 +21,22 @@ else()
 endif()
 
 # Add the application source files
-add_executable(03_ExampleCombinedLogging
+add_executable(03_SpdlogIntegration
     main.cpp
 )
 
 # Link against the library and spdlog
-target_link_libraries(03_ExampleCombinedLogging
+target_link_libraries(03_SpdlogIntegration
     PRIVATE
         mylib
         spdlog::spdlog
 )
 
 # Include directories
-target_include_directories(03_ExampleCombinedLogging
+target_include_directories(03_SpdlogIntegration
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 # Set C++ standard
-target_compile_features(03_ExampleCombinedLogging PUBLIC cxx_std_20)
+target_compile_features(03_SpdlogIntegration PUBLIC cxx_std_20)
