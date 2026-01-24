@@ -63,12 +63,16 @@ TEST_F(TextColorTest, Destructor) {
 
 // Test stream operator with various color combinations
 TEST_F(TextColorTest, StreamOperator) {
-    log::TextColor text_color(log::DisplayAttributes::eItalic, log::FGColorCode::eLightBlue, log::BGColorCode::eDarkGray);
+    log::TextColor text_color(log::DisplayAttributes::eItalic,
+                              log::FGColorCode::eLightBlue,
+                              log::BGColorCode::eDarkGray);
     EXPECT_EQ(captureStream(text_color), "\033[3m\033[94m\033[100m");
 
-    text_color = log::TextColor(log::DisplayAttributes::eHidden, log::FGColorCode::eLightMagenta, log::BGColorCode::eLightCyan);
+    text_color =
+        log::TextColor(log::DisplayAttributes::eHidden, log::FGColorCode::eLightMagenta, log::BGColorCode::eLightCyan);
     EXPECT_EQ(captureStream(text_color), "\033[8m\033[95m\033[106m");
 
-    text_color = log::TextColor(log::DisplayAttributes::eFaint, log::FGColorCode::eWhite, log::BGColorCode::eLightGreen);
+    text_color =
+        log::TextColor(log::DisplayAttributes::eFaint, log::FGColorCode::eWhite, log::BGColorCode::eLightGreen);
     EXPECT_EQ(captureStream(text_color), "\033[2m\033[97m\033[102m");
 }

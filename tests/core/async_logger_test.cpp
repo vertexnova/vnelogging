@@ -47,7 +47,7 @@ class CoutRedirect {
 
 class AsyncLoggerTest : public ::testing::Test {
    protected:
-    void SetUp() override { }
+    void SetUp() override {}
 
     void TearDown() override {
         try {
@@ -114,8 +114,13 @@ TEST_F(AsyncLoggerTest, LogWithNoSinks) {
     std::string logger_name = "AsyncTestLogger";
     std::shared_ptr<log::AsyncLogger> logger = std::make_shared<log::AsyncLogger>(logger_name);
     // Should not throw or do anything when no sinks are added
-    EXPECT_NO_THROW(
-        logger->log(kLoggerCatName, log::LogLevel::eInfo, log::TimeStampType::eUtc, "Test message", kFileName, kFunctionName, kLineNumber));
+    EXPECT_NO_THROW(logger->log(kLoggerCatName,
+                                log::LogLevel::eInfo,
+                                log::TimeStampType::eUtc,
+                                "Test message",
+                                kFileName,
+                                kFunctionName,
+                                kLineNumber));
 }
 
 TEST_F(AsyncLoggerTest, LogMessage) {
@@ -128,7 +133,13 @@ TEST_F(AsyncLoggerTest, LogMessage) {
     auto console_sink = std::make_unique<log::ConsoleLogSink>();
     logger->addLogSink(std::move(console_sink));
 
-    logger->log(kLoggerCatName, log::LogLevel::eInfo, log::TimeStampType::eUtc, "Test message", kFileName, kFunctionName, kLineNumber);
+    logger->log(kLoggerCatName,
+                log::LogLevel::eInfo,
+                log::TimeStampType::eUtc,
+                "Test message",
+                kFileName,
+                kFunctionName,
+                kLineNumber);
     logger->flush();
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));  // wait for few ms
@@ -169,9 +180,15 @@ TEST_F(AsyncLoggerTest, Flush) {
     auto file_sink = std::make_unique<log::FileLogSink>(test_file, false);
     logger->addLogSink(std::move(file_sink));
 
-    logger->log(kLoggerCatName, log::LogLevel::eInfo, log::TimeStampType::eUtc, "Test message", kFileName, kFunctionName, kLineNumber);
+    logger->log(kLoggerCatName,
+                log::LogLevel::eInfo,
+                log::TimeStampType::eUtc,
+                "Test message",
+                kFileName,
+                kFunctionName,
+                kLineNumber);
     logger->flush();
-    logger.reset();                                               // Ensure async logger is destroyed and threads are joined
+    logger.reset();  // Ensure async logger is destroyed and threads are joined
     std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Ensure file handles are released
 
     std::ifstream log_file(test_file);
@@ -219,7 +236,13 @@ TEST_F(AsyncLoggerTest, FlushLevel) {
     logger->addLogSink(std::move(file_sink2));
     logger->setFlushLevel(log::LogLevel::eWarn);
 
-    logger->log(kLoggerCatName, log::LogLevel::eWarn, log::TimeStampType::eLocal, "Should flush now", kFileName, kFunctionName, kLineNumber);
+    logger->log(kLoggerCatName,
+                log::LogLevel::eWarn,
+                log::TimeStampType::eLocal,
+                "Should flush now",
+                kFileName,
+                kFunctionName,
+                kLineNumber);
     logger->flush();
     logger.reset();
     std::this_thread::sleep_for(std::chrono::milliseconds(100));

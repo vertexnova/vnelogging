@@ -95,7 +95,8 @@ class TimeStamp {
      * @param type The type of timestamp to generate (local or UTC).
      * @param provider A shared pointer to a ITimeProvider instance.
      */
-    TimeStamp(TimeStampType type = TimeStampType::eLocal, std::shared_ptr<ITimeProvider> provider = std::make_shared<TimeProvider>())
+    TimeStamp(TimeStampType type = TimeStampType::eLocal,
+              std::shared_ptr<ITimeProvider> provider = std::make_shared<TimeProvider>())
         : type_(type)
         , provider_(std::move(provider)) {}
 

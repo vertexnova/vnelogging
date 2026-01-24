@@ -301,8 +301,14 @@ class Logging {
  * @param CATEGORY The category for the log message.
  * @param LEVEL The severity level to log at.
  */
-#define _VNE_LOG_WITH_LOGGER(LOGGER, CATEGORY, LEVEL) \
-    ::vne::log::LogStream(LOGGER, CATEGORY, LEVEL, ::vne::log::TimeStampType::eLocal, __FILE__, __FUNCTION_NAME__, __LINE__)
+#define _VNE_LOG_WITH_LOGGER(LOGGER, CATEGORY, LEVEL)        \
+    ::vne::log::LogStream(LOGGER,                            \
+                          CATEGORY,                          \
+                          LEVEL,                             \
+                          ::vne::log::TimeStampType::eLocal, \
+                          __FILE__,                          \
+                          __FUNCTION_NAME__,                 \
+                          __LINE__)
 
 #define _VNE_LOG_TRACE_LC(LOGGER, CATEGORY) _VNE_LOG_WITH_LOGGER(LOGGER, CATEGORY, ::vne::log::LogLevel::eTrace)
 #define _VNE_LOG_DEBUG_LC(LOGGER, CATEGORY) _VNE_LOG_WITH_LOGGER(LOGGER, CATEGORY, ::vne::log::LogLevel::eDebug)

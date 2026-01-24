@@ -59,7 +59,8 @@ void FileLogSink::log(const std::string& name,
                       const std::string& file,
                       const std::string& function,
                       uint32_t line) {
-    std::string formatted_log = LogFormatter::format(name, level, time_stamp_type, message, file, function, line, pattern_);
+    std::string formatted_log =
+        LogFormatter::format(name, level, time_stamp_type, message, file, function, line, pattern_);
     file_stream_ << formatted_log << '\n';
 }
 

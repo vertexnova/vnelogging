@@ -42,9 +42,21 @@ TEST_F(LogDispatcherTest, TestDispatchAndFlush) {
 
     // Set expectations for log method calls
     EXPECT_CALL(*dynamic_cast<log::LogSinkMock*>(log_sinks_[0].get()),
-                log("Test Logger", log::LogLevel::eInfo, log::TimeStampType::eLocal, "Test message", "TestFile", "TestFunction", 123));
+                log("Test Logger",
+                    log::LogLevel::eInfo,
+                    log::TimeStampType::eLocal,
+                    "Test message",
+                    "TestFile",
+                    "TestFunction",
+                    123));
     EXPECT_CALL(*dynamic_cast<log::LogSinkMock*>(log_sinks_[1].get()),
-                log("Test Logger", log::LogLevel::eInfo, log::TimeStampType::eLocal, "Test message", "TestFile", "TestFunction", 123));
+                log("Test Logger",
+                    log::LogLevel::eInfo,
+                    log::TimeStampType::eLocal,
+                    "Test message",
+                    "TestFile",
+                    "TestFunction",
+                    123));
 
     // Dispatch a log message
     dispatcher.dispatch(log_sinks_,

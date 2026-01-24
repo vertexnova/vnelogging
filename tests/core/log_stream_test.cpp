@@ -35,8 +35,13 @@ class LogStreamTest : public ::testing::Test {
 
 TEST_F(LogStreamTest, LogStreamConstructDestructWithoutLogger) {
     {
-        log::LogStream
-            log_stream(kLoggerName, kCategoryName, log::LogLevel::eInfo, log::TimeStampType::eLocal, kFileName, kFunctionName, kLineNumber);
+        log::LogStream log_stream(kLoggerName,
+                                  kCategoryName,
+                                  log::LogLevel::eInfo,
+                                  log::TimeStampType::eLocal,
+                                  kFileName,
+                                  kFunctionName,
+                                  kLineNumber);
         log_stream << "Test message";
     }
     SUCCEED();
@@ -48,8 +53,13 @@ TEST_F(LogStreamTest, LogStreamConstructDestructWithLogger) {
     logger->addLogSink(std::move(console_sink));
     log::LoggerController::registerLogger(logger);
     {
-        log::LogStream
-            log_stream(kLoggerName, kCategoryName, log::LogLevel::eInfo, log::TimeStampType::eLocal, kFileName, kFunctionName, kLineNumber);
+        log::LogStream log_stream(kLoggerName,
+                                  kCategoryName,
+                                  log::LogLevel::eInfo,
+                                  log::TimeStampType::eLocal,
+                                  kFileName,
+                                  kFunctionName,
+                                  kLineNumber);
         log_stream << "Test message with logger";
     }
 
@@ -67,14 +77,24 @@ TEST_F(LogStreamTest, LogStreamWithDifferentLogLevels) {
     logger->setCurrentLogLevel(log::LogLevel::eWarn);
 
     {
-        log::LogStream
-            log_stream(kLoggerName, kCategoryName, log::LogLevel::eInfo, log::TimeStampType::eLocal, kFileName, kFunctionName, kLineNumber);
+        log::LogStream log_stream(kLoggerName,
+                                  kCategoryName,
+                                  log::LogLevel::eInfo,
+                                  log::TimeStampType::eLocal,
+                                  kFileName,
+                                  kFunctionName,
+                                  kLineNumber);
         log_stream << "This message should not be logged";
     }
 
     {
-        log::LogStream
-            log_stream(kLoggerName, kCategoryName, log::LogLevel::eError, log::TimeStampType::eLocal, kFileName, kFunctionName, kLineNumber);
+        log::LogStream log_stream(kLoggerName,
+                                  kCategoryName,
+                                  log::LogLevel::eError,
+                                  log::TimeStampType::eLocal,
+                                  kFileName,
+                                  kFunctionName,
+                                  kLineNumber);
         log_stream << "This message should be logged";
     }
 
@@ -90,8 +110,13 @@ TEST_F(LogStreamTest, LogStreamWithEmptyMessage) {
     log::LoggerController::registerLogger(logger);
 
     {
-        log::LogStream
-            log_stream(kLoggerName, kCategoryName, log::LogLevel::eInfo, log::TimeStampType::eLocal, kFileName, kFunctionName, kLineNumber);
+        log::LogStream log_stream(kLoggerName,
+                                  kCategoryName,
+                                  log::LogLevel::eInfo,
+                                  log::TimeStampType::eLocal,
+                                  kFileName,
+                                  kFunctionName,
+                                  kLineNumber);
         // Empty message
     }
 

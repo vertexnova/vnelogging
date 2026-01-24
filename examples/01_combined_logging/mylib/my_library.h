@@ -29,7 +29,7 @@ namespace example {
  * @endcode
  */
 class MyLibrary {
-public:
+   public:
     // Constructors and destructor
     MyLibrary() = default;
     ~MyLibrary();
@@ -69,7 +69,7 @@ public:
      */
     [[nodiscard]] bool isInitialized() const noexcept { return is_initialized_; }
 
-private:
+   private:
     bool is_initialized_ = false;
 };
 

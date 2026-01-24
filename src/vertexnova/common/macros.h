@@ -21,22 +21,22 @@
  * @param message The message to display if the assertion fails.
  */
 #ifdef VNE_DEVELOPER_BUILD
-#define VNE_ASSERT_MSG(condition, message)                                                                                                        \
-    do {                                                                                                                                          \
-        if (!(condition)) {                                                                                                                       \
-            std::cerr << "Assertion failed: (" #condition "), function " << __FUNCTION__ << ", file " << __FILE__ << ", line " << __LINE__ << "." \
-                      << std::endl                                                                                                                \
-                      << "Message: " << message << std::endl;                                                                                     \
-            std::terminate();                                                                                                                     \
-        }                                                                                                                                         \
+#define VNE_ASSERT_MSG(condition, message)                                                                        \
+    do {                                                                                                          \
+        if (!(condition)) {                                                                                       \
+            std::cerr << "Assertion failed: (" #condition "), function " << __FUNCTION__ << ", file " << __FILE__ \
+                      << ", line " << __LINE__ << "." << std::endl                                                \
+                      << "Message: " << message << std::endl;                                                     \
+            std::terminate();                                                                                     \
+        }                                                                                                         \
     } while (false)
-#define VNE_ASSERT(condition)                                                                                                                     \
-    do {                                                                                                                                          \
-        if (!(condition)) {                                                                                                                       \
-            std::cerr << "Assertion failed: (" #condition "), function " << __FUNCTION__ << ", file " << __FILE__ << ", line " << __LINE__ << "." \
-                      << std::endl;                                                                                                               \
-            std::terminate();                                                                                                                     \
-        }                                                                                                                                         \
+#define VNE_ASSERT(condition)                                                                                     \
+    do {                                                                                                          \
+        if (!(condition)) {                                                                                       \
+            std::cerr << "Assertion failed: (" #condition "), function " << __FUNCTION__ << ", file " << __FILE__ \
+                      << ", line " << __LINE__ << "." << std::endl;                                               \
+            std::terminate();                                                                                     \
+        }                                                                                                         \
     } while (false)
 #else
 #define VNE_ASSERT_MSG(condition, message) \
@@ -60,14 +60,14 @@
  * @param condition The condition to check.
  * @param message The message to display if the condition is false.
  */
-#define VNE_ENSURE_MSG(condition, message)                                                                                                     \
-    do {                                                                                                                                       \
-        if (!(condition)) {                                                                                                                    \
-            std::cerr << "Ensure failed: (" #condition "), function " << __FUNCTION__ << ", file " << __FILE__ << ", line " << __LINE__ << "." \
-                      << std::endl                                                                                                             \
-                      << "Message: " << message << std::endl;                                                                                  \
-            return false;                                                                                                                      \
-        }                                                                                                                                      \
+#define VNE_ENSURE_MSG(condition, message)                                                                     \
+    do {                                                                                                       \
+        if (!(condition)) {                                                                                    \
+            std::cerr << "Ensure failed: (" #condition "), function " << __FUNCTION__ << ", file " << __FILE__ \
+                      << ", line " << __LINE__ << "." << std::endl                                             \
+                      << "Message: " << message << std::endl;                                                  \
+            return false;                                                                                      \
+        }                                                                                                      \
     } while (false)
 
 /**

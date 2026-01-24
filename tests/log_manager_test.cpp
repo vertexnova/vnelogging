@@ -28,9 +28,7 @@ constexpr const char* kTestDir = "test_dir";
 
 class LogManagerTest : public ::testing::Test {
    protected:
-    void SetUp() override {
-        fs::create_directory(kTestDir);
-    }
+    void SetUp() override { fs::create_directory(kTestDir); }
 
     void TearDown() override {
         try {

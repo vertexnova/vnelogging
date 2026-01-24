@@ -134,7 +134,8 @@ class LogManager final {
 
    private:
     std::unordered_map<std::string, std::shared_ptr<ILogger>> loggers_;  //!< Registry of logger instances by name.
-    std::unordered_map<std::string, bool> logger_async_state_;           //!< Tracks which loggers are async (true) vs sync (false).
+    std::unordered_map<std::string, bool>
+        logger_async_state_;  //!< Tracks which loggers are async (true) vs sync (false).
 };
 
 }  // namespace vne::log

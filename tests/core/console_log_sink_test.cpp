@@ -52,7 +52,8 @@ TEST_F(ConsoleLogSinkTest, LogOutputsFormattedMessage) {
     // Iterate through all LogLevel values and log each one
     for (int i = static_cast<int>(log::LogLevel::eTrace); i <= static_cast<int>(log::LogLevel::eFatal); ++i) {
         log::LogLevel level = static_cast<log::LogLevel>(i);
-        console_log_sink.log("DefualtLogger", level, log::TimeStampType::eLocal, "Test message", "TestFile", "TestFunction", 42);
+        console_log_sink
+            .log("DefualtLogger", level, log::TimeStampType::eLocal, "Test message", "TestFile", "TestFunction", 42);
 
         std::string output = cout_buffer_.str();
         // Check if the logged message contains the expected message part
@@ -99,8 +100,13 @@ TEST_F(ConsoleLogSinkTest, LogOutputsFormattedMessage) {
 TEST_F(ConsoleLogSinkTest, SetPatternChangesLogFormat) {
     log::ConsoleLogSink console_log_sink;
     console_log_sink.setPattern("%v [%x] [%l] %!");
-    console_log_sink
-        .log("PatternChangeLogger", log::LogLevel::eInfo, log::TimeStampType::eUtc, "Test message", "TestFile", "TestFunction", 42);
+    console_log_sink.log("PatternChangeLogger",
+                         log::LogLevel::eInfo,
+                         log::TimeStampType::eUtc,
+                         "Test message",
+                         "TestFile",
+                         "TestFunction",
+                         42);
 
     std::string output = cout_buffer_.str();
     EXPECT_NE(output.find("Test message"), std::string::npos);

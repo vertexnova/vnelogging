@@ -48,7 +48,7 @@ class CoutRedirect {
 
 class SyncLoggerTest : public ::testing::Test {
    protected:
-    void SetUp() override { }
+    void SetUp() override {}
 
     void TearDown() override {
         try {
@@ -115,9 +115,13 @@ TEST_F(SyncLoggerTest, LogWithNoSinks) {
     std::string logger_name = "SyncTestLogger";
     std::shared_ptr<log::SyncLogger> logger = std::make_shared<log::SyncLogger>(logger_name);
     // Should not throw or do anything when no sinks are added
-    EXPECT_NO_THROW(
-        logger
-            ->log(kLoggerCatName, log::LogLevel::eInfo, log::TimeStampType::eLocal, "Test message", kFileName, kFunctionName, kLineNumber));
+    EXPECT_NO_THROW(logger->log(kLoggerCatName,
+                                log::LogLevel::eInfo,
+                                log::TimeStampType::eLocal,
+                                "Test message",
+                                kFileName,
+                                kFunctionName,
+                                kLineNumber));
 }
 
 TEST_F(SyncLoggerTest, LogMessage) {
@@ -130,7 +134,13 @@ TEST_F(SyncLoggerTest, LogMessage) {
     auto console_sink = std::make_unique<log::ConsoleLogSink>();
     logger->addLogSink(std::move(console_sink));
 
-    logger->log(kLoggerCatName, log::LogLevel::eInfo, log::TimeStampType::eLocal, "Test message", kFileName, kFunctionName, kLineNumber);
+    logger->log(kLoggerCatName,
+                log::LogLevel::eInfo,
+                log::TimeStampType::eLocal,
+                "Test message",
+                kFileName,
+                kFunctionName,
+                kLineNumber);
 
     std::string output = buffer.str();
     EXPECT_TRUE(output.find("Test message") != std::string::npos);
@@ -167,7 +177,13 @@ TEST_F(SyncLoggerTest, Flush) {
     auto file_sink = std::make_unique<log::FileLogSink>(test_file, false);
     logger->addLogSink(std::move(file_sink));
 
-    logger->log(kLoggerCatName, log::LogLevel::eInfo, log::TimeStampType::eLocal, "Test message", kFileName, kFunctionName, kLineNumber);
+    logger->log(kLoggerCatName,
+                log::LogLevel::eInfo,
+                log::TimeStampType::eLocal,
+                "Test message",
+                kFileName,
+                kFunctionName,
+                kLineNumber);
     logger->flush();
 
     std::ifstream log_file(test_file);
@@ -207,7 +223,13 @@ TEST_F(SyncLoggerTest, FlushLevel) {
     log_file1.close();
 
     // Log at flush level (should flush immediately)
-    logger->log(kLoggerCatName, log::LogLevel::eWarn, log::TimeStampType::eLocal, "Should flush now", kFileName, kFunctionName, kLineNumber);
+    logger->log(kLoggerCatName,
+                log::LogLevel::eWarn,
+                log::TimeStampType::eLocal,
+                "Should flush now",
+                kFileName,
+                kFunctionName,
+                kLineNumber);
     std::ifstream log_file2(test_file);
     std::stringstream buffer2;
     buffer2 << log_file2.rdbuf();

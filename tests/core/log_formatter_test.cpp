@@ -41,7 +41,8 @@ TEST_F(LogFormatterTest, FormatTimestamp) {
     auto log_level = vne::log::LogLevel::eInfo;
     auto time_stamp_type = vne::log::TimeStampType::eLocal;
 
-    std::string formatted = vne::log::LogFormatter::format(logger_name, log_level, time_stamp_type, message, file, function, line, format);
+    std::string formatted =
+        vne::log::LogFormatter::format(logger_name, log_level, time_stamp_type, message, file, function, line, format);
     EXPECT_EQ(formatted, getCurrentTime());
 }
 
@@ -55,7 +56,8 @@ TEST_F(LogFormatterTest, FormatLoggerName) {
     auto log_level = vne::log::LogLevel::eInfo;
     auto time_stamp_type = vne::log::TimeStampType::eLocal;
 
-    std::string formatted = vne::log::LogFormatter::format(logger_name, log_level, time_stamp_type, message, file, function, line, format);
+    std::string formatted =
+        vne::log::LogFormatter::format(logger_name, log_level, time_stamp_type, message, file, function, line, format);
     EXPECT_EQ(formatted, logger_name);
 }
 
@@ -69,7 +71,8 @@ TEST_F(LogFormatterTest, FormatLogLevel) {
     auto log_level = vne::log::LogLevel::eInfo;
     auto time_stamp_type = vne::log::TimeStampType::eLocal;
 
-    std::string formatted = vne::log::LogFormatter::format(logger_name, log_level, time_stamp_type, message, file, function, line, format);
+    std::string formatted =
+        vne::log::LogFormatter::format(logger_name, log_level, time_stamp_type, message, file, function, line, format);
     EXPECT_EQ(formatted, "INFO");
 }
 
@@ -83,7 +86,8 @@ TEST_F(LogFormatterTest, FormatFunction) {
     auto log_level = vne::log::LogLevel::eInfo;
     auto time_stamp_type = vne::log::TimeStampType::eLocal;
 
-    std::string formatted = vne::log::LogFormatter::format(logger_name, log_level, time_stamp_type, message, file, function, line, format);
+    std::string formatted =
+        vne::log::LogFormatter::format(logger_name, log_level, time_stamp_type, message, file, function, line, format);
     EXPECT_EQ(formatted, function);
 }
 
@@ -97,7 +101,8 @@ TEST_F(LogFormatterTest, FormatFile) {
     auto log_level = vne::log::LogLevel::eInfo;
     auto time_stamp_type = vne::log::TimeStampType::eLocal;
 
-    std::string formatted = vne::log::LogFormatter::format(logger_name, log_level, time_stamp_type, message, file, function, line, format);
+    std::string formatted =
+        vne::log::LogFormatter::format(logger_name, log_level, time_stamp_type, message, file, function, line, format);
     EXPECT_EQ(formatted, file);
 }
 
@@ -111,7 +116,8 @@ TEST_F(LogFormatterTest, FormatLine) {
     auto log_level = vne::log::LogLevel::eInfo;
     auto time_stamp_type = vne::log::TimeStampType::eLocal;
 
-    std::string formatted = vne::log::LogFormatter::format(logger_name, log_level, time_stamp_type, message, file, function, line, format);
+    std::string formatted =
+        vne::log::LogFormatter::format(logger_name, log_level, time_stamp_type, message, file, function, line, format);
     EXPECT_EQ(formatted, std::to_string(line));
 }
 
@@ -125,7 +131,8 @@ TEST_F(LogFormatterTest, FormatMessage) {
     auto log_level = vne::log::LogLevel::eInfo;
     auto time_stamp_type = vne::log::TimeStampType::eLocal;
 
-    std::string formatted = vne::log::LogFormatter::format(logger_name, log_level, time_stamp_type, message, file, function, line, format);
+    std::string formatted =
+        vne::log::LogFormatter::format(logger_name, log_level, time_stamp_type, message, file, function, line, format);
     EXPECT_EQ(formatted, message);
 }
 
@@ -139,7 +146,8 @@ TEST_F(LogFormatterTest, FormatThreadID) {
     auto log_level = vne::log::LogLevel::eInfo;
     auto time_stamp_type = vne::log::TimeStampType::eLocal;
 
-    std::string formatted = vne::log::LogFormatter::format(logger_name, log_level, time_stamp_type, message, file, function, line, format);
+    std::string formatted =
+        vne::log::LogFormatter::format(logger_name, log_level, time_stamp_type, message, file, function, line, format);
     EXPECT_NE(formatted.find("Thread-"), std::string::npos);
 }
 
@@ -153,7 +161,8 @@ TEST_F(LogFormatterTest, FormatComplex) {
     auto log_level = vne::log::LogLevel::eInfo;
     auto time_stamp_type = vne::log::TimeStampType::eLocal;
 
-    std::string formatted = vne::log::LogFormatter::format(logger_name, log_level, time_stamp_type, message, file, function, line, format);
+    std::string formatted =
+        vne::log::LogFormatter::format(logger_name, log_level, time_stamp_type, message, file, function, line, format);
     std::string expected = getCurrentTime() + " [INFO] [TestLogger] [TestFile] [TestFunction] Test message:42";
     EXPECT_EQ(formatted, expected);
 }
@@ -168,6 +177,7 @@ TEST_F(LogFormatterTest, FormatUnknown) {
     auto log_level = vne::log::LogLevel::eInfo;
     auto time_stamp_type = vne::log::TimeStampType::eLocal;
 
-    std::string formatted = vne::log::LogFormatter::format(logger_name, log_level, time_stamp_type, message, file, function, line, format);
+    std::string formatted =
+        vne::log::LogFormatter::format(logger_name, log_level, time_stamp_type, message, file, function, line, format);
     EXPECT_EQ(formatted, format);
 }

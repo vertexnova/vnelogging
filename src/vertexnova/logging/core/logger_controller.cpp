@@ -36,7 +36,9 @@ void LoggerController::registerLogger(std::shared_ptr<ILogger> logger) {
 void LoggerController::unregisterLogger(const std::string& logger_name) {
     std::lock_guard<std::mutex> lock(getMutex());
     auto& registry = getRegistry();
-    auto it = std::remove_if(registry.begin(), registry.end(), [&](const auto& logger) { return logger->getName() == logger_name; });
+    auto it = std::remove_if(registry.begin(), registry.end(), [&](const auto& logger) {
+        return logger->getName() == logger_name;
+    });
     registry.erase(it, registry.end());
 }
 
@@ -47,7 +49,9 @@ void LoggerController::unregisterAllLoggers() {
 
 std::shared_ptr<ILogger> LoggerController::getLogger(const std::string& logger_name) {
     std::lock_guard<std::mutex> lock(getMutex());
-    auto it = std::find_if(getRegistry().begin(), getRegistry().end(), [&](const auto& logger) { return logger->getName() == logger_name; });
+    auto it = std::find_if(getRegistry().begin(), getRegistry().end(), [&](const auto& logger) {
+        return logger->getName() == logger_name;
+    });
     return (it != getRegistry().end()) ? *it : nullptr;
 }
 

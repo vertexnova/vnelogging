@@ -435,13 +435,14 @@ std::string Logging::createLoggingFolder(const std::string& base_dir, const std:
                 if (log_manager_) {
                     auto logger = log_manager_->getLogger(kDefaultLoggerName);
                     if (logger) {
-                        logger->log(kDefaultLoggerName,
-                                    LogLevel::eWarn,
-                                    TimeStampType::eLocal,
-                                    "Failed to create timestamped log directory: " + log_path + " - Error: " + ec.message(),
-                                    __FILE__,
-                                    __FUNCTION__,
-                                    __LINE__);
+                        logger->log(
+                            kDefaultLoggerName,
+                            LogLevel::eWarn,
+                            TimeStampType::eLocal,
+                            "Failed to create timestamped log directory: " + log_path + " - Error: " + ec.message(),
+                            __FILE__,
+                            __FUNCTION__,
+                            __LINE__);
                     }
                 }
                 log_path = base_dir;

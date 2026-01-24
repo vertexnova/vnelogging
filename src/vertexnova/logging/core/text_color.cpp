@@ -56,9 +56,10 @@ TextColor& TextColor::operator=(const TextColor& rhs) {
 }
 
 std::ostream& operator<<(std::ostream& stream, const TextColor& text_color) {
-    return stream << "\033[" << toUnderlying(text_color.attributes_) << "m" << "\033[" << toUnderlying(text_color.foreground_color_) << "m" << "\033["
+    return stream << "\033[" << toUnderlying(text_color.attributes_) << "m" << "\033["
+                  << toUnderlying(text_color.foreground_color_) << "m" << "\033["
                   << toUnderlying(text_color.background_color_) << "m";
 }
 
-}  // end namespace Log
-}  // end namespace VNE
+}  // namespace log
+}  // namespace vne

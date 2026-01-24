@@ -53,7 +53,13 @@ class LoggerPerformanceTest : public ::testing::Test {
         auto start_time = std::chrono::steady_clock::now();
 
         for (uint32_t i = 0; i < kNumMessages; ++i) {
-            logger->log("LogMessageName", log::LogLevel::eInfo, log::TimeStampType::eLocal, message, "TestFile", "TestFunction", i);
+            logger->log("LogMessageName",
+                        log::LogLevel::eInfo,
+                        log::TimeStampType::eLocal,
+                        message,
+                        "TestFile",
+                        "TestFunction",
+                        i);
         }
 
         auto end_time = std::chrono::steady_clock::now();

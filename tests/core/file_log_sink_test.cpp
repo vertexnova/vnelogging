@@ -54,8 +54,13 @@ TEST_F(FileLogSinkTest, LogWritesToFile) {
     std::string unique_file = std::string(kTestDir) + "/" + "log_writes_test.txt";
     {
         vne::log::FileLogSink file_sync(unique_file);
-        file_sync
-            .log("LogWritesToFile", vne::log::LogLevel::eInfo, log::TimeStampType::eLocal, "Test message", "TestFile", "TestFunction", 42);
+        file_sync.log("LogWritesToFile",
+                      vne::log::LogLevel::eInfo,
+                      log::TimeStampType::eLocal,
+                      "Test message",
+                      "TestFile",
+                      "TestFunction",
+                      42);
         file_sync.flush();
     }
     std::ifstream infile(unique_file);
@@ -127,7 +132,13 @@ TEST_F(FileLogSinkTest, NonAppendModeOverwritesFile) {
 
 TEST_F(FileLogSinkTest, FlushWritesToFile) {
     vne::log::FileLogSink file_sink(test_file_);
-    file_sink.log("FlushWritesToFile", vne::log::LogLevel::eInfo, log::TimeStampType::eLocal, "Test message", "TestFile", "TestFunction", 42);
+    file_sink.log("FlushWritesToFile",
+                  vne::log::LogLevel::eInfo,
+                  log::TimeStampType::eLocal,
+                  "Test message",
+                  "TestFile",
+                  "TestFunction",
+                  42);
 
     // Before flush, file should be empty or not contain the message
     std::ifstream infile_before(test_file_);
