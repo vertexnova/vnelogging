@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="icons/vertexnova_logo_medallion_with_text.svg" alt="VertexNova Logging" width="200"/>
+  <img src="icons/vertexnova_logo_medallion_with_text.svg" alt="VertexNova Logging" width="320"/>
 </p>
 
 <p align="center">

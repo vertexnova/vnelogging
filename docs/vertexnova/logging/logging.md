@@ -18,22 +18,23 @@ The logging system follows a layered architecture with clear separation of conce
 
 ### Core Classes
 
-#### `Logging_C`
+#### `Logging`
 
 Main interface class providing static methods for logging system setup and configuration.
 
 **Key Methods:**
 
-- `Initialize(logger_name, async)`: Initialize the logging system
-- `Shutdown()`: Clean shutdown of the logging system
-- `GetLogger(name)`: Retrieve a logger instance
-- `AddConsoleSink(logger_name)`: Add console output
-- `AddFileSink(logger_name, file)`: Add file output
-- `SetLogLevel(logger_name, level)`: Configure log level
-- `SetConsolePattern(logger_name, pattern)`: Set console formatting
-- `SetFilePattern(logger_name, pattern)`: Set file formatting
+- `initialize(logger_name, async)`: Initialize the logging system
+- `shutdown()`: Clean shutdown of the logging system
+- `getLogger(name)`: Retrieve a logger instance
+- `addConsoleSink(logger_name)`: Add console output
+- `addFileSink(logger_name, file)`: Add file output
+- `setLogLevel(logger_name, level)`: Configure log level
+- `setConsolePattern(logger_name, pattern)`: Set console formatting
+- `setFilePattern(logger_name, pattern)`: Set file formatting
+- `configureLogger(config)`: Configure a logger in a single step
 
-#### `LogManager_C`
+#### `LogManager`
 
 Singleton class managing logger instances and their lifecycle.
 
@@ -43,21 +44,26 @@ Singleton class managing logger instances and their lifecycle.
 - Global configuration management
 - Logger factory operations
 
-#### `Logger_I` Interface
+#### `ILogger` Interface
 
 Abstract base class defining the logger interface.
 
 **Key Methods:**
 
-- `Log(category, level, timestamp_type, message, file, function, line)`: Core logging operation
-- `AddLogSink(sink)`: Add output destination
-- `SetCurrentLogLevel(level)`: Configure filtering
-- `Flush()`: Force output flush
-- `Clone(name)`: Create logger copy
+- `log(category_name, level, time_stamp_type, message, file, function, line)`: Core logging operation
+- `addLogSink(sink)`: Add output destination
+- `getLogSinks()`: Retrieve list of log sinks
+- `setCurrentLogLevel(level)`: Set minimum log level
+- `getCurrentLogLevel()`: Get current log level
+- `flush()`: Force output flush
+- `getName()`: Get logger name
+- `clone(logger_name)`: Create logger copy
+- `setFlushLevel(level)`: Set auto-flush level
+- `getFlushLevel()`: Get flush level
 
 ### Logger Implementations
 
-#### `SyncLogger_C`
+#### `SyncLogger`
 
 Synchronous logger implementation for immediate output.
 
@@ -67,7 +73,7 @@ Synchronous logger implementation for immediate output.
 - Thread-safe operations
 - Immediate output to sinks
 
-#### `AsyncLogger_C`
+#### `AsyncLogger`
 
 Asynchronous logger implementation for high-performance logging.
 
@@ -79,16 +85,19 @@ Asynchronous logger implementation for high-performance logging.
 
 ### Sink System
 
-#### `LogSink_I` Interface
+#### `ILogSink` Interface
 
 Abstract interface for log output destinations.
 
 **Methods:**
 
-- `Log(level, message)`: Output a log message
-- `Flush()`: Force output flush
+- `log(name, level, time_stamp_type, message, file, function, line)`: Output a log message
+- `flush()`: Force output flush
+- `getPattern()`: Get the current log pattern
+- `setPattern(pattern)`: Set the log pattern
+- `clone()`: Create a copy of the sink
 
-#### `ConsoleLogSink_C`
+#### `ConsoleLogSink`
 
 Console output sink with color support.
 
@@ -98,7 +107,7 @@ Console output sink with color support.
 - Configurable formatting patterns
 - Platform-specific console handling
 
-#### `FileLogSink_C`
+#### `FileLogSink`
 
 File output sink with rotation support.
 
@@ -110,22 +119,24 @@ File output sink with rotation support.
 
 ### Formatting System
 
-#### `LogFormatter_C`
+#### `LogFormatter`
 
 Handles message formatting according to patterns.
 
 **Pattern Variables:**
 
-- `%t`: Timestamp
-- `%l`: Log level
-- `%n`: Logger name
-- `%c`: Category
-- `%m`: Message
-- `%f`: File name
-- `%F`: Function name
-- `%L`: Line number
+| Pattern | Description | Example |
+|---------|-------------|---------|
+| `%x` | Timestamp | `2026-01-24 10:30:45` |
+| `%l` | Log level | `INFO`, `DEBUG`, `ERROR` |
+| `%n` | Logger name | `vertexnova`, `physics` |
+| `%v` | Message | The log message content |
+| `%t` | Thread ID | `Thread-1`, `Thread-2` |
+| `%$` | File name | `main.cpp` |
+| `%!` | Function name | `main`, `initialize` |
+| `%#` | Line number | `42` |
 
-#### `TimeStamp_C`
+#### `TimeStamp`
 
 Timestamp generation and formatting.
 
@@ -135,7 +146,7 @@ Timestamp generation and formatting.
 - Configurable format strings
 - High-resolution timestamps
 
-#### `TextColor_C`
+#### `TextColor`
 
 Console color management for different log levels.
 
@@ -150,27 +161,27 @@ Console color management for different log levels.
 
 ### Queue System (Async Logging)
 
-#### `LogQueue_C`
+#### `LogQueue`
 
 Thread-safe message queue for asynchronous logging.
 
 **Features:**
 
-- Lock-free operations
+- Lock-based operations with batch drain
 - Configurable queue size
 - Overflow handling
 
-#### `LogQueueWorker_C`
+#### `LogQueueWorker`
 
 Background worker processing queued messages.
 
 **Features:**
 
-- Continuous message processing
+- Batch message processing
 - Graceful shutdown
 - Error handling
 
-#### `LogDispatcher_C`
+#### `LogDispatcher`
 
 Routes messages to appropriate sinks.
 
@@ -185,13 +196,13 @@ Routes messages to appropriate sinks.
 The system supports six log levels in ascending order of severity:
 
 ```cpp
-enum class LogLevel_TP {
-    LOG_TRACE = 0,  // Detailed diagnostic information
-    LOG_DEBUG = 1,  // Debugging information
-    LOG_INFO = 2,   // General information
-    LOG_WARN = 3,   // Warning messages
-    LOG_ERROR = 4,  // Error conditions
-    LOG_FATAL = 5   // Fatal errors
+enum class LogLevel {
+    eTrace = 0,  // Detailed diagnostic information
+    eDebug = 1,  // Debugging information
+    eInfo = 2,   // General information
+    eWarn = 3,   // Warning messages
+    eError = 4,  // Error conditions
+    eFatal = 5   // Fatal errors
 };
 ```
 
@@ -200,86 +211,132 @@ enum class LogLevel_TP {
 ### Logger Configuration
 
 ```cpp
-struct LoggerConfig_C {
-    std::string name;                    // Logger name
-    LogSink_TP sink;                     // Output destinations
-    std::string console_pattern;         // Console format pattern
-    std::string file_pattern;            // File format pattern
-    std::string file_path;               // Log file path
-    LogLevel_TP log_level;               // Minimum log level
-    LogLevel_TP flush_level;             // Auto-flush level
-    bool async;                          // Async mode flag
+struct LoggerConfig {
+    std::string name;                          // Logger name
+    LogSinkType sink{LogSinkType::eConsole};   // Output destinations
+    std::string console_pattern;               // Console format pattern
+    std::string file_pattern;                  // File format pattern
+    std::string file_path;                     // Log file path
+    LogLevel log_level{LogLevel::eInfo};       // Minimum log level
+    LogLevel flush_level{LogLevel::eError};    // Auto-flush level
+    bool async{false};                         // Async mode flag
 };
 ```
 
 ### Sink Types
 
 ```cpp
-enum class LogSink_TP {
-    NONE = 0,              // No output
-    CONSOLE = 1 << 0,      // Console output
-    FILE = 1 << 1,         // File output
-    BOTH = CONSOLE | FILE  // Both outputs
+enum class LogSinkType {
+    eNone = 0,              // No output
+    eConsole = 1 << 0,      // Console output
+    eFile = 1 << 1,         // File output
+    eBoth = eConsole | eFile  // Both outputs
 };
 ```
 
 ## Usage Examples
 
-### Basic Initialization
+### Basic Setup
 
 ```cpp
-#include "vertexnova/logging//logging.h"
+#include <vertexnova/logging/logging.h>
 
-// Initialize with default settings
-VNE::Log::Logging_C::Initialize("myapp");
+namespace {
+CREATE_VNE_LOGGER_CATEGORY("myapp")
+}  // namespace
 
-// Initialize with async logging
-VNE::Log::Logging_C::Initialize("myapp", true);
+int main() {
+    // Configure with LoggerConfig struct
+    vne::log::LoggerConfig config;
+    config.name = vne::log::kDefaultLoggerName;
+    config.sink = vne::log::LogSinkType::eBoth;
+    config.console_pattern = "%x [%l] [%n] %v";
+    config.file_pattern = "%x [%l] [%n] %v";
+    config.file_path = "app.log";
+    config.log_level = vne::log::LogLevel::eDebug;
+    config.async = false;
+
+    vne::log::Logging::configureLogger(config);
+
+    // Log messages using stream API
+    VNE_LOG_INFO << "Application started";
+    VNE_LOG_DEBUG << "Debug information";
+    VNE_LOG_WARN << "Warning message";
+    VNE_LOG_ERROR << "Error occurred";
+
+    vne::log::Logging::shutdown();
+    return 0;
+}
 ```
 
-### Logger Configuration
+### Async Logging
 
 ```cpp
-// Add console output
-VNE::Log::Logging_C::AddConsoleSink("myapp");
+#include <vertexnova/logging/logging.h>
 
-// Add file output
-VNE::Log::Logging_C::AddFileSink("myapp", "app.log");
+namespace {
+CREATE_VNE_LOGGER_CATEGORY("async.example")
+}  // namespace
 
-// Set log level
-VNE::Log::Logging_C::SetLogLevel("myapp", VNE::Log::LogLevel_TP::LOG_DEBUG);
+int main() {
+    vne::log::LoggerConfig config;
+    config.name = vne::log::kDefaultLoggerName;
+    config.sink = vne::log::LogSinkType::eFile;
+    config.file_path = "async.log";
+    config.log_level = vne::log::LogLevel::eInfo;
+    config.async = true;  // Enable async logging
 
-// Configure patterns
-VNE::Log::Logging_C::SetConsolePattern("myapp", "[%t] %l [%n] %m");
-VNE::Log::Logging_C::SetFilePattern("myapp", "%t | %l | %n | %f:%L | %m");
+    vne::log::Logging::configureLogger(config);
+
+    // High-throughput logging
+    for (int i = 0; i < 10000; ++i) {
+        VNE_LOG_INFO << "Message " << i;
+    }
+
+    vne::log::Logging::shutdown();  // Flushes pending logs
+    return 0;
+}
 ```
 
-### Logging Messages
+### Multiple Loggers
 
 ```cpp
-// Get logger instance
-auto logger = VNE::Log::Logging_C::GetLogger("myapp");
+#include <vertexnova/logging/logging.h>
 
-// Log messages
-logger->Log("core.init", VNE::Log::LogLevel_TP::LOG_INFO,
-            VNE::Log::TimeStampType_TP::LOCAL,
-            "Application started", __FILE__, __FUNCTION__, __LINE__);
+namespace {
+constexpr const char* kPhysicsLogger = "physics";
+constexpr const char* kRenderLogger = "render";
+CREATE_VNE_LOGGER_CATEGORY("subsystem")
+}  // namespace
 
-logger->Log("core.shutdown", VNE::Log::LogLevel_TP::LOG_WARN,
-            VNE::Log::TimeStampType_TP::LOCAL,
-            "Application shutting down", __FILE__, __FUNCTION__, __LINE__);
-```
+#define PHYSICS_LOG_INFO VNE_LOG_INFO_L(kPhysicsLogger)
+#define RENDER_LOG_INFO VNE_LOG_INFO_L(kRenderLogger)
 
-### Using Log Streams
+int main() {
+    // Configure physics logger
+    vne::log::LoggerConfig physics_config;
+    physics_config.name = kPhysicsLogger;
+    physics_config.sink = vne::log::LogSinkType::eBoth;
+    physics_config.file_path = "physics.log";
+    physics_config.log_level = vne::log::LogLevel::eDebug;
+    vne::log::Logging::configureLogger(physics_config);
 
-```cpp
-#include "vertexnova/logging//core/log_stream.h"
+    // Configure render logger
+    vne::log::LoggerConfig render_config;
+    render_config.name = kRenderLogger;
+    render_config.sink = vne::log::LogSinkType::eFile;
+    render_config.file_path = "render.log";
+    render_config.log_level = vne::log::LogLevel::eTrace;
+    render_config.async = true;
+    vne::log::Logging::configureLogger(render_config);
 
-// Create log stream
-VNE::Log::LogStream_C stream("myapp", "core.rendering", VNE::Log::LogLevel_TP::LOG_DEBUG);
+    // Use different loggers
+    PHYSICS_LOG_INFO << "Physics simulation started";
+    RENDER_LOG_INFO << "Rendering frame 1";
 
-// Stream messages
-stream << "Rendering frame " << frameNumber << " at " << timestamp;
+    vne::log::Logging::shutdown();
+    return 0;
+}
 ```
 
 ## Performance Considerations
@@ -287,19 +344,18 @@ stream << "Rendering frame " << frameNumber << " at " << timestamp;
 ### Synchronous vs Asynchronous
 
 - **Synchronous**: Immediate output, suitable for debugging and small applications
-- **Asynchronous**: Higher performance, suitable for production applications
+- **Asynchronous**: Higher throughput, suitable for production applications
 
 ### Queue Management
 
-- Configure appropriate queue sizes for async logging
-- Monitor queue overflow conditions
+- Batch processing reduces lock contention
 - Use flush levels to ensure critical messages are output immediately
 
-### File I/O Optimization
+### Optimization Techniques
 
-- Use buffered file operations
-- Implement log rotation to manage file sizes
-- Consider compression for archived logs
+- Thread-local caching for thread IDs
+- Move semantics for string parameters
+- Batch drain for async queue processing
 
 ## Best Practices
 
@@ -314,13 +370,13 @@ stream << "Rendering frame " << frameNumber << " at " << timestamp;
 - Use appropriate log levels
 - Include relevant context in messages
 - Avoid logging sensitive information
-- Use structured logging for complex data
+- Use stream API for composing messages
 
 ### Configuration Management
 
 - Configure log levels per environment
 - Use patterns for consistent formatting
-- Implement log rotation policies
+- Create logs directory before logging
 - Monitor log file sizes and disk usage
 
 ## Integration
@@ -339,20 +395,6 @@ The logging system integrates with other VertexNova modules:
 - **Standard Library**: File system and threading support
 - **Platform APIs**: Console and file system operations
 
-## Version History
-
-- **1.0.0**: Initial release with core logging functionality
-- **1.1.0**: Added asynchronous logging support
-- **1.2.0**: Enhanced formatting and sink management
-- **1.3.0**: Improved performance and thread safety
-
-## Dependencies
-
-- C++17 or higher
-- Standard Library (filesystem, threading, memory)
-- Platform-specific console APIs
-- Optional: spdlog for advanced features
-
 ## Testing
 
 The logging module includes comprehensive tests covering:
@@ -367,11 +409,12 @@ The logging module includes comprehensive tests covering:
 Run tests with:
 
 ```bash
-# Run all logging tests
-ctest -R logging
-
-# Run specific test categories
-ctest -R logging_core
-ctest -R logging_sinks
-ctest -R logging_async
+./bin/TestVneLogging
 ```
+
+## Requirements
+
+- C++17 or higher
+- Standard Library (filesystem, threading, memory)
+- Platform-specific console APIs
+- Optional: spdlog for advanced features
