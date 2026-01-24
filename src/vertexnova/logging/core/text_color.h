@@ -20,6 +20,48 @@
 
 namespace vne::log {
 
+//==============================================================================
+// Color support detection
+//==============================================================================
+
+/**
+ * @brief Checks if the current terminal supports ANSI color codes.
+ *
+ * Detects color support by checking:
+ * - Platform (web/iOS don't support ANSI)
+ * - Xcode debugger console (TERM_PROGRAM=Apple_Terminal, but not in Xcode)
+ * - Environment variables (TERM, NO_COLOR, FORCE_COLOR)
+ * - TTY status
+ *
+ * @return True if ANSI colors are supported, false otherwise.
+ */
+[[nodiscard]] bool isColorSupported();
+
+/**
+ * @brief Enables or disables color output globally.
+ *
+ * Overrides automatic detection. Useful for:
+ * - Forcing colors off for log file parsing
+ * - Forcing colors on for terminals that aren't detected properly
+ *
+ * @param enabled True to enable colors, false to disable.
+ */
+void setColorEnabled(bool enabled);
+
+/**
+ * @brief Gets the current color enabled state.
+ *
+ * @return True if colors are currently enabled, false otherwise.
+ */
+[[nodiscard]] bool isColorEnabled();
+
+/**
+ * @brief Returns the ANSI reset sequence if colors are enabled, empty string otherwise.
+ *
+ * @return Reset sequence "\033[0m" or empty string.
+ */
+[[nodiscard]] const char* getResetSequence();
+
 /**
  * @enum FGColorCode
  * @brief Enumeration for foreground color codes.

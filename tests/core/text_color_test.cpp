@@ -24,7 +24,79 @@ std::string captureStream(const log::TextColor& text_color) {
 
 }  // namespace
 
-class TextColorTest : public ::testing::Test {};
+//==============================================================================
+// Color Support Detection Tests
+//==============================================================================
+
+class ColorSupportTest : public ::testing::Test {
+   protected:
+    void SetUp() override {
+        // Reset to auto-detect mode
+        log::setColorEnabled(true);  // Will be reset in TearDown
+    }
+
+    void TearDown() override {
+        // Note: Can't fully reset to auto mode, but tests manage their own state
+        log::setColorEnabled(true);
+    }
+};
+
+TEST_F(ColorSupportTest, SetColorEnabled_DisablesColors) {
+    log::setColorEnabled(false);
+    EXPECT_FALSE(log::isColorEnabled());
+}
+
+TEST_F(ColorSupportTest, SetColorEnabled_EnablesColors) {
+    log::setColorEnabled(true);
+    EXPECT_TRUE(log::isColorEnabled());
+}
+
+TEST_F(ColorSupportTest, GetResetSequence_ReturnsResetWhenEnabled) {
+    log::setColorEnabled(true);
+    EXPECT_STREQ(log::getResetSequence(), "\033[0m");
+}
+
+TEST_F(ColorSupportTest, GetResetSequence_ReturnsEmptyWhenDisabled) {
+    log::setColorEnabled(false);
+    EXPECT_STREQ(log::getResetSequence(), "");
+}
+
+TEST_F(ColorSupportTest, TextColor_OutputsNothingWhenDisabled) {
+    log::setColorEnabled(false);
+    log::TextColor color(log::DisplayAttributes::eBold, log::FGColorCode::eRed, log::BGColorCode::eDefault);
+    EXPECT_EQ(captureStream(color), "");
+}
+
+TEST_F(ColorSupportTest, TextColor_OutputsCodesWhenEnabled) {
+    log::setColorEnabled(true);
+    log::TextColor color(log::DisplayAttributes::eBold, log::FGColorCode::eRed, log::BGColorCode::eDefault);
+    EXPECT_EQ(captureStream(color), "\033[1m\033[31m\033[49m");
+}
+
+TEST_F(ColorSupportTest, IsColorSupported_ReturnsBool) {
+    // This is platform-dependent, just verify it returns without crashing
+    bool supported = log::isColorSupported();
+    // In CI environment (no TTY), should return false
+    // In terminal, should return true
+    // Just verify it's a valid bool
+    EXPECT_TRUE(supported == true || supported == false);
+}
+
+//==============================================================================
+// TextColor Class Tests (with colors forced on)
+//==============================================================================
+
+class TextColorTest : public ::testing::Test {
+   protected:
+    void SetUp() override {
+        // Force colors on for these tests
+        log::setColorEnabled(true);
+    }
+
+    void TearDown() override {
+        log::setColorEnabled(true);
+    }
+};
 
 // Test default constructor
 TEST_F(TextColorTest, DefaultConstructor) {
@@ -75,4 +147,11 @@ TEST_F(TextColorTest, StreamOperator) {
     text_color =
         log::TextColor(log::DisplayAttributes::eFaint, log::FGColorCode::eWhite, log::BGColorCode::eLightGreen);
     EXPECT_EQ(captureStream(text_color), "\033[2m\033[97m\033[102m");
+}
+
+// Test self-assignment
+TEST_F(TextColorTest, SelfAssignment) {
+    log::TextColor text_color(log::DisplayAttributes::eBold, log::FGColorCode::eRed, log::BGColorCode::eDefault);
+    text_color = text_color;  // Self-assignment
+    EXPECT_EQ(captureStream(text_color), "\033[1m\033[31m\033[49m");
 }

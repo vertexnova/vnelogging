@@ -12,6 +12,7 @@
 #include <gtest/gtest.h>
 
 #include "vertexnova/logging/core/console_log_sink.h"
+#include "vertexnova/logging/core/text_color.h"
 
 using namespace vne;
 
@@ -30,11 +31,17 @@ class CoutRedirect {
 class ConsoleLogSinkTest : public ::testing::Test {
    protected:
     void SetUp() override {
+        // Force colors on for testing (tests run without TTY)
+        log::setColorEnabled(true);
         // Redirect std::cout to capture console output
         redirect_ = new CoutRedirect(cout_buffer_.rdbuf());
     }
 
-    void TearDown() override { delete redirect_; }
+    void TearDown() override {
+        delete redirect_;
+        // Reset colors
+        log::setColorEnabled(true);
+    }
 
    protected:
     std::stringstream cout_buffer_;
@@ -130,4 +137,29 @@ TEST_F(ConsoleLogSinkTest, SetPatternUpdatesPattern) {
 TEST_F(ConsoleLogSinkTest, GetLogSink) {
     vne::log::ConsoleLogSink console_log_sink;
     EXPECT_NE(console_log_sink.clone(), nullptr);
+}
+
+TEST_F(ConsoleLogSinkTest, LogOutputsWithoutColorsWhenDisabled) {
+    // Disable colors
+    log::setColorEnabled(false);
+
+    log::ConsoleLogSink console_log_sink;
+    console_log_sink.log("TestLogger",
+                         log::LogLevel::eInfo,
+                         log::TimeStampType::eLocal,
+                         "Test message without color",
+                         "TestFile",
+                         "TestFunction",
+                         42);
+
+    std::string output = cout_buffer_.str();
+
+    // Message should be present
+    EXPECT_NE(output.find("Test message without color"), std::string::npos);
+
+    // ANSI color codes should NOT be present
+    EXPECT_EQ(output.find("\033["), std::string::npos) << "No ANSI codes when colors disabled: " << output;
+
+    // Re-enable colors for other tests
+    log::setColorEnabled(true);
 }
