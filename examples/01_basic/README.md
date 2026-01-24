@@ -36,7 +36,7 @@ cmake --build .
 2026-01-24 02:17:24 [DEBUG] [basic.example] Debug mode is enabled
 ```
 
-A file `basic_example.log` will also be created with the same messages.
+A file `logs/basic_example.log` will also be created with the same messages.
 
 ## Key Concepts
 

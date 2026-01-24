@@ -14,6 +14,7 @@
 #include <vertexnova/logging/logging.h>
 
 #include <chrono>
+#include <filesystem>
 #include <thread>
 
 namespace {
@@ -48,6 +49,10 @@ constexpr const char* kRenderLoggerName = "render";
 CREATE_VNE_LOGGER_CATEGORY("multiple_loggers.example");
 
 void setupLoggers() {
+    // Create logs directory
+    const std::string logs_dir = "logs";
+    std::filesystem::create_directories(logs_dir);
+
     // App logger: Console only, INFO level (less verbose)
     vne::log::LoggerConfig app_config;
     app_config.name = kAppLoggerName;
@@ -63,7 +68,7 @@ void setupLoggers() {
     physics_config.sink = vne::log::LogSinkType::eBoth;
     physics_config.console_pattern = "[PHYSICS] %x [%l] %v";
     physics_config.file_pattern = "[PHYSICS] %x [%l] %v";
-    physics_config.file_path = "physics.log";
+    physics_config.file_path = logs_dir + "/physics.log";
     physics_config.log_level = vne::log::LogLevel::eDebug;
     physics_config.async = false;
     vne::log::Logging::configureLogger(physics_config);
@@ -73,7 +78,7 @@ void setupLoggers() {
     render_config.name = kRenderLoggerName;
     render_config.sink = vne::log::LogSinkType::eFile;
     render_config.file_pattern = "[RENDER] %x [%l] %v";
-    render_config.file_path = "render.log";
+    render_config.file_path = logs_dir + "/render.log";
     render_config.log_level = vne::log::LogLevel::eTrace;
     render_config.async = true;  // Async for render to avoid blocking the render thread
     vne::log::Logging::configureLogger(render_config);
@@ -158,8 +163,8 @@ int main() {
 
     std::cout << "\n=== Example Complete ===" << std::endl;
     std::cout << "Check the following files:" << std::endl;
-    std::cout << "  - physics.log (Physics subsystem logs)" << std::endl;
-    std::cout << "  - render.log  (Render subsystem logs - most verbose)" << std::endl;
+    std::cout << "  - logs/physics.log (Physics subsystem logs)" << std::endl;
+    std::cout << "  - logs/render.log  (Render subsystem logs - most verbose)" << std::endl;
     std::cout << "\nNote: App logs only appear on console (INFO level and above)" << std::endl;
 
     return 0;

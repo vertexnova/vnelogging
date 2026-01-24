@@ -64,8 +64,8 @@ Note: App logs only appear on console (INFO level and above)
 
 ## Generated Files
 
-- `physics.log` - Contains Physics subsystem logs (DEBUG level and above)
-- `render.log` - Contains Render subsystem logs (TRACE level - most verbose)
+- `logs/physics.log` - Contains Physics subsystem logs (DEBUG level and above)
+- `logs/render.log` - Contains Render subsystem logs (TRACE level - most verbose)
 
 ## Key Concepts
 

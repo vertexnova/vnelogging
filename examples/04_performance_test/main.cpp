@@ -13,6 +13,7 @@
 #include <vertexnova/logging/logging.h>
 
 #include <chrono>
+#include <filesystem>
 #include <iomanip>
 #include <iostream>
 #include <numeric>
@@ -92,12 +93,16 @@ int main() {
     std::cout << "Benchmark iterations: " << kBenchmarkIterations << std::endl;
     std::cout << "Warmup iterations: " << kWarmupIterations << std::endl;
 
+    // Create logs directory in the current working directory (typically the build directory)
+    const std::string logs_dir = "logs";
+    std::filesystem::create_directories(logs_dir);
+
     // Setup sync logger (file only to avoid console I/O overhead)
     vne::log::LoggerConfig sync_config;
     sync_config.name = kSyncLoggerName;
     sync_config.sink = vne::log::LogSinkType::eFile;
     sync_config.file_pattern = "[SYNC] %x [%l] %v";
-    sync_config.file_path = "perf_sync.log";
+    sync_config.file_path = logs_dir + "/perf_sync.log";
     sync_config.log_level = vne::log::LogLevel::eInfo;
     sync_config.async = false;
     vne::log::Logging::configureLogger(sync_config);
@@ -107,7 +112,7 @@ int main() {
     async_config.name = kAsyncLoggerName;
     async_config.sink = vne::log::LogSinkType::eFile;
     async_config.file_pattern = "[ASYNC] %x [%l] %v";
-    async_config.file_path = "perf_async.log";
+    async_config.file_path = logs_dir + "/perf_async.log";
     async_config.log_level = vne::log::LogLevel::eInfo;
     async_config.async = true;
     vne::log::Logging::configureLogger(async_config);
@@ -149,7 +154,7 @@ int main() {
     vne::log::Logging::shutdown();
 
     std::cout << "\n=== Benchmark Complete ===" << std::endl;
-    std::cout << "Log files created: perf_sync.log, perf_async.log" << std::endl;
+    std::cout << "Log files created: " << logs_dir << "/perf_sync.log, " << logs_dir << "/perf_async.log" << std::endl;
 
     return 0;
 }

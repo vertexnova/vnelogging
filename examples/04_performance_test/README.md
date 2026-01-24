@@ -55,31 +55,31 @@ Running sync logging benchmark...
 
 Sync Logging Results:
   Iterations:    10000
-  Total Time:    19.10 ms
-  Avg Latency:   1.889 us
-  Min Latency:   1.583 us
-  Max Latency:   28.375 us
-  Throughput:    523588 logs/sec
+  Total Time:    22.32 ms
+  Avg Latency:   2.206 us
+  Min Latency:   1.625 us
+  Max Latency:   51.291 us
+  Throughput:    448095 logs/sec
 
 Running async logging benchmark...
 
 Async Logging Results:
   Iterations:    10000
-  Total Time:    10.73 ms
-  Avg Latency:   1.050 us
-  Min Latency:   0.500 us
-  Max Latency:   59.500 us
-  Throughput:    932176 logs/sec
+  Total Time:    6.34 ms
+  Avg Latency:   0.611 us
+  Min Latency:   0.375 us
+  Max Latency:   33.083 us
+  Throughput:    1576686 logs/sec
 
 === Comparison ===
 Async vs Sync:
-  Latency improvement:    +44.4%
-  Throughput improvement: +78.0%
+  Latency improvement:    +72.3%
+  Throughput improvement: +251.9%
 
 Flushing and shutting down...
 
 === Benchmark Complete ===
-Log files created: perf_sync.log, perf_async.log
+Log files created: logs/perf_sync.log, logs/perf_async.log
 ```
 
 ## When to Use Each Mode

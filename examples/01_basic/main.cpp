@@ -12,17 +12,23 @@
 
 #include <vertexnova/logging/logging.h>
 
+#include <filesystem>
+
 // Create a logger category for this file
 CREATE_VNE_LOGGER_CATEGORY("basic.example");
 
 int main() {
+    // Create logs directory
+    const std::string logs_dir = "logs";
+    std::filesystem::create_directories(logs_dir);
+
     // Configure the default logger with console and file output
     vne::log::LoggerConfig config;
     config.name = vne::log::kDefaultLoggerName;
     config.sink = vne::log::LogSinkType::eBoth;
     config.console_pattern = "%x [%l] [%n] %v";
     config.file_pattern = "%x [%l] [%n] [%c] %v";
-    config.file_path = "basic_example.log";
+    config.file_path = logs_dir + "/basic_example.log";
     config.log_level = vne::log::LogLevel::eTrace;
     config.async = false;
 
