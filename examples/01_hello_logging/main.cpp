@@ -14,8 +14,12 @@
 
 #include <filesystem>
 
+namespace {
+
 // Create a logger category for this file
-CREATE_VNE_LOGGER_CATEGORY("basic.example");
+CREATE_VNE_LOGGER_CATEGORY("basic.example")
+
+}  // namespace
 
 int main() {
     // Create logs directory

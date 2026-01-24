@@ -32,7 +32,11 @@ constexpr int kBenchmarkIterations = 10000;
 #define SYNC_LOG_INFO VNE_LOG_INFO_L(kSyncLoggerName)
 #define ASYNC_LOG_INFO VNE_LOG_INFO_L(kAsyncLoggerName)
 
-CREATE_VNE_LOGGER_CATEGORY("performance.test");
+namespace {
+
+CREATE_VNE_LOGGER_CATEGORY("performance.test")
+
+}  // namespace
 
 struct BenchmarkResult {
     double total_time_ms;

@@ -45,8 +45,12 @@ constexpr const char* kRenderLoggerName = "render";
 #define RENDER_LOG_WARN VNE_LOG_WARN_L(kRenderLoggerName)
 #define RENDER_LOG_ERROR VNE_LOG_ERROR_L(kRenderLoggerName)
 
+namespace {
+
 // Create logger category
-CREATE_VNE_LOGGER_CATEGORY("multiple_loggers.example");
+CREATE_VNE_LOGGER_CATEGORY("multiple_loggers.example")
+
+}  // namespace
 
 void setupLoggers() {
     // Create logs directory

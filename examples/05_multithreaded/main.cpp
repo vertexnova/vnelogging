@@ -20,9 +20,9 @@
 
 using namespace vne::log;
 
-CREATE_VNE_LOGGER_CATEGORY("multithreaded")
-
 namespace {
+
+CREATE_VNE_LOGGER_CATEGORY("multithreaded")
 
 constexpr int kNumThreads = 4;
 constexpr int kLogsPerThread = 100;
