@@ -15,19 +15,6 @@
 #include <cstdlib>
 #include <type_traits>
 
-#if !defined(VNE_PLATFORM_WEB) && !defined(VNE_PLATFORM_WIN)
-#include <unistd.h>  // For isatty
-#endif
-
-#ifdef VNE_PLATFORM_WIN
-#include <io.h>  // For _isatty
-#ifndef STDIN_FILENO
-#define STDIN_FILENO 0
-#define STDOUT_FILENO 1
-#define STDERR_FILENO 2
-#endif
-#endif
-
 namespace {
 
 /**
@@ -56,53 +43,25 @@ std::atomic<int> g_color_detected{-1};
 
 /**
  * @brief Detects if the terminal supports ANSI colors.
+ *
+ * Colors are enabled by default on most platforms. Disabled on:
+ * - Web (Emscripten): Browser console doesn't support ANSI codes
+ * - iOS: Xcode console doesn't support ANSI codes
+ *
+ * Note: Some terminals (like Xcode debugger on macOS) may show raw escape
+ * codes instead of colors. Use setColorEnabled(false) to disable colors
+ * programmatically, or set the NO_COLOR environment variable.
  */
 bool detectColorSupport() {
-    // Web platform: no ANSI support
-#ifdef VNE_PLATFORM_WEB
+#if defined(VNE_PLATFORM_WEB) || defined(VNE_PLATFORM_IOS)
     return false;
-#endif
-
-    // iOS: Xcode console doesn't support ANSI colors
-#ifdef VNE_PLATFORM_IOS
-    return false;
-#endif
-
-    // Check FORCE_COLOR environment variable (overrides all)
-    if (const char* force_color = std::getenv("FORCE_COLOR")) {
-        return force_color[0] != '0';
-    }
-
+#else
     // Check NO_COLOR environment variable (https://no-color.org/)
     if (std::getenv("NO_COLOR") != nullptr) {
         return false;
     }
-
-    // Check if running in Xcode debugger (macOS)
-    // Xcode sets __XCODE_BUILT_PRODUCTS_DIR_PATHS or XCODE_VERSION_ACTUAL
-    if (std::getenv("__XCODE_BUILT_PRODUCTS_DIR_PATHS") != nullptr || std::getenv("XCODE_VERSION_ACTUAL") != nullptr) {
-        return false;
-    }
-
-    // Check TERM environment variable
-    const char* term = std::getenv("TERM");
-    if (term == nullptr || std::string(term) == "dumb") {
-        return false;
-    }
-
-    // Check if stdout is a TTY
-#ifdef VNE_PLATFORM_WIN
-    if (_isatty(STDOUT_FILENO) == 0) {
-        return false;
-    }
-#elif !defined(VNE_PLATFORM_WEB)
-    if (isatty(STDOUT_FILENO) == 0) {
-        return false;
-    }
-#endif
-
-    // Assume color support for recognized terminals
     return true;
+#endif
 }
 
 }  // namespace

@@ -206,6 +206,12 @@ The library builds as a **static library** by default (`libvnelogging.a` / `vnel
 | Android | Supported | NDK r21+ |
 | Web | Supported | Emscripten |
 
+**Note on Console Colors:** ANSI color codes are enabled by default. Some terminals (like Xcode debugger) may display raw escape codes. To disable colors:
+```cpp
+vne::log::setColorEnabled(false);  // Programmatic
+```
+Or set the `NO_COLOR` environment variable.
+
 ## Requirements
 
 - C++17 or later (C++20 preferred)
