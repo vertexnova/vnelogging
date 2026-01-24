@@ -4,58 +4,58 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="2" value="Logger_I" style="swimlane;html=1;rounded=1;whiteSpace=wrap;container=1;fillColor=#e1f5fe;strokeColor=#0277bd;fontColor=#01579b;" parent="1" vertex="1">
+        <mxCell id="2" value="ILogger" style="swimlane;html=1;rounded=1;whiteSpace=wrap;container=1;fillColor=#e1f5fe;strokeColor=#0277bd;fontColor=#01579b;" parent="1" vertex="1">
           <mxGeometry x="380" y="580" width="180" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="3" value="AsyncLogger_C" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#fbc02d;fontColor=#f57c00;" parent="1" vertex="1">
+        <mxCell id="3" value="AsyncLogger" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#fbc02d;fontColor=#f57c00;" parent="1" vertex="1">
           <mxGeometry x="570" y="470" width="180" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="4" value="SyncLogger_C" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0b2;strokeColor=#e65100;fontColor=#bf360c;" parent="1" vertex="1">
+        <mxCell id="4" value="SyncLogger" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0b2;strokeColor=#e65100;fontColor=#bf360c;" parent="1" vertex="1">
           <mxGeometry x="630" y="620" width="180" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="5" value="LogSink_I" style="swimlane;html=1;rounded=1;whiteSpace=wrap;container=1;fillColor=#e1f5fe;strokeColor=#0277bd;fontColor=#01579b;" parent="1" vertex="1">
+        <mxCell id="5" value="ILogSink" style="swimlane;html=1;rounded=1;whiteSpace=wrap;container=1;fillColor=#e1f5fe;strokeColor=#0277bd;fontColor=#01579b;" parent="1" vertex="1">
           <mxGeometry x="1020" y="300" width="180" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="6" value="ConsoleLogSink_C" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c8e6c9;strokeColor=#388e3c;fontColor=#1b5e20;" parent="1" vertex="1">
+        <mxCell id="6" value="ConsoleLogSink" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c8e6c9;strokeColor=#388e3c;fontColor=#1b5e20;" parent="1" vertex="1">
           <mxGeometry x="1020" y="440" width="180" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="7" value="FileLogSink_C" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0b2;strokeColor=#e65100;fontColor=#bf360c;" parent="1" vertex="1">
+        <mxCell id="7" value="FileLogSink" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0b2;strokeColor=#e65100;fontColor=#bf360c;" parent="1" vertex="1">
           <mxGeometry x="1270" y="430" width="180" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="8" value="LogManager_C" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8bbd0;strokeColor=#ad1457;fontColor=#880e4f;" parent="1" vertex="1">
+        <mxCell id="8" value="LogManager" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8bbd0;strokeColor=#ad1457;fontColor=#880e4f;" parent="1" vertex="1">
           <mxGeometry x="140" y="595" width="180" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="9" value="LoggerController_C" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e5f5;strokeColor=#8e24aa;fontColor=#4a148c;" parent="1" vertex="1">
+        <mxCell id="9" value="LoggerController" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e5f5;strokeColor=#8e24aa;fontColor=#4a148c;" parent="1" vertex="1">
           <mxGeometry x="380" y="710" width="180" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="10" value="Logging_C" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b3e5fc;strokeColor=#0288d1;fontColor=#01579b;" parent="1" vertex="1">
+        <mxCell id="10" value="Logging" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b3e5fc;strokeColor=#0288d1;fontColor=#01579b;" parent="1" vertex="1">
           <mxGeometry x="140" y="680" width="180" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="11" value="LogQueue_C" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1c4e9;strokeColor=#512da8;fontColor=#311b92;" parent="1" vertex="1">
+        <mxCell id="11" value="LogQueue" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1c4e9;strokeColor=#512da8;fontColor=#311b92;" parent="1" vertex="1">
           <mxGeometry x="250" y="360" width="180" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="12" value="LogQueueWorker_C" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b2dfdb;strokeColor=#00695c;fontColor=#004d40;" parent="1" vertex="1">
+        <mxCell id="12" value="LogQueueWorker" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b2dfdb;strokeColor=#00695c;fontColor=#004d40;" parent="1" vertex="1">
           <mxGeometry x="360" y="280" width="180" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="13" value="LogDispatcher_C" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8e1;strokeColor=#ffb300;fontColor=#e65100;" parent="1" vertex="1">
+        <mxCell id="13" value="LogDispatcher" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8e1;strokeColor=#ffb300;fontColor=#e65100;" parent="1" vertex="1">
           <mxGeometry x="620" y="280" width="180" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="14" value="LogFormatter_C" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f7fa;strokeColor=#00838f;fontColor=#006064;" parent="1" vertex="1">
+        <mxCell id="14" value="LogFormatter" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f7fa;strokeColor=#00838f;fontColor=#006064;" parent="1" vertex="1">
           <mxGeometry x="880" y="700" width="180" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="15" value="LogStream_C" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce4ec;strokeColor=#d81b60;fontColor=#880e4f;" parent="1" vertex="1">
+        <mxCell id="15" value="LogStream" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce4ec;strokeColor=#d81b60;fontColor=#880e4f;" parent="1" vertex="1">
           <mxGeometry x="880" y="800" width="180" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="16" value="TimeProvider_I" style="swimlane;html=1;rounded=1;whiteSpace=wrap;container=1;fillColor=#e1f5fe;strokeColor=#0277bd;fontColor=#01579b;" parent="1" vertex="1">
+        <mxCell id="16" value="TimeStamp" style="swimlane;html=1;rounded=1;whiteSpace=wrap;container=1;fillColor=#e1f5fe;strokeColor=#0277bd;fontColor=#01579b;" parent="1" vertex="1">
           <mxGeometry x="1180" y="700" width="180" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="17" value="TextColor_C" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#ff6f00;fontColor=#e65100;" parent="1" vertex="1">
+        <mxCell id="17" value="TextColor" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#ff6f00;fontColor=#e65100;" parent="1" vertex="1">
           <mxGeometry x="1020" y="550" width="180" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="18" value="LogLevel_TP" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0e0e0;strokeColor=#616161;fontColor=#212121;" parent="1" vertex="1">
+        <mxCell id="18" value="LogLevel" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0e0e0;strokeColor=#616161;fontColor=#212121;" parent="1" vertex="1">
           <mxGeometry x="1190" y="820" width="180" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="19" value="TimeStampType_TP" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0e0e0;strokeColor=#616161;fontColor=#212121;" parent="1" vertex="1">
+        <mxCell id="19" value="TimeStampType" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0e0e0;strokeColor=#616161;fontColor=#212121;" parent="1" vertex="1">
           <mxGeometry x="600" y="820" width="180" height="40" as="geometry" />
         </mxCell>
         <mxCell id="20" style="endArrow=blockThin;endFill=0;html=1;strokeColor=#0277bd;" parent="1" source="3" target="2" edge="1">
