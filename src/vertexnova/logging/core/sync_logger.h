@@ -32,7 +32,7 @@ class SyncLogger : public ILogger {
      * Initializes the synchronous logger with default settings.
      * @param logger_name The name of the logger.
      */
-    SyncLogger(const std::string& logger_name);
+    explicit SyncLogger(std::string logger_name);
 
     /**
      * @brief Destructor for SyncLogger.
@@ -51,7 +51,7 @@ class SyncLogger : public ILogger {
      *
      * @return A reference to the vector of unique pointers to log sinks.
      */
-    const std::vector<std::unique_ptr<ILogSink>>& getLogSinks() const override;
+    [[nodiscard]] const std::vector<std::unique_ptr<ILogSink>>& getLogSinks() const override;
 
     /**
      * @brief Sets the current log level.
@@ -65,7 +65,7 @@ class SyncLogger : public ILogger {
      *
      * @return The current log level.
      */
-    LogLevel getCurrentLogLevel() const override;
+    [[nodiscard]] LogLevel getCurrentLogLevel() const override;
 
     /**
      * @brief Logs a message.
@@ -97,7 +97,7 @@ class SyncLogger : public ILogger {
      *
      * @return The name of the logger.
      */
-    std::string getName() const override;
+    [[nodiscard]] std::string getName() const override;
 
     /**
      * @brief Creates a new instance of the synchronous logger with a specified name.
@@ -108,7 +108,7 @@ class SyncLogger : public ILogger {
      * @param logger_name The name for the new synchronous logger instance.
      * @return A unique pointer to the cloned synchronous logger instance.
      */
-    std::unique_ptr<ILogger> clone(const std::string& logger_name) const override;
+    [[nodiscard]] std::unique_ptr<ILogger> clone(const std::string& logger_name) const override;
 
     /**
      * @brief Sets the flush level.
@@ -122,7 +122,7 @@ class SyncLogger : public ILogger {
      *
      * @return The flush level.
      */
-    LogLevel getFlushLevel() const override;
+    [[nodiscard]] LogLevel getFlushLevel() const override;
 
    private:
     std::string logger_name_;                           //!< Name of the logger.

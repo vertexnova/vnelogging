@@ -14,8 +14,8 @@
 namespace vne {  // Outer namespace
 namespace log {  // Inner namespace
 
-AsyncLogger::AsyncLogger(const std::string& logger_name)
-    : logger_name_(logger_name)
+AsyncLogger::AsyncLogger(std::string logger_name)
+    : logger_name_(std::move(logger_name))
     , current_log_level_(LogLevel::eInfo)
     , flush_level_(LogLevel::eError)
     , dispatcher_(std::make_unique<LogDispatcher>()) {}

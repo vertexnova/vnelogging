@@ -14,8 +14,8 @@
 namespace vne {  // Outer namespace
 namespace log {  // Inner namespace
 
-SyncLogger::SyncLogger(const std::string& logger_name)
-    : logger_name_(logger_name)
+SyncLogger::SyncLogger(std::string logger_name)
+    : logger_name_(std::move(logger_name))
     , current_log_level_(LogLevel::eInfo)
     , flush_level_(LogLevel::eError) {}
 
@@ -77,7 +77,7 @@ std::string SyncLogger::getName() const {
 }
 
 std::unique_ptr<ILogger> SyncLogger::clone(const std::string& logger_name) const {
-    return std::unique_ptr<SyncLogger>(new SyncLogger(logger_name));
+    return std::make_unique<SyncLogger>(logger_name);
 }
 
 }  // namespace log

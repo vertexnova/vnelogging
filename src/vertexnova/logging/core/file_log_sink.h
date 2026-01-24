@@ -42,7 +42,7 @@ class FileLogSink : public ILogSink {
      *
      * Cleans up resources used by the file sink.
      */
-    ~FileLogSink();
+    ~FileLogSink() override;
 
     /**
      * @brief Logs a message to the file.
@@ -79,7 +79,7 @@ class FileLogSink : public ILogSink {
      *
      * @return The current log pattern.
      */
-    std::string getPattern() const override;
+    [[nodiscard]] std::string getPattern() const override;
 
     /**
      * @brief Sets a new log pattern.
@@ -95,7 +95,7 @@ class FileLogSink : public ILogSink {
      *
      * @return The name of the log file.
      */
-    std::string getFileName() const;
+    [[nodiscard]] std::string getFileName() const;
 
     /**
      * @brief Checks the status of the file opening mode.
@@ -105,7 +105,7 @@ class FileLogSink : public ILogSink {
      *
      * @return true if the file is opened in append mode, false if it's in overwrite mode.
      */
-    bool isAppend() const;
+    [[nodiscard]] bool isAppend() const;
 
     /**
      * @brief Creates a new instance of the file log sink.
@@ -114,7 +114,7 @@ class FileLogSink : public ILogSink {
      *
      * @return A unique pointer to the cloned file log sink instance.
      */
-    std::unique_ptr<ILogSink> clone() const override;
+    [[nodiscard]] std::unique_ptr<ILogSink> clone() const override;
 
    private:
     // Deleted copy constructor and assignment operator

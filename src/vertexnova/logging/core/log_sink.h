@@ -74,7 +74,7 @@ class ILogSink {
      *
      * @return The current log pattern.
      */
-    virtual std::string getPattern() const = 0;
+    [[nodiscard]] virtual std::string getPattern() const = 0;
 
     /**
      * @brief Sets the log pattern.
@@ -91,7 +91,7 @@ class ILogSink {
      *
      * @return A unique pointer to the cloned log sink instance.
      */
-    virtual std::unique_ptr<ILogSink> clone() const = 0;
+    [[nodiscard]] virtual std::unique_ptr<ILogSink> clone() const = 0;
 
    protected:
     /**

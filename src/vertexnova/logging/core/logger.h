@@ -42,7 +42,7 @@ class ILogger {
      *
      * @return A reference to the vector of unique pointers to log sinks.
      */
-    virtual const std::vector<std::unique_ptr<ILogSink>>& getLogSinks() const = 0;
+    [[nodiscard]] virtual const std::vector<std::unique_ptr<ILogSink>>& getLogSinks() const = 0;
 
     /**
      * @brief Sets the current log level.
@@ -56,7 +56,7 @@ class ILogger {
      *
      * @return The current log level.
      */
-    virtual LogLevel getCurrentLogLevel() const = 0;
+    [[nodiscard]] virtual LogLevel getCurrentLogLevel() const = 0;
 
     /**
      * @brief Logs a message.
@@ -88,7 +88,7 @@ class ILogger {
      *
      * @return The name of the logger.
      */
-    virtual std::string getName() const = 0;
+    [[nodiscard]] virtual std::string getName() const = 0;
 
     /**
      * @brief Factory method to create a new instance of the logger with a logger name.
@@ -96,7 +96,7 @@ class ILogger {
      * @param logger_name The name for the new logger instance.
      * @return A unique pointer to the cloned logger instance.
      */
-    virtual std::unique_ptr<ILogger> clone(const std::string& logger_name) const = 0;
+    [[nodiscard]] virtual std::unique_ptr<ILogger> clone(const std::string& logger_name) const = 0;
 
     /**
      * @brief Sets the flush level.
@@ -110,7 +110,7 @@ class ILogger {
      *
      * @return The flush level.
      */
-    virtual LogLevel getFlushLevel() const = 0;
+    [[nodiscard]] virtual LogLevel getFlushLevel() const = 0;
 
    protected:
     ILogger() = default;

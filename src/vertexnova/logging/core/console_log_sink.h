@@ -38,7 +38,7 @@ class ConsoleLogSink : public ILogSink {
      *
      * Cleans up resources used by the console logger.
      */
-    ~ConsoleLogSink();
+    ~ConsoleLogSink() override;
 
     // Deleted copy constructor and assignment operator
     ConsoleLogSink(const ConsoleLogSink&) = delete;
@@ -80,7 +80,7 @@ class ConsoleLogSink : public ILogSink {
      *
      * @return The current log pattern.
      */
-    std::string getPattern() const override;
+    [[nodiscard]] std::string getPattern() const override;
 
     /**
      * @brief Sets a new log pattern.
@@ -96,7 +96,7 @@ class ConsoleLogSink : public ILogSink {
      *
      * @return A unique pointer to the cloned console log sink instance.
      */
-    std::unique_ptr<ILogSink> clone() const override;
+    [[nodiscard]] std::unique_ptr<ILogSink> clone() const override;
 
    private:
     std::string pattern_;  //!< The log pattern used by the console logger.

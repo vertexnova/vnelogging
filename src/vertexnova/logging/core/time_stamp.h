@@ -38,7 +38,7 @@ class ITimeProvider {
      * @brief Get the current time as a time_t object.
      * @return The current time.
      */
-    virtual std::time_t now() const = 0;
+    [[nodiscard]] virtual std::time_t now() const = 0;
 
     /**
      * @brief Get the local time from a time_t object.
@@ -61,26 +61,28 @@ class ITimeProvider {
  */
 class TimeProvider : public ITimeProvider {
    public:
-    std::time_t now() const override { return std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()); }
+    [[nodiscard]] std::time_t now() const override {
+        return std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    }
 
     std::tm* localTime(const std::time_t* time) const override {
-        thread_local std::tm result;
+        thread_local std::tm s_result;
 #ifdef _WIN32
-        localtime_s(&result, time);
+        localtime_s(&s_result, time);
 #else
-        localtime_r(time, &result);
+        localtime_r(time, &s_result);
 #endif
-        return &result;
+        return &s_result;
     }
 
     std::tm* gmTime(const std::time_t* time) const override {
-        thread_local std::tm result;
+        thread_local std::tm s_result;
 #ifdef _WIN32
-        gmtime_s(&result, time);
+        gmtime_s(&s_result, time);
 #else
-        gmtime_r(time, &result);
+        gmtime_r(time, &s_result);
 #endif
-        return &result;
+        return &s_result;
     }
 };
 
@@ -104,7 +106,7 @@ class TimeStamp {
      * @brief Get the formatted timestamp as a string.
      * @return The formatted timestamp string.
      */
-    std::string getTimeStamp() const {
+    [[nodiscard]] std::string getTimeStamp() const {
         auto now_c = provider_->now();
         std::tm* ptm = (type_ == TimeStampType::eLocal) ? provider_->localTime(&now_c) : provider_->gmTime(&now_c);
 

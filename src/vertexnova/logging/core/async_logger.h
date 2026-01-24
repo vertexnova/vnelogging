@@ -33,7 +33,7 @@ class AsyncLogger : public ILogger {
      *
      * @param logger_name The name of the logger.
      */
-    explicit AsyncLogger(const std::string& logger_name);
+    explicit AsyncLogger(std::string logger_name);
 
     /**
      * @brief Destructor.
@@ -54,7 +54,7 @@ class AsyncLogger : public ILogger {
      *
      * @return A reference to the vector of unique pointers to log sinks.
      */
-    const std::vector<std::unique_ptr<ILogSink>>& getLogSinks() const override;
+    [[nodiscard]] const std::vector<std::unique_ptr<ILogSink>>& getLogSinks() const override;
 
     /**
      * @brief Sets the current log level.
@@ -68,7 +68,7 @@ class AsyncLogger : public ILogger {
      *
      * @return The current log level.
      */
-    LogLevel getCurrentLogLevel() const override;
+    [[nodiscard]] LogLevel getCurrentLogLevel() const override;
 
     /**
      * @brief Logs a message.
@@ -100,7 +100,7 @@ class AsyncLogger : public ILogger {
      *
      * @return The name of the logger.
      */
-    std::string getName() const override;
+    [[nodiscard]] std::string getName() const override;
 
     /**
      * @brief Factory method to create a new instance of the logger with a logger name.
@@ -108,7 +108,7 @@ class AsyncLogger : public ILogger {
      * @param logger_name The name for the new logger instance.
      * @return A unique pointer to the cloned logger instance.
      */
-    std::unique_ptr<ILogger> clone(const std::string& logger_name) const override;
+    [[nodiscard]] std::unique_ptr<ILogger> clone(const std::string& logger_name) const override;
 
     /**
      * @brief Sets the flush level.
@@ -122,7 +122,7 @@ class AsyncLogger : public ILogger {
      *
      * @return The flush level.
      */
-    LogLevel getFlushLevel() const override;
+    [[nodiscard]] LogLevel getFlushLevel() const override;
 
    private:
     std::string logger_name_;                           //!< Name of the logger.

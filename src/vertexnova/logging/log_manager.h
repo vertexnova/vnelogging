@@ -63,7 +63,7 @@ class LogManager final {
      * @param logger_name The name of the logger to retrieve.
      * @return A shared pointer to the retrieved logger, or nullptr if not found.
      */
-    std::shared_ptr<ILogger> getLogger(const std::string& logger_name) const;
+    [[nodiscard]] std::shared_ptr<ILogger> getLogger(const std::string& logger_name) const;
 
     /**
      * @brief Adds a console sink to a logger.
@@ -119,7 +119,7 @@ class LogManager final {
      * @param logger_name The name of the logger to check.
      * @return true if the logger is async, false if it's sync or doesn't exist.
      */
-    bool isLoggerAsync(const std::string& logger_name) const;
+    [[nodiscard]] bool isLoggerAsync(const std::string& logger_name) const;
 
     /**
      * @brief Flushes the logs and unregisters all loggers.
