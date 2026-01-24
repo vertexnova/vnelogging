@@ -31,7 +31,8 @@ if(NOT GTest_FOUND)
         message(STATUS "Using Google Test from external directory")
         add_subdirectory(${CMAKE_SOURCE_DIR}/external/googletest ${CMAKE_BINARY_DIR}/external/googletest)
         include(GoogleTest)
-        set(GTEST_LIBRARIES gtest gtest_main gmock)
+        # Note: gtest_main already links gtest, so we only need gtest_main and gmock
+        set(GTEST_LIBRARIES gtest_main gmock)
         set(GTEST_INCLUDE_DIRS 
             ${CMAKE_SOURCE_DIR}/external/googletest/googletest/include 
             ${CMAKE_SOURCE_DIR}/external/googletest/googlemock/include
@@ -46,12 +47,13 @@ if(NOT GTest_FOUND)
             GIT_TAG        v1.14.0
         )
         FetchContent_MakeAvailable(googletest)
-        set(GTEST_LIBRARIES gtest gtest_main gmock)
+        # Note: gtest_main already links gtest, so we only need gtest_main and gmock
+        set(GTEST_LIBRARIES gtest_main gmock)
         set(GTEST_INCLUDE_DIRS ${googletest_SOURCE_DIR}/googletest/include ${googletest_SOURCE_DIR}/googlemock/include)
     endif()
 else()
     message(STATUS "Using system Google Test")
-    set(GTEST_LIBRARIES GTest::gtest GTest::gtest_main GTest::gmock)
+    set(GTEST_LIBRARIES GTest::gtest_main GTest::gmock)
     set(GTEST_INCLUDE_DIRS ${GTEST_INCLUDE_DIRS})
 endif()
 
@@ -100,8 +102,6 @@ target_include_directories(TestVneLogging
     PUBLIC
         $<BUILD_INTERFACE:${VNE_INCLUDE_DIR}>
         $<BUILD_INTERFACE:${VNE_SRC_DIR}>
-        $<BUILD_INTERFACE:${VNE_THIRD_PARTY_DIR}/googletest/googletest/include>
-        $<BUILD_INTERFACE:${VNE_THIRD_PARTY_DIR}/googletest/googlemock/include>
 )
 
 # Link libraries

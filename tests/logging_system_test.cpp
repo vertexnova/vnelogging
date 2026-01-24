@@ -190,14 +190,14 @@ TEST_F(LoggingSystemTest, LoggerSpecificMacros) {
     CREATE_VNE_LOGGER_CATEGORY("test_category");
 
     // Log to logger 1
-    _VNE_LOG_INFO_L(logger1_name.c_str()) << "Message to logger 1";
+    VNE_LOG_INFO_L(logger1_name.c_str()) << "Message to logger 1";
 
     // Log to logger 2
-    _VNE_LOG_INFO_L(logger2_name.c_str()) << "Message to logger 2";
+    VNE_LOG_INFO_L(logger2_name.c_str()) << "Message to logger 2";
 
     // Log with explicit category
-    _VNE_LOG_INFO_LC(logger1_name.c_str(), cat1) << "Message to logger 1 with category 1";
-    _VNE_LOG_INFO_LC(logger2_name.c_str(), cat2) << "Message to logger 2 with category 2";
+    VNE_LOG_INFO_LC(logger1_name.c_str(), cat1) << "Message to logger 1 with category 1";
+    VNE_LOG_INFO_LC(logger2_name.c_str(), cat2) << "Message to logger 2 with category 2";
 
     log::Logging::shutdown();  // Ensure all loggers are properly shutdown
 
@@ -247,12 +247,12 @@ TEST_F(LoggingSystemTest, DefaultAndClientLoggers) {
     cout_buffer_.str("");
 
 // Define custom macros for client logger
-#define CLIENT_LOG_TRACE _VNE_LOG_TRACE_L(kClientLoggerName)
-#define CLIENT_LOG_DEBUG _VNE_LOG_DEBUG_L(kClientLoggerName)
-#define CLIENT_LOG_INFO _VNE_LOG_INFO_L(kClientLoggerName)
-#define CLIENT_LOG_WARN _VNE_LOG_WARN_L(kClientLoggerName)
-#define CLIENT_LOG_ERROR _VNE_LOG_ERROR_L(kClientLoggerName)
-#define CLIENT_LOG_FATAL _VNE_LOG_FATAL_L(kClientLoggerName)
+#define CLIENT_LOG_TRACE VNE_LOG_TRACE_L(kClientLoggerName)
+#define CLIENT_LOG_DEBUG VNE_LOG_DEBUG_L(kClientLoggerName)
+#define CLIENT_LOG_INFO VNE_LOG_INFO_L(kClientLoggerName)
+#define CLIENT_LOG_WARN VNE_LOG_WARN_L(kClientLoggerName)
+#define CLIENT_LOG_ERROR VNE_LOG_ERROR_L(kClientLoggerName)
+#define CLIENT_LOG_FATAL VNE_LOG_FATAL_L(kClientLoggerName)
 
     // Use default logger macros
     VNE_LOG_INFO << "Message using default logger";
@@ -300,7 +300,7 @@ TEST_F(LoggingSystemTest, WebPlatformConsoleOnlyLogging) {
     log::Logging::configureLogger(cfg);
 
     // Log a message
-    _VNE_LOG_INFO_L("web_test_logger") << msg;
+    VNE_LOG_INFO_L("web_test_logger") << msg;
 
     // Verify console output (should work even though we tried to use file sink)
     std::string output = cout_buffer_.str();

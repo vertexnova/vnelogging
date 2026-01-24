@@ -56,7 +56,7 @@ struct LoggerConfig {
     bool async = false;                        //!< Flag indicating whether the logger operates asynchronously.
 };
 
-extern const char* kDefaultLoggerName;  //!< Default logger name used in macros and log streams.
+inline constexpr const char* kDefaultLoggerName = "vertexnova";  //!< Default logger name.
 
 /**
  * @class Logging
@@ -95,7 +95,7 @@ class Logging {
      *
      * @return A reference to the shared pointer holding the LogManager instance.
      */
-    static std::shared_ptr<LogManager>& getLogManager() { return log_manager_; }
+    static std::shared_ptr<LogManager>& getLogManager() { return s_log_manager; }
 
     /**
      * @brief Retrieves a logger by name.
@@ -107,7 +107,7 @@ class Logging {
      * @param name The name of the logger to retrieve.
      * @return A shared pointer to the logger instance, or null if not found.
      */
-    static std::shared_ptr<ILogger> getLogger(const std::string& name) { return log_manager_->getLogger(name); }
+    static std::shared_ptr<ILogger> getLogger(const std::string& name) { return s_log_manager->getLogger(name); }
 
     /**
      * @brief Checks if a specific logger is configured for asynchronous operation.
@@ -253,7 +253,7 @@ class Logging {
     static void configureLogger(const LoggerConfig& cfg);
 
    private:
-    static std::shared_ptr<LogManager> log_manager_;  //!< The LogManager instance for managing logging operations.
+    static std::shared_ptr<LogManager> s_log_manager;  //!< The LogManager instance for managing logging operations.
 };
 
 }  // namespace vne::log
@@ -264,33 +264,33 @@ class Logging {
  * @def CREATE_VNE_LOGGER_CATEGORY(name)
  * @brief Macro to create a constant logger category.
  *
- * This macro creates a constant `_logger_category` based on the provided `name`.
+ * This macro creates a constant `VNE_LOGGER_CATEGORY` based on the provided `name`.
  * The category is used as metadata for log messages and helps to organize and filter logs.
  * It is completely separate from the logger name, which determines which configured
  * logger (with its settings) will handle the message.
  *
  * @param name The name of the logger category.
  */
-#define CREATE_VNE_LOGGER_CATEGORY(name) constexpr const char* _logger_category = name;
+#define CREATE_VNE_LOGGER_CATEGORY(name) constexpr const char* VNE_LOGGER_CATEGORY = name;
 
 /**
- * @def __FUNCTION_NAME__
+ * @def VNE_FUNCTION_NAME
  * @brief Macro to get the current function name.
  *
  * This macro provides a standard way to retrieve the name of the current
  * function. It uses different compiler-specific macros depending on the
  * platform.
  */
-#ifndef __FUNCTION_NAME__
+#ifndef VNE_FUNCTION_NAME
 #ifdef WIN32  // WINDOWS
-#define __FUNCTION_NAME__ __FUNCTION__
+#define VNE_FUNCTION_NAME __FUNCTION__
 #else  //*NIX
-#define __FUNCTION_NAME__ __func__
+#define VNE_FUNCTION_NAME __func__
 #endif
 #endif
 
 /**
- * @def _VNE_LOG_WITH_LOGGER(LOGGER, CATEGORY, LEVEL)
+ * @def VNE_LOG_IMPL(LOGGER, CATEGORY, LEVEL)
  * @brief General logging preprocessor macro with explicit logger.
  *
  * This macro provides a convenient way to log messages at different severity
@@ -301,32 +301,35 @@ class Logging {
  * @param CATEGORY The category for the log message.
  * @param LEVEL The severity level to log at.
  */
-#define _VNE_LOG_WITH_LOGGER(LOGGER, CATEGORY, LEVEL)        \
+#define VNE_LOG_IMPL(LOGGER, CATEGORY, LEVEL)                \
     ::vne::log::LogStream(LOGGER,                            \
                           CATEGORY,                          \
                           LEVEL,                             \
                           ::vne::log::TimeStampType::eLocal, \
                           __FILE__,                          \
-                          __FUNCTION_NAME__,                 \
+                          VNE_FUNCTION_NAME,                 \
                           __LINE__)
 
-#define _VNE_LOG_TRACE_LC(LOGGER, CATEGORY) _VNE_LOG_WITH_LOGGER(LOGGER, CATEGORY, ::vne::log::LogLevel::eTrace)
-#define _VNE_LOG_DEBUG_LC(LOGGER, CATEGORY) _VNE_LOG_WITH_LOGGER(LOGGER, CATEGORY, ::vne::log::LogLevel::eDebug)
-#define _VNE_LOG_INFO_LC(LOGGER, CATEGORY) _VNE_LOG_WITH_LOGGER(LOGGER, CATEGORY, ::vne::log::LogLevel::eInfo)
-#define _VNE_LOG_WARN_LC(LOGGER, CATEGORY) _VNE_LOG_WITH_LOGGER(LOGGER, CATEGORY, ::vne::log::LogLevel::eWarn)
-#define _VNE_LOG_ERROR_LC(LOGGER, CATEGORY) _VNE_LOG_WITH_LOGGER(LOGGER, CATEGORY, ::vne::log::LogLevel::eError)
-#define _VNE_LOG_FATAL_LC(LOGGER, CATEGORY) _VNE_LOG_WITH_LOGGER(LOGGER, CATEGORY, ::vne::log::LogLevel::eFatal)
+// Logger + Category macros (LC = Logger + Category)
+#define VNE_LOG_TRACE_LC(LOGGER, CATEGORY) VNE_LOG_IMPL(LOGGER, CATEGORY, ::vne::log::LogLevel::eTrace)
+#define VNE_LOG_DEBUG_LC(LOGGER, CATEGORY) VNE_LOG_IMPL(LOGGER, CATEGORY, ::vne::log::LogLevel::eDebug)
+#define VNE_LOG_INFO_LC(LOGGER, CATEGORY) VNE_LOG_IMPL(LOGGER, CATEGORY, ::vne::log::LogLevel::eInfo)
+#define VNE_LOG_WARN_LC(LOGGER, CATEGORY) VNE_LOG_IMPL(LOGGER, CATEGORY, ::vne::log::LogLevel::eWarn)
+#define VNE_LOG_ERROR_LC(LOGGER, CATEGORY) VNE_LOG_IMPL(LOGGER, CATEGORY, ::vne::log::LogLevel::eError)
+#define VNE_LOG_FATAL_LC(LOGGER, CATEGORY) VNE_LOG_IMPL(LOGGER, CATEGORY, ::vne::log::LogLevel::eFatal)
 
-#define _VNE_LOG_TRACE_L(LOGGER) _VNE_LOG_TRACE_LC(LOGGER, _logger_category)
-#define _VNE_LOG_DEBUG_L(LOGGER) _VNE_LOG_DEBUG_LC(LOGGER, _logger_category)
-#define _VNE_LOG_INFO_L(LOGGER) _VNE_LOG_INFO_LC(LOGGER, _logger_category)
-#define _VNE_LOG_WARN_L(LOGGER) _VNE_LOG_WARN_LC(LOGGER, _logger_category)
-#define _VNE_LOG_ERROR_L(LOGGER) _VNE_LOG_ERROR_LC(LOGGER, _logger_category)
-#define _VNE_LOG_FATAL_L(LOGGER) _VNE_LOG_FATAL_LC(LOGGER, _logger_category)
+// Logger-only macros (L = Logger, uses VNE_LOGGER_CATEGORY from CREATE_VNE_LOGGER_CATEGORY)
+#define VNE_LOG_TRACE_L(LOGGER) VNE_LOG_TRACE_LC(LOGGER, VNE_LOGGER_CATEGORY)
+#define VNE_LOG_DEBUG_L(LOGGER) VNE_LOG_DEBUG_LC(LOGGER, VNE_LOGGER_CATEGORY)
+#define VNE_LOG_INFO_L(LOGGER) VNE_LOG_INFO_LC(LOGGER, VNE_LOGGER_CATEGORY)
+#define VNE_LOG_WARN_L(LOGGER) VNE_LOG_WARN_LC(LOGGER, VNE_LOGGER_CATEGORY)
+#define VNE_LOG_ERROR_L(LOGGER) VNE_LOG_ERROR_LC(LOGGER, VNE_LOGGER_CATEGORY)
+#define VNE_LOG_FATAL_L(LOGGER) VNE_LOG_FATAL_LC(LOGGER, VNE_LOGGER_CATEGORY)
 
-#define VNE_LOG_TRACE _VNE_LOG_TRACE_L(::vne::log::kDefaultLoggerName)
-#define VNE_LOG_DEBUG _VNE_LOG_DEBUG_L(::vne::log::kDefaultLoggerName)
-#define VNE_LOG_INFO _VNE_LOG_INFO_L(::vne::log::kDefaultLoggerName)
-#define VNE_LOG_WARN _VNE_LOG_WARN_L(::vne::log::kDefaultLoggerName)
-#define VNE_LOG_ERROR _VNE_LOG_ERROR_L(::vne::log::kDefaultLoggerName)
-#define VNE_LOG_FATAL _VNE_LOG_FATAL_L(::vne::log::kDefaultLoggerName)
+// Default logger macros (uses kDefaultLoggerName)
+#define VNE_LOG_TRACE VNE_LOG_TRACE_L(::vne::log::kDefaultLoggerName)
+#define VNE_LOG_DEBUG VNE_LOG_DEBUG_L(::vne::log::kDefaultLoggerName)
+#define VNE_LOG_INFO VNE_LOG_INFO_L(::vne::log::kDefaultLoggerName)
+#define VNE_LOG_WARN VNE_LOG_WARN_L(::vne::log::kDefaultLoggerName)
+#define VNE_LOG_ERROR VNE_LOG_ERROR_L(::vne::log::kDefaultLoggerName)
+#define VNE_LOG_FATAL VNE_LOG_FATAL_L(::vne::log::kDefaultLoggerName)

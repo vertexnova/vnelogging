@@ -31,70 +31,70 @@
 namespace vne {
 namespace log {
 
-const char* kDefaultLoggerName = "vertexnova";  // Definition of the default logger name
-std::shared_ptr<LogManager> Logging::log_manager_ = nullptr;
+// kDefaultLoggerName is now defined inline constexpr in logging.h
+std::shared_ptr<LogManager> Logging::s_log_manager = nullptr;
 
 void Logging::initialize(const std::string& name, bool async) {
-    if (!log_manager_) {
-        log_manager_ = std::make_shared<LogManager>();
+    if (!s_log_manager) {
+        s_log_manager = std::make_shared<LogManager>();
     }
-    log_manager_->createLogger(name, async);
+    s_log_manager->createLogger(name, async);
 }
 
 void Logging::shutdown() {
-    if (log_manager_) {
-        log_manager_->finalize();
-        log_manager_.reset();
+    if (s_log_manager) {
+        s_log_manager->finalize();
+        s_log_manager.reset();
     }
 }
 
 bool Logging::isLoggerAsync(const std::string& logger_name) {
-    if (!log_manager_) {
+    if (!s_log_manager) {
         return false;  // If log manager is not initialized, assume sync
     }
-    return log_manager_->isLoggerAsync(logger_name);
+    return s_log_manager->isLoggerAsync(logger_name);
 }
 
 void Logging::addConsoleSink(const std::string& logger_name) {
-    if (!log_manager_) {
-        log_manager_ = std::make_shared<LogManager>();
+    if (!s_log_manager) {
+        s_log_manager = std::make_shared<LogManager>();
     }
-    log_manager_->addConsoleSink(logger_name);
+    s_log_manager->addConsoleSink(logger_name);
 }
 
 void Logging::addFileSink(const std::string& logger_name, const std::string& file) {
-    if (!log_manager_) {
-        log_manager_ = std::make_shared<LogManager>();
+    if (!s_log_manager) {
+        s_log_manager = std::make_shared<LogManager>();
     }
-    log_manager_->addFileSink(logger_name, file);
+    s_log_manager->addFileSink(logger_name, file);
 }
 
 void Logging::setConsolePattern(const std::string& logger_name, const std::string& pattern) {
-    if (!log_manager_) {
-        log_manager_ = std::make_shared<LogManager>();
+    if (!s_log_manager) {
+        s_log_manager = std::make_shared<LogManager>();
     }
-    log_manager_->setConsolePattern(logger_name, pattern);
+    s_log_manager->setConsolePattern(logger_name, pattern);
 }
 
 void Logging::setFilePattern(const std::string& logger_name, const std::string& pattern) {
-    if (!log_manager_) {
-        log_manager_ = std::make_shared<LogManager>();
+    if (!s_log_manager) {
+        s_log_manager = std::make_shared<LogManager>();
     }
-    log_manager_->setFilePattern(logger_name, pattern);
+    s_log_manager->setFilePattern(logger_name, pattern);
 }
 
 void Logging::setLogLevel(const std::string& logger_name, LogLevel level) {
-    if (!log_manager_) {
-        log_manager_ = std::make_shared<LogManager>();
+    if (!s_log_manager) {
+        s_log_manager = std::make_shared<LogManager>();
     }
-    log_manager_->setLogLevel(logger_name, level);
+    s_log_manager->setLogLevel(logger_name, level);
 }
 
 void Logging::setFlushLevel(const std::string& logger_name, LogLevel level) {
-    if (!log_manager_) {
-        log_manager_ = std::make_shared<LogManager>();
+    if (!s_log_manager) {
+        s_log_manager = std::make_shared<LogManager>();
     }
-    log_manager_->setFlushLevel(logger_name, level);
+    s_log_manager->setFlushLevel(logger_name, level);
 }
 
 LoggerConfig Logging::defaultLoggerConfig() {
@@ -366,8 +366,8 @@ bool Logging::ensureLogDirectoryExists(const std::string& log_dir) {
             bool created = std::filesystem::create_directories(log_dir, ec);
             if (!created && ec) {
                 // Use logging system instead of std::cout
-                if (log_manager_) {
-                    auto logger = log_manager_->getLogger(kDefaultLoggerName);
+                if (s_log_manager) {
+                    auto logger = s_log_manager->getLogger(kDefaultLoggerName);
                     if (logger) {
                         logger->log(kDefaultLoggerName,
                                     LogLevel::eWarn,
@@ -385,8 +385,8 @@ bool Logging::ensureLogDirectoryExists(const std::string& log_dir) {
 #endif
     } catch (const std::exception& e) {
         // Use logging system instead of std::cout
-        if (log_manager_) {
-            auto logger = log_manager_->getLogger(kDefaultLoggerName);
+        if (s_log_manager) {
+            auto logger = s_log_manager->getLogger(kDefaultLoggerName);
             if (logger) {
                 logger->log(kDefaultLoggerName,
                             LogLevel::eError,
@@ -432,8 +432,8 @@ std::string Logging::createLoggingFolder(const std::string& base_dir, const std:
             if (!created && ec) {
                 // If timestamped directory creation fails, fall back to base directory
                 // Use logging system instead of std::cout
-                if (log_manager_) {
-                    auto logger = log_manager_->getLogger(kDefaultLoggerName);
+                if (s_log_manager) {
+                    auto logger = s_log_manager->getLogger(kDefaultLoggerName);
                     if (logger) {
                         logger->log(
                             kDefaultLoggerName,
@@ -455,8 +455,8 @@ std::string Logging::createLoggingFolder(const std::string& base_dir, const std:
     } catch (const std::exception& e) {
         // If anything fails, return a simple fallback path
         // Use logging system instead of std::cout
-        if (log_manager_) {
-            auto logger = log_manager_->getLogger(kDefaultLoggerName);
+        if (s_log_manager) {
+            auto logger = s_log_manager->getLogger(kDefaultLoggerName);
             if (logger) {
                 logger->log(kDefaultLoggerName,
                             LogLevel::eError,
