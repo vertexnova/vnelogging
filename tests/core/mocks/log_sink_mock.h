@@ -1,6 +1,4 @@
-#ifndef LOG_SINK_MOCK_H
-#define LOG_SINK_MOCK_H
-
+#pragma once
 /* ---------------------------------------------------------------------
  * Copyright (c) 2024 Ajeet Singh Yadav. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License")
@@ -70,7 +68,7 @@ class LogSinkMock : public ILogSink {
      *
      * @param pattern The new log pattern (not used in mock).
      */
-    void setPattern(const std::string& pattern) override {}
+    void setPattern(const std::string& /*pattern*/) override {}
 
     /**
      * @brief Clones the log sink (mock implementation).
@@ -82,5 +80,3 @@ class LogSinkMock : public ILogSink {
 
 }  // namespace log
 }  // namespace vne
-
-#endif  // LOG_SINK_MOCK_H

@@ -1,5 +1,4 @@
-#ifndef VNE_LOGGING_TIME_PROVIDER_MOCK_H
-#define VNE_LOGGING_TIME_PROVIDER_MOCK_H
+#pragma once
 /* ---------------------------------------------------------------------
  * Copyright (c) 2024 Ajeet Singh Yadav. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License")
@@ -49,5 +48,3 @@ class TimeProviderMock : public ITimeProvider {
 
 }  // namespace log
 }  // namespace vne
-
-#endif  // VNE_LOGGING_TIME_PROVIDER_MOCK_H

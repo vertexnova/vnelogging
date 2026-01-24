@@ -10,6 +10,8 @@
  */
 
 #include <gtest/gtest.h>
+#include <filesystem>
+#include <fstream>
 #include <thread>
 
 #include "vertexnova/logging/core/file_log_sink.h"
