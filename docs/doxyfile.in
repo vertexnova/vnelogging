@@ -1,0 +1,86 @@
+#==============================================================================
+# Doxyfile Configuration for VneLogging
+#==============================================================================
+
+PROJECT_NAME           = "@CMAKE_PROJECT_NAME@"
+PROJECT_NUMBER         = @PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@
+PROJECT_BRIEF          = "A flexible and efficient C++ logging library"
+PROJECT_LOGO           = 
+
+INPUT                  = @PROJECT_SOURCE_DIR@/include \
+                         @PROJECT_SOURCE_DIR@/src \
+                         @CMAKE_CURRENT_SOURCE_DIR@/docs/ \
+                         @CMAKE_CURRENT_SOURCE_DIR@/README.md
+
+OUTPUT_DIRECTORY       = @CMAKE_CURRENT_BINARY_DIR@/docs/html
+
+FILE_PATTERNS          = *.h \
+                         *.hpp \
+                         *.cpp \
+                         *.md
+
+RECURSIVE              = YES
+
+USE_MDFILE_AS_MAINPAGE = @CMAKE_CURRENT_SOURCE_DIR@/README.md
+
+HTML_COLORSTYLE_HUE    = 200
+HTML_COLORSTYLE_SAT    = 100
+HTML_COLORSTYLE_GAMMA  = 60
+
+OUTPUT_LANGUAGE        = English
+
+EXTRACT_ALL            = YES
+EXTRACT_STATIC         = YES
+EXTRACT_PRIVATE        = YES
+
+# Class diagram look
+UML_LOOK               = YES
+UML_LIMIT_NUM_FIELDS   = 16
+
+# If the REFERENCED_BY_RELATION tag is set to YES then for each documented
+# function all documented functions referencing it will be listed.
+REFERENCED_BY_RELATION = YES
+
+# If the REFERENCES_RELATION tag is set to YES then for each documented function
+# all documented entities called/used by that function will be listed.
+REFERENCES_RELATION    = YES
+
+# Do not generate the latex output
+GENERATE_LATEX         = NO
+USE_PDFLATEX           = NO
+
+# Generate the side panel
+GENERATE_TREEVIEW      = YES
+
+BUILTIN_STL_SUPPORT    = YES
+
+# This makes first sentence from comment block a brief description
+JAVADOC_AUTOBRIEF      = YES
+
+GENERATE_TODOLIST      = YES
+
+# Callgraph of functions
+IMAGE_PATH             = @CMAKE_CURRENT_SOURCE_DIR@/docs/
+PLANTUML_JAR_PATH      = @PLANT_UML_PATH@
+DOT_PATH               = @DOXYGEN_DOT_PATH@
+DOT_CLEANUP            = NO
+HAVE_DOT               = YES
+CALL_GRAPH             = YES
+CALLER_GRAPH           = YES
+GRAPHICAL_HIERARCHY    = YES
+DIRECTORY_GRAPH        = YES
+GENERATE_LEGEND        = YES
+INCLUDED_BY_GRAPH      = YES
+INCLUDE_GRAPH          = YES
+DOT_IMAGE_FORMAT       = png:cairo:cairo
+
+# Exclude patterns
+EXCLUDE_PATTERNS       = */tests/* \
+                         */mocks/*
+
+# Markdown support
+MARKDOWN_SUPPORT       = YES
+
+# Search
+SEARCHENGINE           = YES
+SERVER_BASED_SEARCH    = NO

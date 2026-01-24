@@ -1,0 +1,266 @@
+[
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/src",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/include -I/Users/ayadav/workspace/github/vnelogging/src -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/vnelogging.dir/vertexnova/logging/core/console_log_sink.cpp.o -c /Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/core/console_log_sink.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/core/console_log_sink.cpp",
+  "output": "src/CMakeFiles/vnelogging.dir/vertexnova/logging/core/console_log_sink.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/src",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/include -I/Users/ayadav/workspace/github/vnelogging/src -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/vnelogging.dir/vertexnova/logging/core/file_log_sink.cpp.o -c /Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/core/file_log_sink.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/core/file_log_sink.cpp",
+  "output": "src/CMakeFiles/vnelogging.dir/vertexnova/logging/core/file_log_sink.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/src",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/include -I/Users/ayadav/workspace/github/vnelogging/src -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/vnelogging.dir/vertexnova/logging/core/log_formatter.cpp.o -c /Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/core/log_formatter.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/core/log_formatter.cpp",
+  "output": "src/CMakeFiles/vnelogging.dir/vertexnova/logging/core/log_formatter.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/src",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/include -I/Users/ayadav/workspace/github/vnelogging/src -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/vnelogging.dir/vertexnova/logging/core/log_stream.cpp.o -c /Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/core/log_stream.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/core/log_stream.cpp",
+  "output": "src/CMakeFiles/vnelogging.dir/vertexnova/logging/core/log_stream.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/src",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/include -I/Users/ayadav/workspace/github/vnelogging/src -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/vnelogging.dir/vertexnova/logging/core/text_color.cpp.o -c /Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/core/text_color.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/core/text_color.cpp",
+  "output": "src/CMakeFiles/vnelogging.dir/vertexnova/logging/core/text_color.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/src",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/include -I/Users/ayadav/workspace/github/vnelogging/src -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/vnelogging.dir/vertexnova/logging/core/log_queue.cpp.o -c /Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/core/log_queue.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/core/log_queue.cpp",
+  "output": "src/CMakeFiles/vnelogging.dir/vertexnova/logging/core/log_queue.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/src",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/include -I/Users/ayadav/workspace/github/vnelogging/src -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/vnelogging.dir/vertexnova/logging/core/log_queue_worker.cpp.o -c /Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/core/log_queue_worker.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/core/log_queue_worker.cpp",
+  "output": "src/CMakeFiles/vnelogging.dir/vertexnova/logging/core/log_queue_worker.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/src",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/include -I/Users/ayadav/workspace/github/vnelogging/src -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/vnelogging.dir/vertexnova/logging/core/log_dispatcher.cpp.o -c /Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/core/log_dispatcher.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/core/log_dispatcher.cpp",
+  "output": "src/CMakeFiles/vnelogging.dir/vertexnova/logging/core/log_dispatcher.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/src",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/include -I/Users/ayadav/workspace/github/vnelogging/src -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/vnelogging.dir/vertexnova/logging/core/logger_controller.cpp.o -c /Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/core/logger_controller.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/core/logger_controller.cpp",
+  "output": "src/CMakeFiles/vnelogging.dir/vertexnova/logging/core/logger_controller.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/src",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/include -I/Users/ayadav/workspace/github/vnelogging/src -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/vnelogging.dir/vertexnova/logging/core/sync_logger.cpp.o -c /Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/core/sync_logger.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/core/sync_logger.cpp",
+  "output": "src/CMakeFiles/vnelogging.dir/vertexnova/logging/core/sync_logger.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/src",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/include -I/Users/ayadav/workspace/github/vnelogging/src -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/vnelogging.dir/vertexnova/logging/core/async_logger.cpp.o -c /Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/core/async_logger.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/core/async_logger.cpp",
+  "output": "src/CMakeFiles/vnelogging.dir/vertexnova/logging/core/async_logger.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/src",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/include -I/Users/ayadav/workspace/github/vnelogging/src -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/vnelogging.dir/vertexnova/logging/log_manager.cpp.o -c /Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/log_manager.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/log_manager.cpp",
+  "output": "src/CMakeFiles/vnelogging.dir/vertexnova/logging/log_manager.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/src",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/include -I/Users/ayadav/workspace/github/vnelogging/src -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/vnelogging.dir/vertexnova/logging/logging.cpp.o -c /Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/logging.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/src/vertexnova/logging/logging.cpp",
+  "output": "src/CMakeFiles/vnelogging.dir/vertexnova/logging/logging.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/tests",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -isystem /Users/ayadav/workspace/github/vnelogging/build -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/include -isystem /Users/ayadav/workspace/github/vnelogging/src -isystem /googletest/googletest/include -isystem /googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/TestVneLogging.dir/core/log_level_test.cpp.o -c /Users/ayadav/workspace/github/vnelogging/tests/core/log_level_test.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/tests/core/log_level_test.cpp",
+  "output": "tests/CMakeFiles/TestVneLogging.dir/core/log_level_test.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/tests",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -isystem /Users/ayadav/workspace/github/vnelogging/build -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/include -isystem /Users/ayadav/workspace/github/vnelogging/src -isystem /googletest/googletest/include -isystem /googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/TestVneLogging.dir/core/time_stamp_test.cpp.o -c /Users/ayadav/workspace/github/vnelogging/tests/core/time_stamp_test.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/tests/core/time_stamp_test.cpp",
+  "output": "tests/CMakeFiles/TestVneLogging.dir/core/time_stamp_test.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/tests",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -isystem /Users/ayadav/workspace/github/vnelogging/build -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/include -isystem /Users/ayadav/workspace/github/vnelogging/src -isystem /googletest/googletest/include -isystem /googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/TestVneLogging.dir/core/console_log_sink_test.cpp.o -c /Users/ayadav/workspace/github/vnelogging/tests/core/console_log_sink_test.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/tests/core/console_log_sink_test.cpp",
+  "output": "tests/CMakeFiles/TestVneLogging.dir/core/console_log_sink_test.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/tests",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -isystem /Users/ayadav/workspace/github/vnelogging/build -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/include -isystem /Users/ayadav/workspace/github/vnelogging/src -isystem /googletest/googletest/include -isystem /googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/TestVneLogging.dir/core/file_log_sink_test.cpp.o -c /Users/ayadav/workspace/github/vnelogging/tests/core/file_log_sink_test.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/tests/core/file_log_sink_test.cpp",
+  "output": "tests/CMakeFiles/TestVneLogging.dir/core/file_log_sink_test.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/tests",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -isystem /Users/ayadav/workspace/github/vnelogging/build -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/include -isystem /Users/ayadav/workspace/github/vnelogging/src -isystem /googletest/googletest/include -isystem /googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/TestVneLogging.dir/core/log_formatter_test.cpp.o -c /Users/ayadav/workspace/github/vnelogging/tests/core/log_formatter_test.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/tests/core/log_formatter_test.cpp",
+  "output": "tests/CMakeFiles/TestVneLogging.dir/core/log_formatter_test.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/tests",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -isystem /Users/ayadav/workspace/github/vnelogging/build -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/include -isystem /Users/ayadav/workspace/github/vnelogging/src -isystem /googletest/googletest/include -isystem /googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/TestVneLogging.dir/core/text_color_test.cpp.o -c /Users/ayadav/workspace/github/vnelogging/tests/core/text_color_test.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/tests/core/text_color_test.cpp",
+  "output": "tests/CMakeFiles/TestVneLogging.dir/core/text_color_test.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/tests",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -isystem /Users/ayadav/workspace/github/vnelogging/build -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/include -isystem /Users/ayadav/workspace/github/vnelogging/src -isystem /googletest/googletest/include -isystem /googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/TestVneLogging.dir/core/log_stream_test.cpp.o -c /Users/ayadav/workspace/github/vnelogging/tests/core/log_stream_test.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/tests/core/log_stream_test.cpp",
+  "output": "tests/CMakeFiles/TestVneLogging.dir/core/log_stream_test.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/tests",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -isystem /Users/ayadav/workspace/github/vnelogging/build -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/include -isystem /Users/ayadav/workspace/github/vnelogging/src -isystem /googletest/googletest/include -isystem /googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/TestVneLogging.dir/core/log_queue_test.cpp.o -c /Users/ayadav/workspace/github/vnelogging/tests/core/log_queue_test.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/tests/core/log_queue_test.cpp",
+  "output": "tests/CMakeFiles/TestVneLogging.dir/core/log_queue_test.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/tests",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -isystem /Users/ayadav/workspace/github/vnelogging/build -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/include -isystem /Users/ayadav/workspace/github/vnelogging/src -isystem /googletest/googletest/include -isystem /googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/TestVneLogging.dir/core/log_queue_worker_test.cpp.o -c /Users/ayadav/workspace/github/vnelogging/tests/core/log_queue_worker_test.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/tests/core/log_queue_worker_test.cpp",
+  "output": "tests/CMakeFiles/TestVneLogging.dir/core/log_queue_worker_test.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/tests",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -isystem /Users/ayadav/workspace/github/vnelogging/build -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/include -isystem /Users/ayadav/workspace/github/vnelogging/src -isystem /googletest/googletest/include -isystem /googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/TestVneLogging.dir/core/log_dispatcher_test.cpp.o -c /Users/ayadav/workspace/github/vnelogging/tests/core/log_dispatcher_test.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/tests/core/log_dispatcher_test.cpp",
+  "output": "tests/CMakeFiles/TestVneLogging.dir/core/log_dispatcher_test.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/tests",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -isystem /Users/ayadav/workspace/github/vnelogging/build -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/include -isystem /Users/ayadav/workspace/github/vnelogging/src -isystem /googletest/googletest/include -isystem /googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/TestVneLogging.dir/core/logger_controller_test.cpp.o -c /Users/ayadav/workspace/github/vnelogging/tests/core/logger_controller_test.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/tests/core/logger_controller_test.cpp",
+  "output": "tests/CMakeFiles/TestVneLogging.dir/core/logger_controller_test.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/tests",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -isystem /Users/ayadav/workspace/github/vnelogging/build -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/include -isystem /Users/ayadav/workspace/github/vnelogging/src -isystem /googletest/googletest/include -isystem /googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/TestVneLogging.dir/core/sync_logger_test.cpp.o -c /Users/ayadav/workspace/github/vnelogging/tests/core/sync_logger_test.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/tests/core/sync_logger_test.cpp",
+  "output": "tests/CMakeFiles/TestVneLogging.dir/core/sync_logger_test.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/tests",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -isystem /Users/ayadav/workspace/github/vnelogging/build -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/include -isystem /Users/ayadav/workspace/github/vnelogging/src -isystem /googletest/googletest/include -isystem /googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/TestVneLogging.dir/core/async_logger_test.cpp.o -c /Users/ayadav/workspace/github/vnelogging/tests/core/async_logger_test.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/tests/core/async_logger_test.cpp",
+  "output": "tests/CMakeFiles/TestVneLogging.dir/core/async_logger_test.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/tests",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -isystem /Users/ayadav/workspace/github/vnelogging/build -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/include -isystem /Users/ayadav/workspace/github/vnelogging/src -isystem /googletest/googletest/include -isystem /googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/TestVneLogging.dir/core/logger_performance_test.cpp.o -c /Users/ayadav/workspace/github/vnelogging/tests/core/logger_performance_test.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/tests/core/logger_performance_test.cpp",
+  "output": "tests/CMakeFiles/TestVneLogging.dir/core/logger_performance_test.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/tests",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -isystem /Users/ayadav/workspace/github/vnelogging/build -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/include -isystem /Users/ayadav/workspace/github/vnelogging/src -isystem /googletest/googletest/include -isystem /googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/TestVneLogging.dir/log_manager_test.cpp.o -c /Users/ayadav/workspace/github/vnelogging/tests/log_manager_test.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/tests/log_manager_test.cpp",
+  "output": "tests/CMakeFiles/TestVneLogging.dir/log_manager_test.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/tests",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -isystem /Users/ayadav/workspace/github/vnelogging/build -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/include -isystem /Users/ayadav/workspace/github/vnelogging/src -isystem /googletest/googletest/include -isystem /googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/TestVneLogging.dir/logging_system_test.cpp.o -c /Users/ayadav/workspace/github/vnelogging/tests/logging_system_test.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/tests/logging_system_test.cpp",
+  "output": "tests/CMakeFiles/TestVneLogging.dir/logging_system_test.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/tests",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -isystem /Users/ayadav/workspace/github/vnelogging/build -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/include -isystem /Users/ayadav/workspace/github/vnelogging/src -isystem /googletest/googletest/include -isystem /googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/TestVneLogging.dir/log_test.cpp.o -c /Users/ayadav/workspace/github/vnelogging/tests/log_test.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/tests/log_test.cpp",
+  "output": "tests/CMakeFiles/TestVneLogging.dir/log_test.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/tests",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -isystem /Users/ayadav/workspace/github/vnelogging/build -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/include -isystem /Users/ayadav/workspace/github/vnelogging/src -isystem /googletest/googletest/include -isystem /googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/TestVneLogging.dir/main.cpp.o -c /Users/ayadav/workspace/github/vnelogging/tests/main.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/tests/main.cpp",
+  "output": "tests/CMakeFiles/TestVneLogging.dir/main.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/external/googletest/googlemock",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/include -I/Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk  -DGTEST_HAS_PTHREAD=1   -o CMakeFiles/gmock.dir/src/gmock-all.cc.o -c /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/src/gmock-all.cc",
+  "file": "/Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/src/gmock-all.cc",
+  "output": "external/googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/external/googletest/googlemock",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_PLATFORM_MACOS -isystem /Users/ayadav/workspace/github/vnelogging/build -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk  -DGTEST_HAS_PTHREAD=1   -o CMakeFiles/gmock_main.dir/src/gmock_main.cc.o -c /Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/src/gmock_main.cc",
+  "file": "/Users/ayadav/workspace/github/vnelogging/external/googletest/googlemock/src/gmock_main.cc",
+  "output": "external/googletest/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/external/googletest/googletest",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/include -I/Users/ayadav/workspace/github/vnelogging/external/googletest/googletest -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk  -DGTEST_HAS_PTHREAD=1   -o CMakeFiles/gtest.dir/src/gtest-all.cc.o -c /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/src/gtest-all.cc",
+  "file": "/Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/src/gtest-all.cc",
+  "output": "external/googletest/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/external/googletest/googletest",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/include -isystem /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk  -DGTEST_HAS_PTHREAD=1   -o CMakeFiles/gtest_main.dir/src/gtest_main.cc.o -c /Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/src/gtest_main.cc",
+  "file": "/Users/ayadav/workspace/github/vnelogging/external/googletest/googletest/src/gtest_main.cc",
+  "output": "external/googletest/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/examples/01_combined_logging/mylib",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/examples/01_combined_logging/mylib -I/Users/ayadav/workspace/github/vnelogging/src -I/Users/ayadav/workspace/github/vnelogging/include -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/mylib.dir/my_library.cpp.o -c /Users/ayadav/workspace/github/vnelogging/examples/01_combined_logging/mylib/my_library.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/examples/01_combined_logging/mylib/my_library.cpp",
+  "output": "examples/01_combined_logging/mylib/CMakeFiles/mylib.dir/my_library.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/examples/01_combined_logging/myapp",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DSPDLOG_COMPILED_LIB -DVNE_BUILD_TYPE_DEBUG -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/examples/01_combined_logging/myapp -I/Users/ayadav/workspace/github/vnelogging/examples/01_combined_logging/mylib -I/Users/ayadav/workspace/github/vnelogging/src -I/Users/ayadav/workspace/github/vnelogging/include -I/Users/ayadav/workspace/github/vnelogging/external/spdlog/include -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -o CMakeFiles/01_ExampleCombinedLogging.dir/main.cpp.o -c /Users/ayadav/workspace/github/vnelogging/examples/01_combined_logging/myapp/main.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/examples/01_combined_logging/myapp/main.cpp",
+  "output": "examples/01_combined_logging/myapp/CMakeFiles/01_ExampleCombinedLogging.dir/main.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/external/spdlog",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DSPDLOG_COMPILED_LIB -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/external/spdlog/include -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -o CMakeFiles/spdlog.dir/src/spdlog.cpp.o -c /Users/ayadav/workspace/github/vnelogging/external/spdlog/src/spdlog.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/external/spdlog/src/spdlog.cpp",
+  "output": "external/spdlog/CMakeFiles/spdlog.dir/src/spdlog.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/external/spdlog",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DSPDLOG_COMPILED_LIB -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/external/spdlog/include -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -o CMakeFiles/spdlog.dir/src/stdout_sinks.cpp.o -c /Users/ayadav/workspace/github/vnelogging/external/spdlog/src/stdout_sinks.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/external/spdlog/src/stdout_sinks.cpp",
+  "output": "external/spdlog/CMakeFiles/spdlog.dir/src/stdout_sinks.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/external/spdlog",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DSPDLOG_COMPILED_LIB -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/external/spdlog/include -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -o CMakeFiles/spdlog.dir/src/color_sinks.cpp.o -c /Users/ayadav/workspace/github/vnelogging/external/spdlog/src/color_sinks.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/external/spdlog/src/color_sinks.cpp",
+  "output": "external/spdlog/CMakeFiles/spdlog.dir/src/color_sinks.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/external/spdlog",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DSPDLOG_COMPILED_LIB -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/external/spdlog/include -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -o CMakeFiles/spdlog.dir/src/file_sinks.cpp.o -c /Users/ayadav/workspace/github/vnelogging/external/spdlog/src/file_sinks.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/external/spdlog/src/file_sinks.cpp",
+  "output": "external/spdlog/CMakeFiles/spdlog.dir/src/file_sinks.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/external/spdlog",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DSPDLOG_COMPILED_LIB -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/external/spdlog/include -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -o CMakeFiles/spdlog.dir/src/async.cpp.o -c /Users/ayadav/workspace/github/vnelogging/external/spdlog/src/async.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/external/spdlog/src/async.cpp",
+  "output": "external/spdlog/CMakeFiles/spdlog.dir/src/async.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/external/spdlog",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DSPDLOG_COMPILED_LIB -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/external/spdlog/include -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -o CMakeFiles/spdlog.dir/src/cfg.cpp.o -c /Users/ayadav/workspace/github/vnelogging/external/spdlog/src/cfg.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/external/spdlog/src/cfg.cpp",
+  "output": "external/spdlog/CMakeFiles/spdlog.dir/src/cfg.cpp.o"
+},
+{
+  "directory": "/Users/ayadav/workspace/github/vnelogging/build/external/spdlog",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -DSPDLOG_COMPILED_LIB -DVNE_PLATFORM_MACOS -I/Users/ayadav/workspace/github/vnelogging/build -I/Users/ayadav/workspace/github/vnelogging/external/spdlog/include -g -std=c++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -o CMakeFiles/spdlog.dir/src/bundled_fmtlib_format.cpp.o -c /Users/ayadav/workspace/github/vnelogging/external/spdlog/src/bundled_fmtlib_format.cpp",
+  "file": "/Users/ayadav/workspace/github/vnelogging/external/spdlog/src/bundled_fmtlib_format.cpp",
+  "output": "external/spdlog/CMakeFiles/spdlog.dir/src/bundled_fmtlib_format.cpp.o"
+}
+]

@@ -1,0 +1,16 @@
+[SPDLOG-APP] 2026-01-24 01:28:08.553 [app] [info] Application starting up
+[SPDLOG-APP] 2026-01-24 01:28:08.553 [app] [debug] This is a debug message from the application
+[VNE-LIB] 2026-01-24 01:28:08 [mylib] [INFO] [initialize] MyLibrary initialized successfully
+[SPDLOG-APP] 2026-01-24 01:28:08.554 [app] [info] Library initialized, starting operations
+[SPDLOG-APP] 2026-01-24 01:28:08.554 [app] [info] Performing operations with the library
+[VNE-LIB] 2026-01-24 01:28:08 [mylib] [DEBUG] [doWork] Starting operation: operation1
+[VNE-LIB] 2026-01-24 01:28:08 [mylib] [INFO] [doWork] Operation 'operation1' completed successfully
+[SPDLOG-APP] 2026-01-24 01:28:08.657 [app] [warning] This is a warning from the application
+[VNE-LIB] 2026-01-24 01:28:08 [mylib] [DEBUG] [processData] Processing data: 11 bytes
+[VNE-LIB] 2026-01-24 01:28:08 [mylib] [INFO] [processData] Data processed successfully: sample data
+[SPDLOG-APP] 2026-01-24 01:28:08.712 [app] [error] This is an error message from the application
+[VNE-LIB] 2026-01-24 01:28:08 [mylib] [DEBUG] [doWork] Starting operation: operation2
+[VNE-LIB] 2026-01-24 01:28:08 [mylib] [INFO] [doWork] Operation 'operation2' completed successfully
+[SPDLOG-APP] 2026-01-24 01:28:08.816 [app] [info] All operations completed
+[VNE-LIB] 2026-01-24 01:28:08 [mylib] [INFO] [shutdown] MyLibrary shutting down
+[SPDLOG-APP] 2026-01-24 01:28:08.816 [app] [info] Application shutting down

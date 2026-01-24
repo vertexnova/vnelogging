@@ -1,0 +1,220 @@
+{
+    // VertexNova Logging Library Development Settings - Cross-Platform Configuration
+    // C++ Configuration - Platform Agnostic
+    "C_Cpp.default.cppStandard": "c++20",
+    "C_Cpp.default.cStandard": "c17",
+    "C_Cpp.default.intelliSenseMode": "windows-msvc-x64",
+    "C_Cpp.default.compilerPath": "cl.exe",
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/include",
+        "${workspaceFolder}/src",
+        "${workspaceFolder}/external/spdlog/include",
+        "${workspaceFolder}/external/googletest/googletest/include"
+    ],
+    "C_Cpp.default.defines": [
+        "VNE_TARGET_PLATFORM_WINDOWS"
+    ],
+    // CMake Configuration - Disabled for manual control
+    "cmake.configureOnOpen": false,
+    "cmake.buildDirectory": "${workspaceFolder}/build/${buildType}",
+    "cmake.generator": "Visual Studio 17 2022",
+    "cmake.preferredGenerators": [
+        "Visual Studio 17 2022",
+        "Visual Studio 16 2019",
+        "Unix Makefiles",
+        "Ninja"
+    ],
+    "cmake.debugConfig": {
+        "stopAtEntry": false,
+        "cwd": "${workspaceFolder}",
+        "environment": [],
+        "externalConsole": false,
+        "MIMode": "gdb"
+    },
+    // Editor Settings - Cross-Platform
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false,
+    "editor.rulers": [
+        80,
+        120,
+        150
+    ],
+    "editor.wordWrap": "bounded",
+    "editor.wordWrapColumn": 150,
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "explicit",
+        "source.organizeImports": "explicit"
+    },
+    // File Associations - Cross-Platform
+    "files.associations": {
+        "*.h": "cpp",
+        "*.hpp": "cpp",
+        "*.cpp": "cpp",
+        "*.cc": "cpp",
+        "*.cxx": "cpp",
+        "*.c": "c",
+        "*.cmake": "cmake",
+        "CMakeLists.txt": "cmake",
+        "*.chatmode.md": "markdown",
+        "*.instructions.md": "markdown",
+        "*.prompt.md": "markdown"
+    },
+    // C++ Formatting - Use project's .clang-format with xaver extension
+    "C_Cpp.clang_format_style": "file",
+    "C_Cpp.clang_format_fallbackStyle": "Google",
+    "C_Cpp.clang_format_sortIncludes": "true",
+    "clang-format.style": "file",
+    "clang-format.fallbackStyle": "Google",
+    "clang-format.sortIncludes": "true",
+    "clang-format.executable": "clang-format",
+    "clang-format.assumeFilename": "${workspaceFolder}/.clang-format",
+    "clang-format.formatOnSave": true,
+    "clang-format.formatOnSaveMode": "file",
+    // IntelliSense - Cross-Platform
+    "C_Cpp.intelliSenseEngine": "default",
+    "C_Cpp.intelliSenseEngineFallback": "enabled",
+    "C_Cpp.autocomplete": "default",
+    "C_Cpp.errorSquiggles": "enabled",
+    "C_Cpp.enhancedColorization": "enabled",
+    // Code Analysis - Cross-Platform
+    "C_Cpp.codeAnalysis.clangTidy.enabled": true,
+    "C_Cpp.codeAnalysis.clangTidy.path": "clang-tidy",
+    "C_Cpp.codeAnalysis.runAutomatically": true,
+    // Search and Navigation - Cross-Platform
+    "search.exclude": {
+        "**/build": true,
+        "**/external": true,
+        "**/.git": true,
+        "**/node_modules": true,
+        "**/bin": true,
+        "**/lib": true
+    },
+    "files.exclude": {
+        "**/build": true,
+        "**/.git": true,
+        "**/.vscode": false
+    },
+    // Terminal Configuration - Platform Specific
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "terminal.integrated.defaultProfile.osx": "bash",
+    "terminal.integrated.profiles.windows": {
+        "PowerShell": {
+            "source": "PowerShell",
+            "args": [
+                "-NoExit",
+                "-Command",
+                "& { cd '${workspaceFolder}' }"
+            ]
+        },
+        "Developer PowerShell": {
+            "source": "PowerShell",
+            "args": [
+                "-NoExit",
+                "-Command",
+                "& { cd '${workspaceFolder}'; & 'C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\Tools\\LaunchDevCmd.bat' }"
+            ]
+        },
+        "Git Bash": {
+            "source": "Git Bash",
+            "args": [
+                "-c",
+                "cd '${workspaceFolder}' && bash"
+            ]
+        }
+    },
+    "terminal.integrated.profiles.linux": {
+        "bash": {
+            "path": "bash",
+            "args": [
+                "-c",
+                "cd '${workspaceFolder}' && bash"
+            ]
+        },
+        "zsh": {
+            "path": "zsh",
+            "args": [
+                "-c",
+                "cd '${workspaceFolder}' && zsh"
+            ]
+        }
+    },
+    "terminal.integrated.profiles.osx": {
+        "bash": {
+            "path": "bash",
+            "args": [
+                "-c",
+                "cd '${workspaceFolder}' && bash"
+            ]
+        },
+        "zsh": {
+            "path": "zsh",
+            "args": [
+                "-c",
+                "cd '${workspaceFolder}' && zsh"
+            ]
+        }
+    },
+    // Extensions - Cross-Platform
+    "extensions.ignoreRecommendations": true,
+    "extensions.autoUpdate": true,
+    // Git Configuration - Cross-Platform
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "git.autofetch": true,
+    // Task Configuration - Cross-Platform
+    "task.autoDetect": "on",
+    // Debugging - Cross-Platform
+    "debug.allowBreakpointsEverywhere": true,
+    "debug.console.fontSize": 12,
+    "debug.internalConsoleOptions": "openOnSessionStart",
+    // Performance - Cross-Platform
+    "files.watcherExclude": {
+        "**/build/**": true,
+        "**/external/**": true,
+        "**/.git/**": true
+    },
+    "search.followSymlinks": false,
+    // Language Server - Cross-Platform
+    "C_Cpp.loggingLevel": "Warning",
+    "C_Cpp.workspaceSymbols": "Default",
+    "C_Cpp.suggestSnippets": true,
+    // VertexNova Specific - Cross-Platform
+    "files.encoding": "utf8",
+    "files.eol": "\n",
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    // Copilot Configuration - Cross-Platform
+    "chat.modeFilesLocations": {
+        "chatmodes": true
+    },
+    "chat.promptFilesLocations": {
+        "prompts": true
+    },
+    "chat.instructionsFilesLocations": {
+        "instructions": true
+    },
+    "chat.copilot.enableChat": true,
+    "chat.copilot.enableInlineChat": true,
+    "chat.copilot.enableComposer": true,
+    // Platform-Specific CMake Generators
+    "[windows]": {
+        "cmake.generator": "Visual Studio 17 2022",
+        "C_Cpp.default.intelliSenseMode": "windows-msvc-x64",
+        "C_Cpp.default.compilerPath": "cl.exe"
+    },
+    "[linux]": {
+        "cmake.generator": "Unix Makefiles",
+        "C_Cpp.default.intelliSenseMode": "linux-clang-x64",
+        "C_Cpp.default.compilerPath": "g++"
+    },
+    "[osx]": {
+        "cmake.generator": "Unix Makefiles",
+        "C_Cpp.default.intelliSenseMode": "macos-clang-x64",
+        "C_Cpp.default.compilerPath": "clang++"
+    },
+    "svn.ignoreMissingSvnWarning": true
+}
