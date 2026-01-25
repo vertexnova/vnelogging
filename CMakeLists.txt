@@ -31,7 +31,13 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 # Internal Libraries
 #==============================================================================
 set(VNE_LIBS_DIR ${PROJECT_SOURCE_DIR}/libs)
-add_subdirectory(libs/vnecommon)
+
+# Only add vnecommon if not already available (e.g., when used as submodule)
+if(NOT TARGET vne::common)
+    if(EXISTS "${VNE_LIBS_DIR}/vnecommon/CMakeLists.txt")
+        add_subdirectory(libs/vnecommon)
+    endif()
+endif()
 
 #==============================================================================
 # Project Setup
