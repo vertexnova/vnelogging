@@ -23,6 +23,8 @@ ignore:
   - "tests/**/*"
   - "examples/**/*"
   - "external/**/*"
+  - "libs/**/*"
+  - "cmake/**/*"
 
 # Comment settings for PRs
 comment:

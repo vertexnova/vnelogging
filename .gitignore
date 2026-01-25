@@ -53,10 +53,12 @@ compile_commands.json
 _deps/
 
 # IDE
-.vscode/
 .idea/
 *.swp
 *~
+
+# Clangd cache
+.cache/
 
 # macOS
 .DS_Store

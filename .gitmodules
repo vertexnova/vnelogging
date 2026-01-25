@@ -6,3 +6,9 @@
 	path = external/spdlog
 	url = https://github.com/gabime/spdlog.git
 	branch = v1.17.0
+[submodule "cmake/vnecmake"]
+	path = cmake/vnecmake
+	url = git@github.com:vertexnova/vnecmake.git
+[submodule "libs/vnecommon"]
+	path = libs/vnecommon
+	url = git@github.com:vertexnova/vnecommon.git

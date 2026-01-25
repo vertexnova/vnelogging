@@ -11,7 +11,7 @@
  */
 
 #include <vertexnova/logging/logging.h>
-#include <vertexnova/utils/macros.h>
+#include <vertexnova/common/macros.h>
 
 #include <chrono>
 #include <filesystem>

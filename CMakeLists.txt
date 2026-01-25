@@ -22,7 +22,16 @@ set(CMAKE_CXX_EXTENSIONS False)
 #==============================================================================
 # Add custom CMake modules path
 #==============================================================================
+# VneCMake shared modules (submodule)
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/vnecmake/modules")
+# Project-specific modules
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+
+#==============================================================================
+# Internal Libraries
+#==============================================================================
+set(VNE_LIBS_DIR ${PROJECT_SOURCE_DIR}/libs)
+add_subdirectory(libs/vnecommon)
 
 #==============================================================================
 # Project Setup

@@ -31,8 +31,7 @@ set(INCLUDE_FILES
 # Public headers in include/ directory
 set(PUBLIC_HEADERS
     ${VNE_INCLUDE_DIR}/vertexnova/logging/logging.h
-    ${VNE_INCLUDE_DIR}/vertexnova/utils/macros.h
-    ${VNE_INCLUDE_DIR}/vertexnova/utils/path_utils.h
+    ${VNE_INCLUDE_DIR}/vertexnova/logging/utils/path_utils.h
 )
 
 # Define source files
@@ -91,5 +90,5 @@ endif()
 # Set compile features
 target_compile_features(vnelogging PUBLIC cxx_std_20)
 
-# Link against warnings and build settings
-target_link_libraries(vnelogging PUBLIC vne::logging::Warnings vne::logging::BuildSettings)
+# Link against warnings, build settings, and common utilities
+target_link_libraries(vnelogging PUBLIC vne::logging::Warnings vne::logging::BuildSettings vne::common)
