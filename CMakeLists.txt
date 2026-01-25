@@ -125,7 +125,7 @@ include(ClangTidy)
 #==============================================================================
 
 if(ENABLE_COVERAGE)
-    include(cmake/FindCoverage.cmake)
+    include(FindCoverage)
 endif()
 
 #==============================================================================
@@ -134,7 +134,7 @@ endif()
 
 option(ENABLE_DOXYGEN "Enable Doxygen documentation builds" OFF)
 if(ENABLE_DOXYGEN)
-    include(cmake/Doxygen.cmake)
+    include(Doxygen)
     enable_doxygen()
 endif()
 
