@@ -12,22 +12,24 @@
 #include "log_stream.h"
 #include "logger_controller.h"
 
+#include <utility>
+
 namespace vne {  // Outer namespace
 namespace log {  // Inner namespace
 
 LogStream::LogStream(const char* logger_name,
-                     const std::string& category,
+                     std::string category,
                      LogLevel level,
                      TimeStampType time_stamp_type,
-                     const std::string& file,
-                     const std::string& function,
+                     std::string file,
+                     std::string function,
                      uint32_t line)
     : logger_name_(logger_name)
-    , category_(category)
+    , category_(std::move(category))
     , log_level_(level)
     , time_stamp_type_(time_stamp_type)
-    , file_(file)
-    , function_(function)
+    , file_(std::move(file))
+    , function_(std::move(function))
     , line_(line) {}
 
 LogStream::~LogStream() {

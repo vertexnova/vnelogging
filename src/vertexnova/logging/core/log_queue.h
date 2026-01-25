@@ -24,6 +24,9 @@
 
 namespace vne::log {
 
+/// Default maximum number of items to drain from the queue in a single operation.
+constexpr size_t kDefaultDrainBatchSize = 32;
+
 class LogQueue {
    public:
     /**
@@ -51,7 +54,7 @@ class LogQueue {
      *
      * This is more efficient than multiple pop() calls as it only locks once.
      */
-    std::vector<std::function<void()>> drain(size_t max_items = 32);
+    std::vector<std::function<void()>> drain(size_t max_items = kDefaultDrainBatchSize);
 
    private:
     std::queue<std::function<void()>> queue_;  //!< The queue of log tasks.

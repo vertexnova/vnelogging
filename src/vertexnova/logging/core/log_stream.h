@@ -43,11 +43,11 @@ class LogStream {
      * @param line The line number in the source file where the log was generated.
      */
     LogStream(const char* logger_name,
-              const std::string& category,
+              std::string category,
               LogLevel level,
               TimeStampType time_stamp_type,
-              const std::string& file,
-              const std::string& function,
+              std::string file,
+              std::string function,
               uint32_t line);
 
     /**

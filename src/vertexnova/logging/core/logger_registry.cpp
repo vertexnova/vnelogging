@@ -18,13 +18,13 @@ namespace log {
 thread_local std::shared_ptr<ILogger> LoggerRegistry::current_logger_ = nullptr;
 
 std::unordered_map<std::string, std::shared_ptr<ILogger>>& LoggerRegistry::registry() {
-    static std::unordered_map<std::string, std::shared_ptr<ILogger>> registry;
-    return registry;
+    static std::unordered_map<std::string, std::shared_ptr<ILogger>> s_registry;
+    return s_registry;
 }
 
 std::mutex& LoggerRegistry::mutex() {
-    static std::mutex mtx;
-    return mtx;
+    static std::mutex s_mutex;
+    return s_mutex;
 }
 
 void LoggerRegistry::registerLogger(const std::string& name, std::shared_ptr<ILogger> logger) {

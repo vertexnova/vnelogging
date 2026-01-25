@@ -17,13 +17,13 @@ namespace vne {
 namespace log {
 
 std::vector<std::shared_ptr<ILogger>>& LoggerController::getRegistry() {
-    static std::vector<std::shared_ptr<ILogger>> registry;
-    return registry;
+    static std::vector<std::shared_ptr<ILogger>> s_registry;
+    return s_registry;
 }
 
 std::mutex& LoggerController::getMutex() {
-    static std::mutex mutex;
-    return mutex;
+    static std::mutex s_mutex;
+    return s_mutex;
 }
 
 void LoggerController::registerLogger(std::shared_ptr<ILogger> logger) {
