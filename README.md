@@ -191,6 +191,7 @@ The library builds as a **static library** by default (`libvnelogging.a` / `vnel
 
 ## Documentation
 
+- [Wiki](https://github.com/vertexnova/vnelogging/wiki) — User guide, quick start, API reference
 - [API Documentation](docs/README.md) — Generated with Doxygen
 - [Architecture](docs/vertexnova/logging/logging.md) — Design and components
 - [Coding Guidelines](CODING_GUIDELINES.md) — Project conventions
