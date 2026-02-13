@@ -1,12 +1,9 @@
 <mxfile host="65bd71144e">
     <diagram name="Public API" id="api">
-        <mxGraphModel dx="1298" dy="770" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="800" math="0" shadow="0">
+        <mxGraphModel dx="910" dy="770" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="800" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="title" value="VneLogging API — How to use" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=18;fontStyle=1;fontColor=#000000;" parent="1" vertex="1">
-                    <mxGeometry x="350" y="20" width="500" height="36" as="geometry"/>
-                </mxCell>
                 <mxCell id="step1" value="1. Configure" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#0d47a1;" vertex="1" parent="1">
                     <mxGeometry x="60" y="80" width="120" height="36" as="geometry"/>
                 </mxCell>

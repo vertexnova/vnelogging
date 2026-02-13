@@ -1,8 +1,19 @@
-# Logging Module
+# Vertexnova Logging
 
 ## Overview
 
-The Logging module provides a comprehensive, flexible, and efficient logging system for C++ applications. It supports multiple log sinks, configurable log levels, customizable formatting, and both synchronous and asynchronous logging operations.
+The VertexNova Logging provides a comprehensive, flexible, and efficient logging system for C++ applications. It supports multiple log sinks, configurable log levels, customizable formatting, and both synchronous and asynchronous logging operations.
+
+![System Context](diagrams/context.png)
+
+**Figure 1: Context Diagram**
+
+| Element | Description |
+|---------|-------------|
+| C++ Application | Developer/user code that uses `VNE_LOG_*` macros and `configureLogger` |
+| VneLogging | Logging library; processes log messages and routes to sinks |
+| Console | stdout/stderr; where formatted log messages are displayed |
+| File System | Where log files are written (e.g. `app.log`) |
 
 ## Architecture
 
@@ -13,6 +24,31 @@ The logging system follows a layered architecture with clear separation of conce
 - **Sink Layer**: Output destination management (console, file)
 - **Formatting Layer**: Message formatting and timestamp handling
 - **Queue Layer**: Asynchronous logging support
+
+![Architecture](diagrams/logging.png)
+
+**Figure 2: Class Diagram**
+
+| Element | Description |
+|---------|-------------|
+| Logging | Static setup interface; `configureLogger`, `initialize`, `shutdown` |
+| LogManager | Singleton managing logger instances and lifecycle |
+| LoggerController | Bridges configuration to logger creation |
+| ILogger | Abstract logger interface; `log`, `flush`, `addLogSink` |
+| SyncLogger | Synchronous logger; immediate output to sinks |
+| AsyncLogger | Asynchronous logger; queue-based, non-blocking |
+| ILogSink | Abstract output destination interface |
+| ConsoleLogSink | Writes to console with level-based colors |
+| FileLogSink | Writes to log files |
+| LogQueue | Thread-safe message queue for async logging |
+| LogQueueWorker | Background worker that drains the queue |
+| LogDispatcher | Routes formatted messages to sinks |
+| LogFormatter | Formats messages according to pattern (e.g. `%x`, `%l`, `%v`) |
+| LogStream | Stream API for composing log messages with `<<` |
+| TimeStamp | Timestamp generation and formatting |
+| TextColor | Console color management per log level |
+| LogLevel | Enum: eTrace, eDebug, eInfo, eWarn, eError, eFatal |
+| TimeStampType | Timestamp type (local/UTC) |
 
 ## Key Components
 
@@ -207,6 +243,16 @@ enum class LogLevel {
 ```
 
 ## Configuration
+
+![API Overview](diagrams/api.png)
+
+**Figure 3: API Flow Diagram**
+
+| Step | Description |
+|------|-------------|
+| 1. Configure | Set `LoggerConfig` (sink, file_path, log_level) and call `Logging::configureLogger(config)` |
+| 2. Log | Create category with `CREATE_VNE_LOGGER_CATEGORY`, then use `VNE_LOG_INFO`, `VNE_LOG_DEBUG`, etc. |
+| 3. Shutdown | Call `Logging::shutdown()` before exit to flush buffers and close files |
 
 ### Logger Configuration
 

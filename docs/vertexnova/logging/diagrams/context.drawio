@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram name="System Context (C4 Level 1)" id="context">
-        <mxGraphModel dx="930" dy="770" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="900" math="0" shadow="0">
+        <mxGraphModel dx="910" dy="770" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="900" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -39,9 +39,6 @@
                     <mxGeometry x="-0.2" y="1" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
-                </mxCell>
-                <mxCell id="title" value="VneLogging — System Context" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#1a1a1a;" parent="1" vertex="1">
-                    <mxGeometry x="300" y="40" width="360" height="36" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
