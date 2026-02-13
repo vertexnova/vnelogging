@@ -1,5 +1,5 @@
 ---
-applyTo: "**/*test*.cpp,**/*_test.cpp,**/tests/**/*.cpp,**/test/**/*.cpp"
+applyTo: "**/*_test.cpp,**/tests/**/*.cpp,**/test/**/*.cpp"
 ---
 ## Test Review Rules
 
