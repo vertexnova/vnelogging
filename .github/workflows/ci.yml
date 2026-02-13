@@ -17,6 +17,22 @@ on:
     branches: [ "main" ]
 
 jobs:
+  clang-format:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Install clang-format
+      run: sudo apt-get update && sudo apt-get install -y clang-format
+
+    - name: Check formatting (uses project .clang-format)
+      run: |
+        find src include examples tests -type f \( -name '*.h' -o -name '*.cpp' -o -name '*.hpp' -o -name '*.c' \) \
+          | xargs clang-format -i --style=file --fallback-style=Google
+        git diff --exit-code
+
   linux:
     runs-on: ubuntu-latest
     strategy:
@@ -147,3 +163,31 @@ jobs:
     - name: Test
       working-directory: build
       run: ctest --output-on-failure -C Release
+
+  clang-tidy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential cmake clang clang-tidy
+
+    - name: Configure CMake
+      run: |
+        cmake -B build -S . \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_C_COMPILER=clang \
+          -DCMAKE_CXX_COMPILER=clang++ \
+          -DBUILD_TESTS=ON
+
+    - name: Build
+      run: cmake --build build --config Release --parallel
+
+    - name: Run clang-tidy (project .clang-tidy)
+      run: |
+        find src -type f \( -name '*.cpp' -o -name '*.h' \) -print0 \
+          | xargs -0 -r clang-tidy -p build
