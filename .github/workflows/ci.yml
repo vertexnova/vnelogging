@@ -70,7 +70,7 @@ jobs:
 
     - name: Test
       working-directory: build
-      run: ctest --output-on-failure
+      run: ctest --output-on-failure --timeout 300 --verbose
 
   coverage:
     runs-on: ubuntu-latest
@@ -98,7 +98,7 @@ jobs:
 
     - name: Test
       working-directory: build
-      run: ctest --output-on-failure
+      run: ctest --output-on-failure --timeout 300 --verbose
 
     - name: Generate Coverage Report
       run: |
@@ -141,7 +141,7 @@ jobs:
 
     - name: Test
       working-directory: build
-      run: ctest --output-on-failure
+      run: ctest --output-on-failure --timeout 300 --verbose
 
   windows:
     runs-on: windows-latest
@@ -162,7 +162,7 @@ jobs:
 
     - name: Test
       working-directory: build
-      run: ctest --output-on-failure -C Release
+      run: ctest --output-on-failure --timeout 300 --verbose -C Release
 
   clang-tidy:
     runs-on: ubuntu-latest

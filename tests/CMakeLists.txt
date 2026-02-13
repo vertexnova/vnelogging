@@ -120,5 +120,11 @@ if(VNE_PLATFORM_WEB)
     )
 endif()
 
-# Add a test
-add_test(NAME vnelogging.test COMMAND TestVneLogging)
+# Add a test with verbose output
+add_test(NAME vnelogging.test COMMAND TestVneLogging --gtest_print_time=1)
+
+# Set test properties
+set_tests_properties(vnelogging.test PROPERTIES
+    TIMEOUT 300
+    ENVIRONMENT "GTEST_COLOR=1"
+)
