@@ -6,11 +6,11 @@ cmake_minimum_required(VERSION 3.16)
 
 project(03_SpdlogIntegration)
 
-# Find or use spdlog from external
-if(EXISTS "${CMAKE_SOURCE_DIR}/external/spdlog/CMakeLists.txt")
-    message(STATUS "Using spdlog from external directory")
+# Find or use spdlog from deps/external
+if(EXISTS "${CMAKE_SOURCE_DIR}/deps/external/spdlog/CMakeLists.txt")
+    message(STATUS "Using spdlog from deps/external directory")
     if(NOT TARGET spdlog::spdlog)
-        add_subdirectory(${CMAKE_SOURCE_DIR}/external/spdlog ${CMAKE_BINARY_DIR}/external/spdlog)
+        add_subdirectory(${CMAKE_SOURCE_DIR}/deps/external/spdlog ${CMAKE_BINARY_DIR}/deps/external/spdlog)
     endif()
 else()
     # Try to find system spdlog

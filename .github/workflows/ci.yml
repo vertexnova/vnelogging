@@ -106,8 +106,8 @@ jobs:
         lcov --remove coverage.info \
           '/usr/*' \
           '*/tests/*' \
-          '*/external/*' \
-          '*/libs/*' \
+          '*/deps/external/*' \
+          '*/deps/internal/*' \
           '*/_deps/*' \
           '*/googletest/*' \
           '*/googlemock/*' \

@@ -28,10 +28,9 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/vnecmake/modules")
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 #==============================================================================
-# Internal Libraries (deps/internal like vneio, or legacy libs/)
+# Internal Libraries (deps/internal)
 #==============================================================================
 set(VNE_DEPS_INTERNAL_DIR ${PROJECT_SOURCE_DIR}/deps/internal)
-set(VNE_LIBS_DIR ${PROJECT_SOURCE_DIR}/libs)
 
 # Only add vnecommon if not already available (e.g., when used as submodule)
 if(NOT TARGET vne::common)
@@ -40,9 +39,6 @@ if(NOT TARGET vne::common)
         add_subdirectory(deps/internal/vnecommon ${CMAKE_BINARY_DIR}/deps/internal/vnecommon)
         set(BUILD_EXAMPLES ${BUILD_EXAMPLES} CACHE BOOL "" FORCE)
         message(STATUS "VneLogging: using vnecommon from deps/internal/vnecommon")
-    elseif(EXISTS "${VNE_LIBS_DIR}/vnecommon/CMakeLists.txt")
-        add_subdirectory(libs/vnecommon)
-        message(STATUS "VneLogging: using vnecommon from libs/vnecommon")
     endif()
 endif()
 
@@ -202,7 +198,7 @@ endif()
 set(VNE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set(VNE_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 set(VNE_BUILD_DIR ${CMAKE_BINARY_DIR})
-set(VNE_EXTERNAL_DIR ${PROJECT_SOURCE_DIR}/external)
+set(VNE_EXTERNAL_DIR ${PROJECT_SOURCE_DIR}/deps/external)
 
 #==============================================================================
 # Configure config.h

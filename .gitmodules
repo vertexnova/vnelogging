@@ -1,14 +1,14 @@
-[submodule "external/googletest"]
-	path = external/googletest
+[submodule "deps/external/googletest"]
+	path = deps/external/googletest
 	url = https://github.com/google/googletest.git
 	branch = v1.17.0
-[submodule "external/spdlog"]
-	path = external/spdlog
+[submodule "deps/external/spdlog"]
+	path = deps/external/spdlog
 	url = https://github.com/gabime/spdlog.git
 	branch = v1.17.0
 [submodule "cmake/vnecmake"]
 	path = cmake/vnecmake
 	url = git@github.com:vertexnova/vnecmake.git
-[submodule "libs/vnecommon"]
-	path = libs/vnecommon
+[submodule "deps/internal/vnecommon"]
+	path = deps/internal/vnecommon
 	url = git@github.com:vertexnova/vnecommon.git
