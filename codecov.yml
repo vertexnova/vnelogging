@@ -22,8 +22,8 @@ coverage:
 ignore:
   - "tests/**/*"
   - "examples/**/*"
-  - "external/**/*"
-  - "libs/**/*"
+  - "deps/external/**/*"
+  - "deps/internal/**/*"
   - "cmake/**/*"
 
 # Comment settings for PRs

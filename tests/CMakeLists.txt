@@ -26,20 +26,20 @@ endif()
 find_package(GTest QUIET)
 
 if(NOT GTest_FOUND)
-    # Use external googletest if available
-    if(EXISTS "${CMAKE_SOURCE_DIR}/external/googletest/CMakeLists.txt")
-        message(STATUS "Using Google Test from external directory")
-        add_subdirectory(${CMAKE_SOURCE_DIR}/external/googletest ${CMAKE_BINARY_DIR}/external/googletest)
+    # Use deps/external googletest if available
+    if(EXISTS "${CMAKE_SOURCE_DIR}/deps/external/googletest/CMakeLists.txt")
+        message(STATUS "Using Google Test from deps/external directory")
+        add_subdirectory(${CMAKE_SOURCE_DIR}/deps/external/googletest ${CMAKE_BINARY_DIR}/deps/external/googletest)
         include(GoogleTest)
         # Note: gtest_main already links gtest, so we only need gtest_main and gmock
         set(GTEST_LIBRARIES gtest_main gmock)
         set(GTEST_INCLUDE_DIRS 
-            ${CMAKE_SOURCE_DIR}/external/googletest/googletest/include 
-            ${CMAKE_SOURCE_DIR}/external/googletest/googlemock/include
+            ${CMAKE_SOURCE_DIR}/deps/external/googletest/googletest/include 
+            ${CMAKE_SOURCE_DIR}/deps/external/googletest/googlemock/include
         )
     else()
-        # Fallback to FetchContent if external not available
-        message(STATUS "external/googletest not found, using FetchContent")
+        # Fallback to FetchContent if deps/external not available
+        message(STATUS "deps/external/googletest not found, using FetchContent")
         include(FetchContent)
         FetchContent_Declare(
             googletest
