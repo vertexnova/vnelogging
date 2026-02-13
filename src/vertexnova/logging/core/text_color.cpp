@@ -132,9 +132,9 @@ std::ostream& operator<<(std::ostream& stream, const TextColor& text_color) {
         return stream;  // No output when colors disabled
     }
 
-    return stream << "\033[" << toUnderlying(text_color.attributes_) << "m"
-                  << "\033[" << toUnderlying(text_color.foreground_color_) << "m"
-                  << "\033[" << toUnderlying(text_color.background_color_) << "m";
+    return stream << "\033[" << toUnderlying(text_color.attributes_) << "m" << "\033["
+                  << toUnderlying(text_color.foreground_color_) << "m" << "\033["
+                  << toUnderlying(text_color.background_color_) << "m";
 }
 
 }  // namespace vne::log
