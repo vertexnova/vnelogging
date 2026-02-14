@@ -119,13 +119,15 @@ endif()
 option(VNE_LOGGING_DEV "Dev build: enable examples and tests (local development)" ${VNE_LOGGING_DEV_DEFAULT})
 option(VNE_LOGGING_CI "CI build: enable tests, disable examples (e.g. -DVNE_LOGGING_CI=ON in pipelines)" OFF)
 
-# CMake Options:
-# | Option            | Default | Description                                                      |
-# |-------------------|---------|------------------------------------------------------------------|
-# | BUILD_TESTS       | ON      | Build the test suite                                             |
-# | VNE_LOGGING_TESTS | ON      | Build vnelogging test suite (set to OFF when used as submodule) |
-# | BUILD_EXAMPLES    | OFF     | Build example programs                                           |
-# | ENABLE_COVERAGE   | OFF     | Enable code coverage reporting                                   |
+# CMake Options and Presets:
+# | Option / Preset   | Default        | Description                                                      |
+# |-------------------|----------------|------------------------------------------------------------------|
+# | VNE_LOGGING_DEV   | ON (top-level) | Dev preset: BUILD_TESTS=ON, BUILD_EXAMPLES=ON                    |
+# | VNE_LOGGING_CI    | OFF            | CI preset: BUILD_TESTS=ON, BUILD_EXAMPLES=OFF                    |
+# | BUILD_TESTS       | ON             | Build the test suite                                             |
+# | VNE_LOGGING_TESTS | ON             | Build vnelogging test suite (set to OFF when used as submodule) |
+# | BUILD_EXAMPLES    | OFF            | Build example programs                                           |
+# | ENABLE_COVERAGE   | OFF            | Enable code coverage reporting                                   |
 option(BUILD_TESTS "Build the test suite" ON)
 option(VNE_LOGGING_TESTS "Build vnelogging test suite (turn OFF when used as submodule with only parent tests)" ON)
 option(BUILD_EXAMPLES "Build example programs" OFF)
