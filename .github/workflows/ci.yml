@@ -63,7 +63,7 @@ jobs:
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} \
           -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }} \
-          -DBUILD_TESTS=ON
+          -DVNE_LOGGING_CI=ON
 
     - name: Build
       run: cmake --build build --config Release --parallel
@@ -90,7 +90,7 @@ jobs:
           -DCMAKE_BUILD_TYPE=Debug \
           -DCMAKE_C_COMPILER=gcc \
           -DCMAKE_CXX_COMPILER=g++ \
-          -DBUILD_TESTS=ON \
+          -DVNE_LOGGING_CI=ON \
           -DENABLE_COVERAGE=ON
 
     - name: Build
@@ -134,7 +134,7 @@ jobs:
       run: |
         cmake -B build -S . \
           -DCMAKE_BUILD_TYPE=Release \
-          -DBUILD_TESTS=ON
+          -DVNE_LOGGING_CI=ON
 
     - name: Build
       run: cmake --build build --config Release --parallel
@@ -155,7 +155,7 @@ jobs:
       run: |
         cmake -B build -S . `
           -DCMAKE_BUILD_TYPE=Release `
-          -DBUILD_TESTS=ON
+          -DVNE_LOGGING_CI=ON
 
     - name: Build
       run: cmake --build build --config Release --parallel
@@ -182,7 +182,7 @@ jobs:
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_C_COMPILER=clang \
           -DCMAKE_CXX_COMPILER=clang++ \
-          -DBUILD_TESTS=ON
+          -DVNE_LOGGING_CI=ON
 
     - name: Build
       run: cmake --build build --config Release --parallel

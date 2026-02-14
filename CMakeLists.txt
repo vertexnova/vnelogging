@@ -28,20 +28,19 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/vnecmake/modules")
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 #==============================================================================
-# Internal Libraries (deps/internal)
+# Internal Libraries (deps/internal) - use if already in build, else add
 #==============================================================================
 set(VNE_DEPS_INTERNAL_DIR ${PROJECT_SOURCE_DIR}/deps/internal)
+include(VneUseDep)
 
-# Only add vnecommon if not already available (e.g., when used as submodule)
-if(NOT TARGET vne::common)
-    if(EXISTS "${VNE_DEPS_INTERNAL_DIR}/vnecommon/CMakeLists.txt")
-        set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-        add_subdirectory(deps/internal/vnecommon ${CMAKE_BINARY_DIR}/deps/internal/vnecommon)
-        set(BUILD_EXAMPLES ${BUILD_EXAMPLES} CACHE BOOL "" FORCE)
-        message(STATUS "VneLogging: using vnecommon from deps/internal/vnecommon")
-    endif()
-endif()
+function(_vnelogging_configure_vnecommon_dep)
+    set(_vnelogging_build_examples_saved "${BUILD_EXAMPLES}")
+    vne_use_dep(TARGET vne::common SUBDIR "${VNE_DEPS_INTERNAL_DIR}/vnecommon" BINARY_DIR "${CMAKE_BINARY_DIR}/deps/internal/vnecommon"
+        CACHE_VARS BUILD_EXAMPLES OFF)
+    set(BUILD_EXAMPLES "${_vnelogging_build_examples_saved}" CACHE BOOL "" FORCE)
+endfunction()
 
+_vnelogging_configure_vnecommon_dep()
 #==============================================================================
 # Project Setup
 #==============================================================================
@@ -114,10 +113,47 @@ endif()
 #==============================================================================
 # Build Options
 #==============================================================================
+# Build presets: DEV (local repo) and CI (pipelines). Default DEV when top-level project.
+if(CMAKE_PROJECT_NAME STREQUAL "vnelogging")
+    set(VNE_LOGGING_DEV_DEFAULT ON)
+else()
+    set(VNE_LOGGING_DEV_DEFAULT OFF)
+endif()
+option(VNE_LOGGING_DEV "Dev build: enable examples and tests (local development)" ${VNE_LOGGING_DEV_DEFAULT})
+option(VNE_LOGGING_CI "CI build: enable tests, disable examples (e.g. -DVNE_LOGGING_CI=ON in pipelines)" OFF)
 
+# Ensure CI preset takes precedence over DEV when both are specified.
+if(VNE_LOGGING_CI)
+    set(VNE_LOGGING_DEV OFF CACHE BOOL "Dev build: enable examples and tests (local development)" FORCE)
+endif()
+# CMake Options and Presets:
+# | Option / Preset   | Default        | Description                                                      |
+# |-------------------|----------------|------------------------------------------------------------------|
+# | VNE_LOGGING_DEV   | ON (top-level) | Dev preset: BUILD_TESTS=ON, BUILD_EXAMPLES=ON                    |
+# | VNE_LOGGING_CI    | OFF            | CI preset: BUILD_TESTS=ON, BUILD_EXAMPLES=OFF                    |
+# | BUILD_TESTS       | ON             | Build the test suite                                             |
+# | VNE_LOGGING_TESTS | ON             | Build vnelogging test suite (can be set to OFF by parent projects) |
+# | BUILD_EXAMPLES    | OFF            | Build example programs                                           |
+# | ENABLE_COVERAGE   | OFF            | Enable code coverage reporting                                   |
 option(BUILD_TESTS "Build the test suite" ON)
+option(VNE_LOGGING_TESTS "Build vnelogging test suite (can be set to OFF by parent projects)" ON)
 option(BUILD_EXAMPLES "Build example programs" OFF)
 option(ENABLE_COVERAGE "Enable code coverage reporting" OFF)
+
+# Apply CI or DEV preset (CI takes precedence; DEV is ignored when CI is active)
+if(VNE_LOGGING_CI)
+    set(BUILD_TESTS ON CACHE BOOL "Build the test suite" FORCE)
+    set(VNE_LOGGING_TESTS ON CACHE BOOL "Build vnelogging test suite (turn OFF when used as submodule with only parent tests)")
+    set(BUILD_EXAMPLES OFF CACHE BOOL "Build example programs" FORCE)
+    # Ensure DEV preset is disabled when CI preset is active
+    set(VNE_LOGGING_DEV OFF CACHE BOOL "Disable DEV preset when CI preset is active" FORCE)
+    message(STATUS "VneLogging: CI build -> BUILD_TESTS=ON, VNE_LOGGING_TESTS=ON, BUILD_EXAMPLES=OFF")
+elseif(VNE_LOGGING_DEV)
+    set(BUILD_TESTS ON CACHE BOOL "Build the test suite" FORCE)
+    set(VNE_LOGGING_TESTS ON CACHE BOOL "Build vnelogging test suite (turn OFF when used as submodule with only parent tests)")
+    set(BUILD_EXAMPLES ON CACHE BOOL "Build example programs" FORCE)
+    message(STATUS "VneLogging: DEV build -> BUILD_TESTS=ON, VNE_LOGGING_TESTS=ON, BUILD_EXAMPLES=ON")
+endif()
 
 # Enable cache system
 option(ENABLE_CACHE "Enable compiler cache if available" OFF)
@@ -214,10 +250,13 @@ include_directories("${CMAKE_BINARY_DIR}")
 add_subdirectory(src)
 
 #==============================================================================
-# Tests
+# Tests (enabled only when BUILD_TESTS and VNE_LOGGING_TESTS are ON).
+# A parent project may set VNE_LOGGING_TESTS=OFF, but note that presets such as
+# VNE_LOGGING_DEV or VNE_LOGGING_CI (when used) configure these options and
+# take precedence over individual settings.
 #==============================================================================
 
-if(BUILD_TESTS)
+if(BUILD_TESTS AND VNE_LOGGING_TESTS)
     enable_testing()
     add_subdirectory(tests)
 endif()
