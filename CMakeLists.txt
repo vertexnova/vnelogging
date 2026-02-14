@@ -125,11 +125,11 @@ option(VNE_LOGGING_CI "CI build: enable tests, disable examples (e.g. -DVNE_LOGG
 # | VNE_LOGGING_DEV   | ON (top-level) | Dev preset: BUILD_TESTS=ON, BUILD_EXAMPLES=ON                    |
 # | VNE_LOGGING_CI    | OFF            | CI preset: BUILD_TESTS=ON, BUILD_EXAMPLES=OFF                    |
 # | BUILD_TESTS       | ON             | Build the test suite                                             |
-# | VNE_LOGGING_TESTS | ON             | Build vnelogging test suite (set to OFF when used as submodule) |
+# | VNE_LOGGING_TESTS | ON             | Build vnelogging test suite (can be set to OFF by parent projects) |
 # | BUILD_EXAMPLES    | OFF            | Build example programs                                           |
 # | ENABLE_COVERAGE   | OFF            | Enable code coverage reporting                                   |
 option(BUILD_TESTS "Build the test suite" ON)
-option(VNE_LOGGING_TESTS "Build vnelogging test suite (turn OFF when used as submodule with only parent tests)" ON)
+option(VNE_LOGGING_TESTS "Build vnelogging test suite (can be set to OFF by parent projects)" ON)
 option(BUILD_EXAMPLES "Build example programs" OFF)
 option(ENABLE_COVERAGE "Enable code coverage reporting" OFF)
 
