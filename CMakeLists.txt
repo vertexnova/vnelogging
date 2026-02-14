@@ -114,11 +114,30 @@ endif()
 #==============================================================================
 # Build Options
 #==============================================================================
+# Build presets: DEV (local repo) and CI (pipelines). Default DEV when top-level project.
+if(CMAKE_PROJECT_NAME STREQUAL "vnelogging")
+    set(VNE_LOGGING_DEV_DEFAULT ON)
+else()
+    set(VNE_LOGGING_DEV_DEFAULT OFF)
+endif()
+option(VNE_LOGGING_DEV "Dev build: enable examples and tests (local development)" ${VNE_LOGGING_DEV_DEFAULT})
+option(VNE_LOGGING_CI "CI build: enable tests, disable examples (e.g. -DVNE_LOGGING_CI=ON in pipelines)" OFF)
 
 option(BUILD_TESTS "Build the test suite" ON)
 option(VNE_LOGGING_TESTS "Build vnelogging test suite (turn OFF when used as submodule with only parent tests)" ON)
 option(BUILD_EXAMPLES "Build example programs" OFF)
 option(ENABLE_COVERAGE "Enable code coverage reporting" OFF)
+
+# Apply DEV or CI preset (CI wins over plain defaults; DEV wins over CI if both set)
+if(VNE_LOGGING_DEV)
+    set(BUILD_TESTS ON CACHE BOOL "Build the test suite" FORCE)
+    set(BUILD_EXAMPLES ON CACHE BOOL "Build example programs" FORCE)
+    message(STATUS "VneLogging: DEV build -> BUILD_TESTS=ON, BUILD_EXAMPLES=ON")
+elseif(VNE_LOGGING_CI)
+    set(BUILD_TESTS ON CACHE BOOL "Build the test suite" FORCE)
+    set(BUILD_EXAMPLES OFF CACHE BOOL "Build example programs" FORCE)
+    message(STATUS "VneLogging: CI build -> BUILD_TESTS=ON, BUILD_EXAMPLES=OFF")
+endif()
 
 # Enable cache system
 option(ENABLE_CACHE "Enable compiler cache if available" OFF)
