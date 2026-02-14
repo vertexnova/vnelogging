@@ -122,6 +122,10 @@ endif()
 option(VNE_LOGGING_DEV "Dev build: enable examples and tests (local development)" ${VNE_LOGGING_DEV_DEFAULT})
 option(VNE_LOGGING_CI "CI build: enable tests, disable examples (e.g. -DVNE_LOGGING_CI=ON in pipelines)" OFF)
 
+# Ensure CI preset takes precedence over DEV when both are specified.
+if(VNE_LOGGING_CI)
+    set(VNE_LOGGING_DEV OFF CACHE BOOL "Dev build: enable examples and tests (local development)" FORCE)
+endif()
 # CMake Options and Presets:
 # | Option / Preset   | Default        | Description                                                      |
 # |-------------------|----------------|------------------------------------------------------------------|
