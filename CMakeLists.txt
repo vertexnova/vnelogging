@@ -146,7 +146,7 @@ if(VNE_LOGGING_CI)
     set(VNE_LOGGING_TESTS ON CACHE BOOL "Build vnelogging test suite (turn OFF when used as submodule with only parent tests)" FORCE)
     set(BUILD_EXAMPLES OFF CACHE BOOL "Build example programs" FORCE)
     # Ensure DEV preset is disabled when CI preset is active
-    set(VNE_LOGGING_DEV OFF CACHE BOOL "Disable DEV preset when CI preset is active" FORCE)
+    set(VNE_LOGGING_DEV OFF CACHE BOOL "Dev preset: BUILD_TESTS=ON, BUILD_EXAMPLES=ON" FORCE)
     message(STATUS "VneLogging: CI build -> BUILD_TESTS=ON, VNE_LOGGING_TESTS=ON, BUILD_EXAMPLES=OFF")
 elseif(VNE_LOGGING_DEV)
     set(BUILD_TESTS ON CACHE BOOL "Build the test suite" FORCE)
