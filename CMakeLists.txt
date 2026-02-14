@@ -28,19 +28,15 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/vnecmake/modules")
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 #==============================================================================
-# Internal Libraries (deps/internal)
+# Internal Libraries (deps/internal) - use if already in build, else add
 #==============================================================================
 set(VNE_DEPS_INTERNAL_DIR ${PROJECT_SOURCE_DIR}/deps/internal)
+include(VneUseDep)
 
-# Only add vnecommon if not already available (e.g., when used as submodule)
-if(NOT TARGET vne::common)
-    if(EXISTS "${VNE_DEPS_INTERNAL_DIR}/vnecommon/CMakeLists.txt")
-        set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-        add_subdirectory(deps/internal/vnecommon ${CMAKE_BINARY_DIR}/deps/internal/vnecommon)
-        set(BUILD_EXAMPLES ${BUILD_EXAMPLES} CACHE BOOL "" FORCE)
-        message(STATUS "VneLogging: using vnecommon from deps/internal/vnecommon")
-    endif()
-endif()
+set(_vnelogging_build_examples_saved ${BUILD_EXAMPLES})
+vne_use_dep(TARGET vne::common SUBDIR "${VNE_DEPS_INTERNAL_DIR}/vnecommon" BINARY_DIR "${CMAKE_BINARY_DIR}/deps/internal/vnecommon"
+    CACHE_VARS BUILD_EXAMPLES OFF)
+set(BUILD_EXAMPLES ${_vnelogging_build_examples_saved} CACHE BOOL "" FORCE)
 
 #==============================================================================
 # Project Setup
