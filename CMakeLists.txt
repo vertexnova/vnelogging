@@ -237,7 +237,10 @@ include_directories("${CMAKE_BINARY_DIR}")
 add_subdirectory(src)
 
 #==============================================================================
-# Tests (only when BUILD_TESTS and VNE_LOGGING_TESTS; parent can set VNE_LOGGING_TESTS=OFF)
+# Tests (enabled only when BUILD_TESTS and VNE_LOGGING_TESTS are ON).
+# A parent project may set VNE_LOGGING_TESTS=OFF, but note that presets such as
+# VNE_LOGGING_DEV or VNE_LOGGING_CI (when used) configure these options and
+# take precedence over individual settings.
 #==============================================================================
 
 if(BUILD_TESTS AND VNE_LOGGING_TESTS)
