@@ -116,6 +116,7 @@ endif()
 #==============================================================================
 
 option(BUILD_TESTS "Build the test suite" ON)
+option(VNE_LOGGING_TESTS "Build vnelogging test suite (turn OFF when used as submodule with only parent tests)" ON)
 option(BUILD_EXAMPLES "Build example programs" OFF)
 option(ENABLE_COVERAGE "Enable code coverage reporting" OFF)
 
@@ -214,10 +215,10 @@ include_directories("${CMAKE_BINARY_DIR}")
 add_subdirectory(src)
 
 #==============================================================================
-# Tests
+# Tests (only when BUILD_TESTS and VNE_LOGGING_TESTS; parent can set VNE_LOGGING_TESTS=OFF)
 #==============================================================================
 
-if(BUILD_TESTS)
+if(BUILD_TESTS AND VNE_LOGGING_TESTS)
     enable_testing()
     add_subdirectory(tests)
 endif()
