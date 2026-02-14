@@ -33,11 +33,14 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 set(VNE_DEPS_INTERNAL_DIR ${PROJECT_SOURCE_DIR}/deps/internal)
 include(VneUseDep)
 
-set(_vnelogging_build_examples_saved ${BUILD_EXAMPLES})
-vne_use_dep(TARGET vne::common SUBDIR "${VNE_DEPS_INTERNAL_DIR}/vnecommon" BINARY_DIR "${CMAKE_BINARY_DIR}/deps/internal/vnecommon"
-    CACHE_VARS BUILD_EXAMPLES OFF)
-set(BUILD_EXAMPLES ${_vnelogging_build_examples_saved} CACHE BOOL "" FORCE)
+function(_vnelogging_configure_vnecommon_dep)
+    set(_vnelogging_build_examples_saved "${BUILD_EXAMPLES}")
+    vne_use_dep(TARGET vne::common SUBDIR "${VNE_DEPS_INTERNAL_DIR}/vnecommon" BINARY_DIR "${CMAKE_BINARY_DIR}/deps/internal/vnecommon"
+        CACHE_VARS BUILD_EXAMPLES OFF)
+    set(BUILD_EXAMPLES "${_vnelogging_build_examples_saved}" CACHE BOOL "" FORCE)
+endfunction()
 
+_vnelogging_configure_vnecommon_dep()
 #==============================================================================
 # Project Setup
 #==============================================================================
