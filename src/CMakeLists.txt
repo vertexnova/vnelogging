@@ -69,9 +69,9 @@ target_include_directories(vnelogging
         $<INSTALL_INTERFACE:include>
 )
 
-# Platform-specific library linking
-if(NOT WIN32)
-    target_link_libraries(vnelogging PRIVATE pthread)
+# Platform-specific library linking (Threads::Threads is portable for pthread)
+if(NOT WIN32 AND NOT EMSCRIPTEN)
+    target_link_libraries(vnelogging PRIVATE Threads::Threads)
 endif()
 
 # Mobile platform specific linking

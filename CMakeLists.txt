@@ -247,6 +247,7 @@ include_directories("${CMAKE_BINARY_DIR}")
 # Add Library
 #==============================================================================
 
+find_package(Threads REQUIRED)
 add_subdirectory(src)
 
 #==============================================================================
