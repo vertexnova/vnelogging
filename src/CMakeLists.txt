@@ -77,9 +77,9 @@ endif()
 # Mobile platform specific linking
 if(VNE_TARGET_PLATFORM STREQUAL "Android")
     target_link_libraries(vnelogging PRIVATE log)
-elseif(VNE_TARGET_PLATFORM STREQUAL "iOS")
-    # iOS-specific libraries if needed
-    target_link_libraries(vnelogging PRIVATE Foundation)
+elseif(VNE_TARGET_PLATFORM STREQUAL "iOS" OR VNE_TARGET_PLATFORM STREQUAL "visionOS")
+    # Link Foundation as a framework for iOS/visionOS builds.
+    target_link_options(vnelogging PRIVATE "-framework" "Foundation")
 endif()
 
 # MSVC-specific: Suppress getenv deprecation warning (C4996)
