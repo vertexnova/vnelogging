@@ -337,6 +337,15 @@ install(DIRECTORY src/vertexnova/
     FILES_MATCHING PATTERN "*.h"
 )
 
+# vnecommon is header-only (PUBLIC link of vnelogging). Ship its headers so installed
+# consumers get vertexnova/common/ without a separate vnecommon library under lib/.
+if(EXISTS "${PROJECT_SOURCE_DIR}/deps/internal/vnecommon/include/vertexnova/common")
+    install(DIRECTORY "${PROJECT_SOURCE_DIR}/deps/internal/vnecommon/include/vertexnova/common/"
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova/common
+        FILES_MATCHING PATTERN "*.h"
+    )
+endif()
+
 # Install config.h
 install(FILES ${CMAKE_BINARY_DIR}/config.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova/logging

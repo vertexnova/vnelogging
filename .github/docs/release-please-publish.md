@@ -13,7 +13,7 @@
 
 ## Install layout
 
-Tarballs contain the CMake install prefix: `include/vertexnova/logging/`, libraries under `lib/` (and platform-specific layout), `LICENSE`, `CHANGELOG.md`, and `lib/cmake/VneLogging/` export files.
+Tarballs contain the CMake install prefix: `include/vertexnova/logging/`, `include/vertexnova/common/` (headers from the bundled header-only **vnecommon** dependency — no separate `lib/` entry for vnecommon), libraries for **vnelogging** under `lib/` (and platform-specific layout), `LICENSE`, `CHANGELOG.md`, and `lib/cmake/VneLogging/` export files.
 
 ## Troubleshooting
 
