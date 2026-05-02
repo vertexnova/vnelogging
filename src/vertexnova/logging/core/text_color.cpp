@@ -72,7 +72,7 @@ namespace vne::log {
 // Color support functions
 //==============================================================================
 
-bool isColorSupported() {
+[[nodiscard]] VNE_LOGGING_API bool isColorSupported() {
     int detected = g_color_detected.load(std::memory_order_relaxed);
     if (detected < 0) {
         detected = detectColorSupport() ? 1 : 0;
@@ -81,11 +81,11 @@ bool isColorSupported() {
     return detected != 0;
 }
 
-void setColorEnabled(bool enabled) {
+VNE_LOGGING_API void setColorEnabled(bool enabled) {
     g_color_mode.store(enabled ? 1 : 0, std::memory_order_relaxed);
 }
 
-bool isColorEnabled() {
+[[nodiscard]] VNE_LOGGING_API bool isColorEnabled() {
     int mode = g_color_mode.load(std::memory_order_relaxed);
     if (mode >= 0) {
         return mode != 0;
@@ -93,7 +93,7 @@ bool isColorEnabled() {
     return isColorSupported();
 }
 
-const char* getResetSequence() {
+[[nodiscard]] VNE_LOGGING_API const char* getResetSequence() {
     return isColorEnabled() ? "\033[0m" : "";
 }
 
