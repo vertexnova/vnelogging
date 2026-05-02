@@ -120,10 +120,11 @@ if(VNE_LOGGING_LIB_TYPE STREQUAL "shared")
                 $<TARGET_FILE:vnelogging>
                 $<TARGET_FILE_DIR:TestVneLogging>
             VERBATIM)
-    elseif(APPLE)
-        set_property(TARGET TestVneLogging APPEND PROPERTY BUILD_RPATH "@loader_path/../lib")
-    elseif(UNIX)
-        set_property(TARGET TestVneLogging APPEND PROPERTY BUILD_RPATH "\$ORIGIN/../lib")
+    else()
+        # Match the real output directory of vnelogging (not a guessed ../lib relative to the test exe).
+        set_target_properties(TestVneLogging PROPERTIES
+            BUILD_RPATH "$<TARGET_FILE_DIR:vnelogging>"
+        )
     endif()
 endif()
 

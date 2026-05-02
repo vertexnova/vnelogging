@@ -47,7 +47,7 @@ find_path(VneLogging_INCLUDE_DIR
 )
 
 find_library(VneLogging_LIBRARY
-    NAMES VneLogging vnelogging libvnelogging
+    NAMES VneLogging vnelogging
     PATHS
         ${CMAKE_CURRENT_LIST_DIR}/../../lib
         ${CMAKE_INSTALL_PREFIX}/lib
