@@ -6,13 +6,14 @@ A generic script to format C/C++ source files using clang-format with
 VneLogging-specific formatting rules.
 
 Usage:
-    python scripts/clang_formatter.py <folder_path> [options]
+    python scripts/clang_formatter.py <folder_path> | all [options]
     python scripts/clang_formatter.py --file <file_path> [options]
 
 Examples:
-    python scripts/clang_formatter.py src/vnelogging
-    python scripts/clang_formatter.py src/vnelogging --dry-run
-    python scripts/clang_formatter.py src/vnelogging --verbose
+    python scripts/clang_formatter.py all
+    python scripts/clang_formatter.py all --dry-run
+    python scripts/clang_formatter.py src
+    python scripts/clang_formatter.py src --verbose
     python scripts/clang_formatter.py --file src/vertexnova/logging/logging.cpp
     python scripts/clang_formatter.py --file include/vertexnova/logging/logging.h
 """
@@ -22,6 +23,10 @@ import os
 import subprocess
 import sys
 from pathlib import Path
+from typing import List, Tuple
+
+# Top-level trees to format when target is "all" (same idea as VertexNova CI: src, include, tests, examples).
+ALL_FORMAT_DIRS = ("src", "include", "tests", "examples")
 
 
 def find_source_files(folder_path: Path) -> list:
@@ -32,7 +37,16 @@ def find_source_files(folder_path: Path) -> list:
     extensions = ('.h', '.cpp', '.mm', '.m', '.hpp', '.c')
 
     # Directories to exclude
-    exclude_dirs = {'build', '.git', 'node_modules', 'CMakeFiles', '__pycache__'}
+    exclude_dirs = {
+        'build',
+        '.git',
+        'node_modules',
+        'CMakeFiles',
+        '__pycache__',
+        'deps',
+        '.venv',
+        'venv',
+    }
 
     for root, dirs, files in os.walk(folder_path):
         # Remove excluded directories from dirs list to prevent walking into them
@@ -43,6 +57,25 @@ def find_source_files(folder_path: Path) -> list:
                 source_files.append(os.path.join(root, file))
 
     return source_files
+
+
+def collect_sources_for_all(project_root: Path) -> Tuple[List[str], List[str]]:
+    """Gather sources under standard project directories (existing dirs only)."""
+    files: List[str] = []
+    used_dirs: List[str] = []
+    for name in ALL_FORMAT_DIRS:
+        d = project_root / name
+        if d.is_dir():
+            used_dirs.append(name)
+            files.extend(find_source_files(d))
+    # De-duplicate (stable order)
+    seen = set()
+    unique: List[str] = []
+    for f in files:
+        if f not in seen:
+            seen.add(f)
+            unique.append(f)
+    return unique, used_dirs
 
 
 def is_source_file(file_path: Path) -> bool:
@@ -109,10 +142,10 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python scripts/clang_formatter.py src/vnelogging
-  python scripts/clang_formatter.py src/vnelogging --dry-run
-  python scripts/clang_formatter.py src/vnelogging --verbose
-  python scripts/clang_formatter.py tests
+  python scripts/clang_formatter.py all
+  python scripts/clang_formatter.py all --dry-run
+  python scripts/clang_formatter.py src
+  python scripts/clang_formatter.py tests --verbose
   python scripts/clang_formatter.py --file src/vertexnova/logging/logging.cpp
   python scripts/clang_formatter.py --file include/vertexnova/logging/logging.h
         """
@@ -123,7 +156,7 @@ Examples:
     group.add_argument(
         'folder',
         nargs='?',
-        help='Folder path to format (e.g., src/vnelogging)'
+        help="Folder path to format, or 'all' for src, include, tests, examples (if present)"
     )
     group.add_argument(
         '--file',
@@ -159,6 +192,8 @@ Examples:
         print(f"Style file: {style_file}")
     print()
 
+    format_scope = None  # set for final summary when not --file
+
     if args.file:
         # Format specific file
         target_file = project_root / args.file
@@ -178,18 +213,34 @@ Examples:
         source_files = [str(target_file)]
 
     else:
-        # Format folder
-        target_folder = project_root / args.folder
+        if args.folder is None:
+            parser.error("Provide a folder path, the keyword 'all', or use --file")
 
-        if not target_folder.exists():
-            print(f"Error: Target folder not found at {target_folder}")
-            sys.exit(1)
+        if args.folder == "all":
+            source_files, used_dirs = collect_sources_for_all(project_root)
+            if not used_dirs:
+                print(
+                    "Error: No standard directories found for 'all'. "
+                    f"Expected at least one of: {', '.join(ALL_FORMAT_DIRS)}"
+                )
+                sys.exit(1)
+            format_scope = ", ".join(used_dirs)
+            print(f"Target: all → {format_scope}/")
+            print()
+        else:
+            # Format folder
+            target_folder = project_root / args.folder
 
-        print(f"Target folder: {target_folder}")
-        print()
+            if not target_folder.exists():
+                print(f"Error: Target folder not found at {target_folder}")
+                sys.exit(1)
 
-        # Find source files
-        source_files = find_source_files(target_folder)
+            print(f"Target folder: {target_folder}")
+            print()
+
+            # Find source files
+            source_files = find_source_files(target_folder)
+            format_scope = args.folder
 
     if args.verbose:
         print("Source files found:")
@@ -212,8 +263,8 @@ Examples:
         if not args.dry_run:
             if args.file:
                 print(f"Formatted 1 file: {args.file}")
-            else:
-                print(f"Formatted {len(source_files)} files in {args.folder}")
+            elif format_scope is not None:
+                print(f"Formatted {len(source_files)} files in {format_scope}")
     else:
         print("\n✗ Formatting failed!")
         sys.exit(1)

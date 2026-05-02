@@ -140,21 +140,24 @@ Builds VneLogging for iOS (Simulator or Device).
 Formats C++ source files using clang-format.
 
 ```bash
-# Format entire directory
-python scripts/clang_formatter.py src/vnelogging
+# Format all default trees: src, include, tests, examples (each if present)
+python scripts/clang_formatter.py all
+
+# Format one directory
+python scripts/clang_formatter.py src
 
 # Format single file
 python scripts/clang_formatter.py --file src/vertexnova/logging/logging.cpp
 
 # Preview changes without modifying files
-python scripts/clang_formatter.py src/vnelogging --dry-run
+python scripts/clang_formatter.py all --dry-run
 
 # Verbose output
-python scripts/clang_formatter.py src/vnelogging --verbose
+python scripts/clang_formatter.py all --verbose
 ```
 
 **Options:**
-- `<folder>` - Directory to format
+- `<folder>` - Directory to format, or the keyword `all` for standard project folders
 - `--file <file>` - Single file to format
 - `--dry-run` - Preview changes without modifying files
 - `--verbose` - Show verbose output
@@ -381,7 +384,7 @@ ctest --output-on-failure
 ### Code Quality Check
 ```bash
 # Format code
-python scripts/clang_formatter.py src/vnelogging
+python scripts/clang_formatter.py all
 
 # Run static analysis
 python scripts/static_analyzer.py src/vnelogging

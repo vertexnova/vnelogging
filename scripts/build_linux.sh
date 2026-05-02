@@ -65,6 +65,7 @@ usage() {
   echo "  -clean             Clean the build directory before performing the action"
   echo "  -interactive       Run in interactive mode to choose options"
   echo "  -j <jobs>          Number of parallel jobs (default: 10)"
+  echo "  -l|--lib-type      Library type: static or shared (default: static)"
   echo ""
   echo "Examples:"
   echo "  $0 -t Debug -a configure_and_build"
@@ -146,6 +147,7 @@ interactive_mode() {
 BUILD_TYPE="Debug"
 ACTION="configure_and_build"
 COMPILER="gcc"
+LIB_TYPE="static"
 CLEAN_BUILD=false
 INTERACTIVE_MODE=false
 
@@ -158,6 +160,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     -a|--action)
       ACTION="$2"
+      shift 2
+      ;;
+    -l|--lib-type)
+      LIB_TYPE="$2"
       shift 2
       ;;
     -c|--compiler)
@@ -182,6 +188,11 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+if [[ "$LIB_TYPE" != "static" && "$LIB_TYPE" != "shared" ]]; then
+  echo "Invalid --lib-type: $LIB_TYPE (expected static or shared)"
+  exit 1
+fi
+
 # Check for interactive mode
 if [ "$INTERACTIVE_MODE" = true ]; then
   interactive_mode
@@ -202,17 +213,17 @@ echo "$PLATFORM :: $COMPILER-${COMPILER_VERSION}"
 # Store project root directory
 PROJECT_ROOT=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 
-# Set the build directory based on build type and compiler
-BUILD_DIR="$PROJECT_ROOT/build/${BUILD_TYPE}/build-linux-$COMPILER-${COMPILER_VERSION}"
+# Set the build directory: build/<static|shared>/<BuildType>/...
+BUILD_DIR="$PROJECT_ROOT/build/${LIB_TYPE}/${BUILD_TYPE}/build-linux-$COMPILER-${COMPILER_VERSION}"
 
 # Build CMake command
 build_cmake_command() {
   local base_cmd=""
 
   if [ "$COMPILER" = "gcc" ]; then
-    base_cmd="cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DBUILD_TESTS=ON"
+    base_cmd="cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DBUILD_TESTS=ON -DVNE_LOGGING_LIB_TYPE=$LIB_TYPE"
   elif [ "$COMPILER" = "clang" ]; then
-    base_cmd="cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DBUILD_TESTS=ON"
+    base_cmd="cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DBUILD_TESTS=ON -DVNE_LOGGING_LIB_TYPE=$LIB_TYPE"
   fi
 
   echo "$base_cmd $PROJECT_ROOT"

@@ -10,6 +10,7 @@
  * ----------------------------------------------------------------------
  */
 
+#include "vertexnova/logging/export.h"
 #include "vertexnova/logging/log_manager.h"
 #include "vertexnova/logging/core/logger.h"
 #include "vertexnova/logging/core/log_stream.h"
@@ -44,7 +45,7 @@ enum class LogSinkType {
  * including its name, sink type, patterns for console and file output,
  * log level, and whether it operates asynchronously.
  */
-struct LoggerConfig {
+struct VNE_LOGGING_API LoggerConfig {
     std::string name;                          //!< The name of the logger.
     LogSinkType sink = LogSinkType::eConsole;  //!< The type of log sink to use (console, file, or both).
     std::string console_pattern;               //!< The pattern for formatting log messages in the console.
@@ -66,7 +67,7 @@ inline constexpr const char* kDefaultLoggerName = "vertexnova";  //!< Default lo
  * including initialization, pattern setup, sink configuration, and macros
  * for logging operations.
  */
-class Logging {
+class VNE_LOGGING_API Logging {
    public:
     /**
      * @brief Initializes the logging system with the specified logger name.

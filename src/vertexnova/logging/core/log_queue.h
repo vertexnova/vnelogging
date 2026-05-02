@@ -10,6 +10,8 @@
  * ----------------------------------------------------------------------
  */
 
+#include "vertexnova/logging/export.h"
+
 #include <queue>
 #include <mutex>
 #include <functional>
@@ -27,7 +29,7 @@ namespace vne::log {
 /// Default maximum number of items to drain from the queue in a single operation.
 constexpr size_t kDefaultDrainBatchSize = 32;
 
-class LogQueue {
+class VNE_LOGGING_API LogQueue {
    public:
     /**
      * @brief Pushes a new log task onto the queue.

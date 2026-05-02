@@ -10,6 +10,8 @@
  * ----------------------------------------------------------------------
  */
 
+#include "vertexnova/logging/export.h"
+
 #include "log_sink.h"
 
 #include <memory>
@@ -26,7 +28,7 @@ namespace vne::log {
  * methods to add log sinks, set and get the log level, log messages, flush log output
  * and get logger names.
  */
-class ILogger {
+class VNE_LOGGING_API ILogger {
    public:
     virtual ~ILogger() = default;
 

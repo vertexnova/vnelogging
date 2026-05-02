@@ -10,6 +10,8 @@
  * ----------------------------------------------------------------------
  */
 
+#include "vertexnova/logging/export.h"
+
 #include "log_level.h"
 #include "time_stamp.h"
 
@@ -26,7 +28,7 @@ namespace vne::log {
  * must implement. It includes methods for logging messages, flushing
  * the log output, and setting/getting the log pattern.
  */
-class ILogSink {
+class VNE_LOGGING_API ILogSink {
    public:
     /**
      * @brief Destructor.

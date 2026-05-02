@@ -10,6 +10,8 @@
  * ----------------------------------------------------------------------
  */
 
+#include "vertexnova/logging/export.h"
+
 #include <memory>
 #include <mutex>
 #include <vector>
@@ -35,7 +37,7 @@ namespace vne::log {
  * logger instances. It uses a singleton pattern to ensure that only one
  * logger instance is managed globally across the application.
  */
-class LoggerController {
+class VNE_LOGGING_API LoggerController {
    public:
     /**
      * @brief Registers a logger instance with the controller.

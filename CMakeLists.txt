@@ -111,6 +111,46 @@ elseif(VNE_TARGET_PLATFORM STREQUAL "Web")
 endif()
 
 #==============================================================================
+# Library type — static or shared (one per build directory)
+#==============================================================================
+# Parent projects (e.g. VneIo) should align cache: set(VNE_LOGGING_LIB_TYPE "${PARENT_LIB_TYPE}" CACHE STRING "" FORCE)
+# before add_subdirectory(vnelogging) when linking vne::logging as a shared dependency.
+
+set(VNE_LOGGING_LIB_TYPE "static" CACHE STRING "VneLogging library type: static or shared (one per build)")
+set_property(CACHE VNE_LOGGING_LIB_TYPE PROPERTY STRINGS static shared)
+if(NOT VNE_LOGGING_LIB_TYPE STREQUAL "static" AND NOT VNE_LOGGING_LIB_TYPE STREQUAL "shared")
+    message(FATAL_ERROR "VNE_LOGGING_LIB_TYPE must be 'static' or 'shared'. Got: ${VNE_LOGGING_LIB_TYPE}")
+endif()
+
+if(VNE_LOGGING_LIB_TYPE STREQUAL "shared")
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+    set(_VNE_LOGGING_LIB_KIND SHARED)
+else()
+    set(_VNE_LOGGING_LIB_KIND STATIC)
+endif()
+
+message(STATUS "VneLogging: VNE_LOGGING_LIB_TYPE=${VNE_LOGGING_LIB_TYPE}")
+
+function(vnelogging_apply_shared_export target_name)
+    get_target_property(_vlg_kind "${target_name}" TYPE)
+    if(NOT _vlg_kind STREQUAL "SHARED_LIBRARY")
+        return()
+    endif()
+    target_compile_definitions(${target_name}
+        PRIVATE VNE_LOGGING_BUILDING_DLL
+        INTERFACE VNE_LOGGING_DLL
+    )
+    if(MSVC)
+        target_compile_options(${target_name} PRIVATE /wd4251 /wd4275)
+    else()
+        set_target_properties(${target_name} PROPERTIES
+            CXX_VISIBILITY_PRESET hidden
+            VISIBILITY_INLINES_HIDDEN ON
+        )
+    endif()
+endfunction()
+
+#==============================================================================
 # Build Options
 #==============================================================================
 # Build presets: DEV (local repo) and CI (pipelines). Default DEV when top-level project.
@@ -135,6 +175,7 @@ endif()
 # | VNE_LOGGING_TESTS | ON             | Build vnelogging test suite (can be set to OFF by parent projects) |
 # | BUILD_EXAMPLES    | OFF            | Build example programs                                           |
 # | ENABLE_COVERAGE   | OFF            | Enable code coverage reporting                                   |
+# | VNE_LOGGING_LIB_TYPE | static      | Library artifact: static or shared                               |
 option(BUILD_TESTS "Build the test suite" ON)
 option(VNE_LOGGING_TESTS "Build vnelogging test suite (can be set to OFF by parent projects)" ON)
 option(BUILD_EXAMPLES "Build example programs" OFF)
@@ -311,3 +352,10 @@ install(EXPORT VneLoggingTargets
 install(FILES cmake/FindVneLogging.cmake
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/VneLogging
 )
+
+if(EXISTS "${PROJECT_SOURCE_DIR}/LICENSE")
+    install(FILES "${PROJECT_SOURCE_DIR}/LICENSE" DESTINATION .)
+endif()
+if(EXISTS "${PROJECT_SOURCE_DIR}/CHANGELOG.md")
+    install(FILES "${PROJECT_SOURCE_DIR}/CHANGELOG.md" DESTINATION .)
+endif()

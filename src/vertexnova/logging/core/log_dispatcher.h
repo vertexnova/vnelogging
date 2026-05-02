@@ -10,6 +10,8 @@
  * ----------------------------------------------------------------------
  */
 
+#include "vertexnova/logging/export.h"
+
 #include "log_sink.h"
 #include "log_queue.h"
 #include "log_queue_worker.h"
@@ -34,7 +36,7 @@
 
 namespace vne::log {
 
-class LogDispatcher {
+class VNE_LOGGING_API LogDispatcher {
    public:
     /**
      * @brief Constructs a LogDispatcher instance.

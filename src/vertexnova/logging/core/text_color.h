@@ -10,6 +10,8 @@
  * ----------------------------------------------------------------------
  */
 
+#include "vertexnova/logging/export.h"
+
 #include <iostream>
 #include <ostream>
 
@@ -35,7 +37,7 @@ namespace vne::log {
  *
  * @return True if ANSI colors are supported, false otherwise.
  */
-[[nodiscard]] bool isColorSupported();
+[[nodiscard]] VNE_LOGGING_API bool isColorSupported();
 
 /**
  * @brief Enables or disables color output globally.
@@ -46,21 +48,21 @@ namespace vne::log {
  *
  * @param enabled True to enable colors, false to disable.
  */
-void setColorEnabled(bool enabled);
+VNE_LOGGING_API void setColorEnabled(bool enabled);
 
 /**
  * @brief Gets the current color enabled state.
  *
  * @return True if colors are currently enabled, false otherwise.
  */
-[[nodiscard]] bool isColorEnabled();
+[[nodiscard]] VNE_LOGGING_API bool isColorEnabled();
 
 /**
  * @brief Returns the ANSI reset sequence if colors are enabled, empty string otherwise.
  *
  * @return Reset sequence "\033[0m" or empty string.
  */
-[[nodiscard]] const char* getResetSequence();
+[[nodiscard]] VNE_LOGGING_API const char* getResetSequence();
 
 /**
  * @enum FGColorCode
@@ -137,7 +139,7 @@ enum class DisplayAttributes {
  * https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
  * https://misc.flogisoft.com/bash/tip_colors_and_formatting
  */
-class TextColor {
+class VNE_LOGGING_API TextColor {
    public:
     /**
      * @brief Default constructor.
@@ -190,7 +192,7 @@ class TextColor {
      * @param text_color The TextColor object.
      * @return The output stream.
      */
-    friend std::ostream& operator<<(std::ostream& stream, const TextColor& text_color);
+    friend VNE_LOGGING_API std::ostream& operator<<(std::ostream& stream, const TextColor& text_color);
 
    private:
     DisplayAttributes attributes_;  //!< Display attribute

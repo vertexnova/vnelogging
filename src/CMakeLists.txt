@@ -30,6 +30,7 @@ set(INCLUDE_FILES
 
 # Public headers in include/ directory
 set(PUBLIC_HEADERS
+    ${VNE_INCLUDE_DIR}/vertexnova/logging/export.h
     ${VNE_INCLUDE_DIR}/vertexnova/logging/logging.h
     ${VNE_INCLUDE_DIR}/vertexnova/logging/utils/path_utils.h
 )
@@ -55,8 +56,8 @@ set(SOURCE_FILES
 #                                 Library                                      #
 #==============================================================================
 
-# Create a static library from the source and header files
-add_library(vnelogging STATIC ${SOURCE_FILES} ${INCLUDE_FILES} ${PUBLIC_HEADERS})
+add_library(vnelogging ${_VNE_LOGGING_LIB_KIND} ${SOURCE_FILES} ${INCLUDE_FILES} ${PUBLIC_HEADERS})
+vnelogging_apply_shared_export(vnelogging)
 
 # Alias for the library
 add_library(vne::logging ALIAS vnelogging)

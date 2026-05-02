@@ -1,0 +1,413 @@
+# ----------------------------------------------------------------------
+# Copyright (c) 2026 Ajeet Singh Yadav. All rights reserved.
+# Licensed under the Apache License, Version 2.0 (the "License")
+#
+# Autodoc:   yes
+# ----------------------------------------------------------------------
+#
+# Release Please opens/updates the release PR; on tag, publish install tarballs.
+# See: .github/docs/release-please-publish.md
+
+name: Release Please
+
+on:
+  push:
+    branches: ["main"]
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    name: "Release / release-please"
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.rp.outputs.release_created }}
+      tag_name: ${{ steps.rp.outputs.tag_name }}
+      version: ${{ steps.rp.outputs.version }}
+    steps:
+      - name: Run release-please
+        id: rp
+        uses: googleapis/release-please-action@v4
+        with:
+          config-file: .github/release-please-config.json
+          token: ${{ secrets.REPO_ACCESS_TOKEN || github.token }}
+
+      - name: Enable auto-merge on Release PR
+        if: steps.rp.outputs.pr != ''
+        env:
+          GH_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN || github.token }}
+          PR_RAW: ${{ steps.rp.outputs.pr }}
+        run: |
+          PR_NUMBER="$(echo "$PR_RAW" | python3 -c 'import sys,json; print(json.load(sys.stdin)["number"])')"
+          if ! gh pr merge --repo "${{ github.repository }}" --auto --squash "$PR_NUMBER" 2>&1 | tee /tmp/gh-out; then
+            if grep -q "enablePullRequestAutoMerge\|Auto merge is not allowed" /tmp/gh-out; then
+              echo "::warning::Auto-merge is disabled. Enable Settings -> General -> Pull Requests -> 'Allow auto-merge'."
+              exit 0
+            fi
+            exit 1
+          fi
+
+  publish:
+    name: "Release / publish (${{ matrix.platform }})"
+    needs: [release-please]
+    if: needs.release-please.outputs.release_created == 'true'
+    permissions:
+      contents: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux-gcc
+            runner: ubuntu-latest
+            build_dir: build/shared/Release
+            c: gcc
+            cpp: g++
+          - platform: macos
+            runner: macos-latest
+            build_dir: build/shared/Release
+            c: ""
+            cpp: ""
+          - platform: windows
+            runner: windows-latest
+            build_dir: build/shared/Release
+            c: ""
+            cpp: ""
+          - platform: web-emscripten
+            runner: ubuntu-latest
+            build_dir: build/shared/Release
+            c: ""
+            cpp: ""
+          - platform: ios-static
+            runner: macos-latest
+            build_dir: build/static/Release
+            c: ""
+            cpp: ""
+          - platform: android
+            runner: ubuntu-latest
+            build_dir: build/shared/Release
+            c: ""
+            cpp: ""
+            android_platform: android-24
+
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Use HTTPS for GitHub
+        run: git config --global url."https://github.com/".insteadOf "git@github.com:"
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release-please.outputs.tag_name }}
+          submodules: recursive
+
+      - name: Setup Android NDK
+        if: matrix.platform == 'android'
+        id: setup-ndk
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r27d
+
+      - name: Select Xcode 26 (macOS + iOS)
+        if: matrix.platform == 'macos' || matrix.platform == 'ios-static'
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "26.0"
+
+      - name: Verify Xcode (iOS release)
+        if: matrix.platform == 'ios-static'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! out="$(xcodebuild -version 2>&1)"; then
+            echo "::error::xcodebuild -version failed."
+            echo "$out"
+            exit 1
+          fi
+          echo "$out"
+          ver="$(printf '%s\n' "$out" | awk '/^Xcode /{print $2; exit}')"
+          if [[ -z "$ver" || "$ver" == "unknown" ]]; then
+            echo "::error::Invalid Xcode version (got: ${ver:-empty})."
+            exit 1
+          fi
+
+      - name: Install Linux build dependencies
+        if: matrix.platform == 'linux-gcc'
+        run: sudo apt-get update -qq && sudo apt-get install -y build-essential cmake
+
+      - name: Install Emscripten
+        if: matrix.platform == 'web-emscripten'
+        uses: mymindstorm/setup-emscripten@v14
+
+      - name: Configure CMake (Linux / macOS / Windows desktop)
+        if: matrix.platform != 'web-emscripten' && matrix.platform != 'ios-static' && matrix.platform != 'android'
+        shell: bash
+        env:
+          INSTALL_PREFIX: ${{ github.workspace }}/install
+        run: |
+          set -e
+          COMPILER_FLAGS=""
+          if [[ -n "${{ matrix.c }}" ]]; then
+            COMPILER_FLAGS="-DCMAKE_C_COMPILER=${{ matrix.c }} -DCMAKE_CXX_COMPILER=${{ matrix.cpp }}"
+          fi
+          BUILD_DIR="${{ matrix.build_dir }}"
+          if [[ "${{ runner.os }}" == "Windows" ]]; then
+            cmake -B "$BUILD_DIR" -S . -G "Visual Studio 17 2022" -A x64 \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DVNE_LOGGING_DEV=OFF \
+              -DVNE_LOGGING_LIB_TYPE=shared \
+              -DBUILD_TESTS=OFF \
+              -DVNE_LOGGING_TESTS=OFF \
+              -DBUILD_EXAMPLES=OFF \
+              -DENABLE_IPO=OFF \
+              -DCMAKE_INSTALL_PREFIX="$INSTALL_PREFIX" \
+              $COMPILER_FLAGS
+          else
+            cmake -B "$BUILD_DIR" -S . \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DVNE_LOGGING_DEV=OFF \
+              -DVNE_LOGGING_LIB_TYPE=shared \
+              -DBUILD_TESTS=OFF \
+              -DVNE_LOGGING_TESTS=OFF \
+              -DBUILD_EXAMPLES=OFF \
+              -DENABLE_IPO=OFF \
+              -DCMAKE_INSTALL_PREFIX="$INSTALL_PREFIX" \
+              $COMPILER_FLAGS
+          fi
+
+      - name: Configure CMake (Android)
+        if: matrix.platform == 'android'
+        shell: bash
+        env:
+          INSTALL_PREFIX: ${{ github.workspace }}/install
+          ANDROID_NDK_ROOT: ${{ steps.setup-ndk.outputs.ndk-path }}
+        run: |
+          set -euo pipefail
+          NDK="${ANDROID_NDK_ROOT}"
+          if [[ -z "$NDK" || ! -f "$NDK/build/cmake/android.toolchain.cmake" ]]; then
+            echo "::error::Android NDK path invalid (ANDROID_NDK_ROOT=${NDK:-empty})"
+            exit 1
+          fi
+          cmake -B "${{ matrix.build_dir }}" -S . \
+            -DCMAKE_TOOLCHAIN_FILE="$NDK/build/cmake/android.toolchain.cmake" \
+            -DANDROID_ABI=arm64-v8a \
+            -DANDROID_PLATFORM=${{ matrix.android_platform }} \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DVNE_LOGGING_DEV=OFF \
+            -DVNE_LOGGING_LIB_TYPE=shared \
+            -DBUILD_TESTS=OFF \
+            -DVNE_LOGGING_TESTS=OFF \
+            -DBUILD_EXAMPLES=OFF \
+            -DENABLE_IPO=OFF \
+            -DCMAKE_INSTALL_PREFIX="$INSTALL_PREFIX"
+
+      - name: Configure CMake (Emscripten)
+        if: matrix.platform == 'web-emscripten'
+        shell: bash
+        env:
+          INSTALL_PREFIX: ${{ github.workspace }}/install
+        run: |
+          cmake -B "${{ matrix.build_dir }}" -S . \
+            -DCMAKE_TOOLCHAIN_FILE="$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DVNE_LOGGING_DEV=OFF \
+            -DVNE_LOGGING_LIB_TYPE=shared \
+            -DBUILD_TESTS=OFF \
+            -DVNE_LOGGING_TESTS=OFF \
+            -DBUILD_EXAMPLES=OFF \
+            -DENABLE_IPO=OFF \
+            -DCMAKE_INSTALL_PREFIX="$INSTALL_PREFIX"
+
+      - name: Configure CMake (iOS)
+        if: matrix.platform == 'ios-static'
+        shell: bash
+        env:
+          INSTALL_PREFIX: ${{ github.workspace }}/install
+        run: |
+          set -euxo pipefail
+          xcodebuild -version
+          cmake -B "${{ matrix.build_dir }}" -S . \
+            -G Xcode \
+            -DCMAKE_SYSTEM_NAME=iOS \
+            -DCMAKE_OSX_ARCHITECTURES=arm64 \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=13.0 \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_VERBOSE_MAKEFILE=ON \
+            -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO \
+            -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_REQUIRED=NO \
+            -DVNE_LOGGING_DEV=OFF \
+            -DVNE_LOGGING_LIB_TYPE=static \
+            -DBUILD_TESTS=OFF \
+            -DVNE_LOGGING_TESTS=OFF \
+            -DBUILD_EXAMPLES=OFF \
+            -DENABLE_IPO=OFF \
+            -DCMAKE_INSTALL_PREFIX="$INSTALL_PREFIX"
+
+      - name: Build
+        shell: bash
+        run: |
+          set -e
+          BDIR="${{ matrix.build_dir }}"
+          if [[ "${{ matrix.platform }}" == "ios-static" ]]; then
+            export VERBOSE=1
+            set -x
+            cmake --build "$BDIR" --config Release --parallel --verbose
+          else
+            cmake --build "$BDIR" --config Release --parallel
+          fi
+
+      - name: Install to staging directory
+        shell: bash
+        run: |
+          set -e
+          BDIR="${{ matrix.build_dir }}"
+          WS="${{ github.workspace }}"
+          if [[ "${{ matrix.platform }}" == "ios-static" ]]; then
+            cmake --install "$BDIR" --config Release --verbose
+          else
+            cmake --install "$BDIR" --config Release
+          fi
+          INSTALL="$WS/install"
+          if [[ ! -d "$INSTALL/include/vertexnova/logging" ]]; then
+            echo "::error::Expected install/include/vertexnova/logging missing."
+            find "$INSTALL" -type f 2>/dev/null | sort | head -50
+            exit 1
+          fi
+          for f in LICENSE CHANGELOG.md; do
+            if [[ ! -f "$INSTALL/$f" ]]; then
+              echo "::error::Expected install/$f missing."
+              exit 1
+            fi
+          done
+          case "${{ matrix.platform }}" in
+            web-emscripten)
+              if [ -z "$(find "$INSTALL" -type f \( -name '*.wasm' -o -name '*.a' -o -name '*.js' \) -print -quit)" ]; then
+                echo "::error::Web install: expected some of .wasm / .a / .js under install/"
+                find "$INSTALL" -type f | sort
+                exit 1
+              fi
+              ;;
+            ios-static)
+              if [ -z "$(find "$INSTALL" -type f -name '*.a' -print -quit)" ]; then
+                echo "::error::iOS install: expected at least one .a under install/"
+                find "$INSTALL" -type f 2>/dev/null | sort || true
+                exit 1
+              fi
+              ;;
+            android)
+              if [ -z "$(find "$INSTALL" -type f \( -name '*.so' -o -name '*.a' \) -print -quit)" ]; then
+                echo "::error::Android install: expected .so or .a under install/"
+                find "$INSTALL" -type f | sort
+                exit 1
+              fi
+              ;;
+            *)
+              if [ -z "$(find "$INSTALL" -type f \( -iname '*vnelogging*' -o -iname '*VneLogging*' \) -print -quit)" ]; then
+                echo "::error::No VneLogging library artifacts found under install/"
+                find "$INSTALL" -type f | sort
+                exit 1
+              fi
+              ;;
+          esac
+
+      - name: Compute artifact detail suffix
+        shell: bash
+        env:
+          ANDROID_NDK_ROOT: ${{ steps.setup-ndk.outputs.ndk-path }}
+        run: |
+          set -e
+          base="${{ matrix.platform }}"
+          arch="$(uname -m 2>/dev/null || true)"
+          arch="${arch//$'\r'/}"
+          arch="${arch//[[:space:]]/}"
+          if [[ -z "$arch" || "$(printf '%s' "$arch" | tr '[:upper:]' '[:lower:]')" == "unknown" ]]; then
+            arch=""
+          fi
+          arch_suffix=""
+          if [[ -n "$arch" ]]; then
+            arch_suffix="-${arch}"
+          fi
+          case "$base" in
+            linux-gcc)
+              . /etc/os-release 2>/dev/null || true
+              vid="${VERSION_ID:-}"
+              gcv="$(gcc -dumpfullversion 2>/dev/null || gcc -dumpversion 2>/dev/null || true)"
+              if [[ -n "$gcv" && -n "$vid" ]]; then
+                detail="ubuntu${vid}-gcc${gcv}${arch_suffix}"
+              elif [[ -n "$gcv" ]]; then
+                detail="gcc${gcv}${arch_suffix}"
+              else
+                detail="linux-gcc${arch_suffix}"
+              fi
+              ;;
+            macos)
+              macv="$(sw_vers -productVersion 2>/dev/null || true)"
+              macv="${macv//$'\r'/}"
+              xv_raw="$(xcodebuild -version 2>/dev/null | awk '/^Xcode /{print $2; exit}')"
+              if [[ -n "$xv_raw" && -n "$macv" ]]; then
+                detail="macos${macv}-xcode${xv_raw}${arch_suffix}"
+              elif [[ -n "$macv" ]]; then
+                detail="macos${macv}${arch_suffix}"
+              else
+                detail="macos${arch_suffix}"
+              fi
+              ;;
+            windows)
+              detail="vs2022-x64"
+              ;;
+            web-emscripten)
+              emv="$(emcc -dumpversion 2>/dev/null || true)"
+              if [[ -z "$emv" ]]; then
+                echo "::error::emcc -dumpversion failed"
+                exit 1
+              fi
+              detail="emcc${emv}${arch_suffix}"
+              ;;
+            ios-static)
+              xv_raw="$(xcodebuild -version 2>/dev/null | awk '/^Xcode /{print $2; exit}')"
+              if [[ -z "$xv_raw" ]]; then
+                echo "::error::Xcode version not found for iOS artifact name"
+                exit 1
+              fi
+              detail="xcode${xv_raw}-arm64"
+              ;;
+            android)
+              android_plat="${{ matrix.android_platform }}"
+              api="${android_plat#android-}"
+              abi_slug="arm64v8a"
+              ndk_root="${ANDROID_NDK_ROOT:-}"
+              ndk_rev=""
+              if [[ -n "$ndk_root" && -f "$ndk_root/source.properties" ]]; then
+                ndk_rev="$(grep -E '^[[:space:]]*Pkg.Revision[[:space:]]*=' "$ndk_root/source.properties" | head -1 | cut -d= -f2- | tr -d ' \t\r\n')"
+              fi
+              if [[ -n "$ndk_rev" ]]; then
+                detail="android${api}-ndk${ndk_rev}-${abi_slug}"
+              else
+                detail="android${api}-${abi_slug}"
+              fi
+              ;;
+            *)
+              detail="generic${arch_suffix}"
+              ;;
+          esac
+          echo "ARTIFACT_DETAIL=${detail}" >> "$GITHUB_ENV"
+
+      - name: Package artifact
+        shell: bash
+        run: |
+          VER="${{ needs.release-please.outputs.version }}"
+          ARTIFACT="vnelogging-v${VER}-${{ matrix.platform }}-${ARTIFACT_DETAIL}.tar.gz"
+          tar -czf "${ARTIFACT}" -C "${{ github.workspace }}/install" .
+          echo "ARTIFACT=${ARTIFACT}" >> "$GITHUB_ENV"
+          echo "Published: ${ARTIFACT}"
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.release-please.outputs.tag_name }}
+          files: ${{ env.ARTIFACT }}

@@ -13,8 +13,8 @@ cmake_minimum_required(VERSION 3.16)
 project(TestVneLogging)
 
 # Disable logging tests for iOS and Web platforms (IO module disabled, file operations not available)
-if(VNE_PLATFORM_IOS OR VNE_PLATFORM_WEB)
-    message(STATUS "Logging tests disabled for ${CMAKE_SYSTEM_NAME} platform (IO module disabled)")
+if(VNE_TARGET_PLATFORM STREQUAL "iOS" OR VNE_TARGET_PLATFORM STREQUAL "Web")
+    message(STATUS "Logging tests disabled for ${VNE_TARGET_PLATFORM} (IO module disabled)")
     return()
 endif()
 
@@ -112,8 +112,24 @@ target_link_libraries(TestVneLogging
         vne::logging
 )
 
+# When vnelogging is a shared library, ensure the test binary finds it at runtime in the build tree.
+if(VNE_LOGGING_LIB_TYPE STREQUAL "shared")
+    if(WIN32)
+        add_custom_command(TARGET TestVneLogging POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                $<TARGET_FILE:vnelogging>
+                $<TARGET_FILE_DIR:TestVneLogging>
+            VERBATIM)
+    else()
+        # Match the real output directory of vnelogging (not a guessed ../lib relative to the test exe).
+        set_target_properties(TestVneLogging PROPERTIES
+            BUILD_RPATH "$<TARGET_FILE_DIR:vnelogging>"
+        )
+    endif()
+endif()
+
 # Web platform specific configuration
-if(VNE_PLATFORM_WEB)
+if(VNE_TARGET_PLATFORM STREQUAL "Web")
     target_compile_definitions(TestVneLogging PRIVATE VNE_PLATFORM_WEB)
     set_target_properties(TestVneLogging PROPERTIES
         SUFFIX ".js"

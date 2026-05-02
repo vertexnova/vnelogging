@@ -64,6 +64,7 @@ usage() {
   echo "  -clean             Clean the build directory before performing the action"
   echo "  -interactive       Run in interactive mode to choose options"
   echo "  -j <jobs>          Number of parallel jobs (default: 10)"
+  echo "  -l|--lib-type      Library type: static or shared (default: static)"
   echo ""
   echo "Examples:"
   echo "  $0 -t Debug -a configure_and_build"
@@ -134,6 +135,7 @@ interactive_mode() {
 BUILD_TYPE="Debug"
 ACTION="configure_and_build"
 COMPILER="cl"
+LIB_TYPE="static"
 CLEAN_BUILD=false
 INTERACTIVE_MODE=false
 
@@ -146,6 +148,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     -a|--action)
       ACTION="$2"
+      shift 2
+      ;;
+    -l|--lib-type)
+      LIB_TYPE="$2"
       shift 2
       ;;
     -clean|--clean)
@@ -169,6 +175,11 @@ done
 # Check for interactive mode
 if [ "$INTERACTIVE_MODE" = true ]; then
   interactive_mode
+fi
+
+if [[ "$LIB_TYPE" != "static" && "$LIB_TYPE" != "shared" ]]; then
+  echo "Invalid --lib-type: $LIB_TYPE (expected static or shared)"
+  exit 1
 fi
 
 # Check if Visual Studio environment is set up
@@ -219,8 +230,8 @@ echo "$PLATFORM :: $COMPILER-${COMPILER_VERSION}"
 # Store project root directory
 PROJECT_ROOT=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 
-# Set the build directory based on build type and compiler
-BUILD_DIR="$PROJECT_ROOT/build/${BUILD_TYPE}/build-windows-$COMPILER-${COMPILER_VERSION}"
+# Set the build directory: build/<static|shared>/<BuildType>/...
+BUILD_DIR="$PROJECT_ROOT/build/${LIB_TYPE}/${BUILD_TYPE}/build-windows-$COMPILER-${COMPILER_VERSION}"
 
 # Build CMake command
 build_cmake_command() {
@@ -232,6 +243,7 @@ build_cmake_command() {
   args+=("-DCMAKE_C_COMPILER=cl")
   args+=("-DCMAKE_CXX_COMPILER=cl")
   args+=("-DBUILD_TESTS=ON")
+  args+=("-DVNE_LOGGING_LIB_TYPE=$LIB_TYPE")
   args+=("$PROJECT_ROOT")
   "${args[@]}"
   return $?

@@ -24,6 +24,7 @@ class BuildConfig:
     def __init__(self):
         self.jobs = 10
         self.build_type = "Debug"
+        self.lib_type = "static"
         self.action = "configure_and_build"
         self.clean_build = False
         self.interactive = False
@@ -186,7 +187,7 @@ def interactive_mode(config: BuildConfig):
         sys.exit(0)
 
 
-def build_cmake_command(project_root: Path, build_type: str) -> List[str]:
+def build_cmake_command(project_root: Path, build_type: str, lib_type: str) -> List[str]:
     """Build CMake configuration command."""
     args = [
         "cmake",
@@ -196,6 +197,7 @@ def build_cmake_command(project_root: Path, build_type: str) -> List[str]:
         "-DCMAKE_C_COMPILER=cl",
         "-DCMAKE_CXX_COMPILER=cl",
         "-DBUILD_TESTS=ON",
+        "-DVNE_LOGGING_LIB_TYPE=" + lib_type,
         str(project_root),
     ]
     return args
@@ -214,10 +216,10 @@ def ensure_build_dir(build_dir: Path):
     build_dir.mkdir(parents=True, exist_ok=True)
 
 
-def configure_project(build_dir: Path, project_root: Path, build_type: str) -> bool:
+def configure_project(build_dir: Path, project_root: Path, build_type: str, lib_type: str) -> bool:
     """Configure the project with CMake."""
     print("Configuring project...")
-    cmake_args = build_cmake_command(project_root, build_type)
+    cmake_args = build_cmake_command(project_root, build_type, lib_type)
     print(f"Running: {' '.join(cmake_args)}")
 
     try:
@@ -315,11 +317,18 @@ Examples:
         action="store_true",
         help="Run in interactive mode",
     )
+    parser.add_argument(
+        "--lib-type",
+        choices=["static", "shared"],
+        default="static",
+        help="Library type: static or shared (default: static)",
+    )
 
     args = parser.parse_args()
 
     config = BuildConfig()
     config.build_type = args.build_type
+    config.lib_type = args.lib_type
     config.action = args.action
     config.jobs = args.jobs
     config.clean_build = args.clean
@@ -348,10 +357,11 @@ Examples:
     script_dir = Path(__file__).parent
     project_root = script_dir.parent
 
-    # Set build directory
+    # Set build directory: build/<static|shared>/<BuildType>/...
     build_dir = (
         project_root
         / "build"
+        / config.lib_type
         / config.build_type
         / f"build-windows-{config.compiler}-{compiler_version}"
     )
@@ -365,7 +375,7 @@ Examples:
     # Perform action
     success = True
     if config.action in ["configure", "build", "configure_and_build", "test"]:
-        if not configure_project(build_dir, project_root, config.build_type):
+        if not configure_project(build_dir, project_root, config.build_type, config.lib_type):
             sys.exit(1)
 
     if config.action in ["build", "configure_and_build", "test"]:

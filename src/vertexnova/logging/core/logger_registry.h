@@ -10,6 +10,8 @@
  * ----------------------------------------------------------------------
  */
 
+#include "vertexnova/logging/export.h"
+
 #include <memory>
 #include <mutex>
 #include <unordered_map>
@@ -38,7 +40,7 @@ namespace vne::log {
  * All logger operations are protected by a mutex for thread safety, and the registry
  * is implemented as a static unordered_map. Intended for internal use by the logging system.
  */
-class LoggerRegistry {
+class VNE_LOGGING_API LoggerRegistry {
    public:
     /**
      * @brief Register a logger by name. If the name exists, replaces the logger.

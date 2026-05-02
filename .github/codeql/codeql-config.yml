@@ -1,0 +1,8 @@
+# ----------------------------------------------------------------------
+# CodeQL configuration for VneLogging — exclude vendored deps from analysis.
+# ----------------------------------------------------------------------
+
+name: vnelogging CodeQL config
+
+paths-ignore:
+  - "deps/external/**"
