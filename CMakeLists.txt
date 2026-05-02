@@ -356,12 +356,20 @@ install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src/vertexnova/logging/"
 
 # vnecommon is header-only (PUBLIC link of vnelogging). Ship its headers so installed
 # consumers get vertexnova/common/ without a separate vnecommon library under lib/.
-if(EXISTS "${PROJECT_SOURCE_DIR}/deps/internal/vnecommon/include/vertexnova/common")
-    install(DIRECTORY "${PROJECT_SOURCE_DIR}/deps/internal/vnecommon/include/vertexnova/common/"
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova/common
-        FILES_MATCHING PATTERN "*.h"
-    )
+set(VNECOMMON_PUBLIC_HEADERS_DIR
+    "${PROJECT_SOURCE_DIR}/deps/internal/vnecommon/include/vertexnova/common")
+if(NOT EXISTS "${VNECOMMON_PUBLIC_HEADERS_DIR}")
+    message(FATAL_ERROR
+        "Required public dependency headers were not found: "
+        "${VNECOMMON_PUBLIC_HEADERS_DIR}. "
+        "vnelogging publicly depends on vnecommon and installed consumers require "
+        "vertexnova/common headers. Ensure the source tree is complete and the "
+        "vnecommon dependency/submodule is available.")
 endif()
+install(DIRECTORY "${VNECOMMON_PUBLIC_HEADERS_DIR}/"
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova/common
+    FILES_MATCHING PATTERN "*.h"
+)
 
 # Install config.h
 install(FILES ${CMAKE_BINARY_DIR}/config.h
