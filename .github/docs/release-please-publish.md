@@ -4,7 +4,7 @@
 
 1. **release-please** (on push to `main`) updates `CHANGELOG.md`, `VERSION`, and `.release-please-manifest.json`, and opens or updates a release PR.
 2. After that PR is merged, a **Git tag** is created.
-3. The **publish** job runs on the tag and builds `cmake --install` trees for Linux, macOS, Windows, Emscripten, iOS (static), and Android, then uploads `vnelogging-v<version>-<platform>-<detail>.tar.gz` to the GitHub Release.
+3. In the same workflow run triggered by a push to `main`, the **publish** job runs when `release_created == 'true'`; it builds `cmake --install` trees for Linux, macOS, Windows, Emscripten, iOS (static), and Android, then uploads `vnelogging-v<version>-<platform>-<detail>.tar.gz` to the GitHub Release.
 
 ## Repo settings
 
