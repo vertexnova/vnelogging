@@ -127,7 +127,7 @@ TextColor& TextColor::operator=(const TextColor& rhs) {
     return *this;
 }
 
-std::ostream& operator<<(std::ostream& stream, const TextColor& text_color) {
+VNE_LOGGING_API std::ostream& operator<<(std::ostream& stream, const TextColor& text_color) {
     if (!isColorEnabled()) {
         return stream;  // No output when colors disabled
     }

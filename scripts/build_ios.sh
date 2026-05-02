@@ -80,6 +80,7 @@ usage() {
   echo "  -clean             Clean the build directory before performing the action"
   echo "  -interactive       Run in interactive mode to choose options"
   echo "  -j <jobs>          Number of parallel jobs (default: 10)"
+  echo "  -l|--lib-type      Library type: static or shared (default: static)"
   echo "  -xcode             Generate Xcode project in addition to regular build"
   echo "  -xcode-only        Only generate Xcode project (skip regular build)"
   echo "  -simulator         Build for iOS Simulator (default)"
@@ -155,6 +156,7 @@ get_ios_sdk_paths() {
 # Initialize variables
 BUILD_TYPE="Debug"
 ACTION="configure_and_build"
+LIB_TYPE="static"
 CLEAN=false
 TARGET="simulator"
 XCODE_ONLY=false
@@ -166,6 +168,10 @@ while [[ $# -gt 0 ]]; do
     case $1 in
         -t|--type)
             BUILD_TYPE="$2"
+            shift 2
+            ;;
+        -l|--lib-type)
+            LIB_TYPE="$2"
             shift 2
             ;;
         -a|--action)
@@ -211,15 +217,20 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+if [[ "$LIB_TYPE" != "static" && "$LIB_TYPE" != "shared" ]]; then
+    echo "Invalid --lib-type: $LIB_TYPE (expected static or shared)"
+    exit 1
+fi
+
 # Check iOS development environment
 check_ios_environment
 
 # Get iOS SDK paths
 get_ios_sdk_paths
 
-# Set up build directories as absolute paths
-BUILD_DIR="$PROJECT_ROOT/build/${BUILD_TYPE}/build-ios-$COMPILER-${COMPILER_VERSION}"
-XCODE_DIR="$PROJECT_ROOT/build/${BUILD_TYPE}/xcode-ios-$COMPILER-${COMPILER_VERSION}"
+# Set up build directories as absolute paths (build/<static|shared>/<BuildType>/...)
+BUILD_DIR="$PROJECT_ROOT/build/${LIB_TYPE}/${BUILD_TYPE}/build-ios-$COMPILER-${COMPILER_VERSION}"
+XCODE_DIR="$PROJECT_ROOT/build/${LIB_TYPE}/${BUILD_TYPE}/xcode-ios-$COMPILER-${COMPILER_VERSION}"
 
 # Clean build directory if requested
 if [ "$CLEAN" = true ]; then
@@ -236,6 +247,7 @@ mkdir -p "$XCODE_DIR"
 # Set up CMake configuration
 CMAKE_ARGS=(
     "-DCMAKE_BUILD_TYPE=$BUILD_TYPE"
+    "-DVNE_LOGGING_LIB_TYPE=$LIB_TYPE"
     "-DVNE_TARGET_PLATFORM=iOS"
     "-DCMAKE_SYSTEM_NAME=iOS"
     "-DCMAKE_OSX_DEPLOYMENT_TARGET=$IOS_DEPLOYMENT_TARGET"

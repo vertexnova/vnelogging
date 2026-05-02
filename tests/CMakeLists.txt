@@ -112,6 +112,21 @@ target_link_libraries(TestVneLogging
         vne::logging
 )
 
+# When vnelogging is a shared library, ensure the test binary finds it at runtime in the build tree.
+if(VNE_LOGGING_LIB_TYPE STREQUAL "shared")
+    if(WIN32)
+        add_custom_command(TARGET TestVneLogging POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                $<TARGET_FILE:vnelogging>
+                $<TARGET_FILE_DIR:TestVneLogging>
+            VERBATIM)
+    elseif(APPLE)
+        set_property(TARGET TestVneLogging APPEND PROPERTY BUILD_RPATH "@loader_path/../lib")
+    elseif(UNIX)
+        set_property(TARGET TestVneLogging APPEND PROPERTY BUILD_RPATH "\$ORIGIN/../lib")
+    endif()
+endif()
+
 # Web platform specific configuration
 if(VNE_PLATFORM_WEB)
     target_compile_definitions(TestVneLogging PRIVATE VNE_PLATFORM_WEB)

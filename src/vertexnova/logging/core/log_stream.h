@@ -10,6 +10,8 @@
  * ----------------------------------------------------------------------
  */
 
+#include "vertexnova/logging/export.h"
+
 #include "log_level.h"
 #include "time_stamp.h"
 
@@ -26,7 +28,7 @@ namespace vne::log {
  * before being sent to the logger. It captures log details such as message category,
  * severity level, file name, function name, and line number.
  */
-class LogStream {
+class VNE_LOGGING_API LogStream {
    public:
     /**
      * @brief Constructs a LogStream object with a specific logger name.

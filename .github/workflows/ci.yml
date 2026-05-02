@@ -38,14 +38,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compiler: [gcc, clang]
         include:
           - compiler: gcc
             c_compiler: gcc
             cpp_compiler: g++
+            lib_type: shared
           - compiler: clang
             c_compiler: clang
             cpp_compiler: clang++
+            lib_type: static
 
     steps:
     - uses: actions/checkout@v4
@@ -59,17 +60,18 @@ jobs:
 
     - name: Configure CMake
       run: |
-        cmake -B build -S . \
+        cmake -B build/${{ matrix.lib_type }}/Release -S . \
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} \
           -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }} \
-          -DVNE_LOGGING_CI=ON
+          -DVNE_LOGGING_CI=ON \
+          -DVNE_LOGGING_LIB_TYPE=${{ matrix.lib_type }}
 
     - name: Build
-      run: cmake --build build --config Release --parallel
+      run: cmake --build build/${{ matrix.lib_type }}/Release --config Release --parallel
 
     - name: Test
-      working-directory: build
+      working-directory: build/${{ matrix.lib_type }}/Release
       run: ctest --output-on-failure --timeout 300 --verbose
 
   coverage:
@@ -86,23 +88,24 @@ jobs:
 
     - name: Configure CMake with Coverage
       run: |
-        cmake -B build -S . \
+        cmake -B build/shared/Debug -S . \
           -DCMAKE_BUILD_TYPE=Debug \
           -DCMAKE_C_COMPILER=gcc \
           -DCMAKE_CXX_COMPILER=g++ \
           -DVNE_LOGGING_CI=ON \
+          -DVNE_LOGGING_LIB_TYPE=shared \
           -DENABLE_COVERAGE=ON
 
     - name: Build
-      run: cmake --build build --config Debug --parallel
+      run: cmake --build build/shared/Debug --config Debug --parallel
 
     - name: Test
-      working-directory: build
+      working-directory: build/shared/Debug
       run: ctest --output-on-failure --timeout 300 --verbose
 
     - name: Generate Coverage Report
       run: |
-        lcov --capture --directory build --output-file coverage.info --ignore-errors mismatch,unused
+        lcov --capture --directory build/shared/Debug --output-file coverage.info --ignore-errors mismatch,unused
         lcov --remove coverage.info \
           '/usr/*' \
           '*/tests/*' \
@@ -132,15 +135,16 @@ jobs:
 
     - name: Configure CMake
       run: |
-        cmake -B build -S . \
+        cmake -B build/static/Release -S . \
           -DCMAKE_BUILD_TYPE=Release \
-          -DVNE_LOGGING_CI=ON
+          -DVNE_LOGGING_CI=ON \
+          -DVNE_LOGGING_LIB_TYPE=static
 
     - name: Build
-      run: cmake --build build --config Release --parallel
+      run: cmake --build build/static/Release --config Release --parallel
 
     - name: Test
-      working-directory: build
+      working-directory: build/static/Release
       run: ctest --output-on-failure --timeout 300 --verbose
 
   windows:
@@ -153,15 +157,16 @@ jobs:
 
     - name: Configure CMake
       run: |
-        cmake -B build -S . `
+        cmake -B build/shared/Release -S . `
           -DCMAKE_BUILD_TYPE=Release `
-          -DVNE_LOGGING_CI=ON
+          -DVNE_LOGGING_CI=ON `
+          -DVNE_LOGGING_LIB_TYPE=shared
 
     - name: Build
-      run: cmake --build build --config Release --parallel
+      run: cmake --build build/shared/Release --config Release --parallel
 
     - name: Test
-      working-directory: build
+      working-directory: build/shared/Release
       run: ctest --output-on-failure --timeout 300 --verbose -C Release
 
   clang-tidy:
@@ -178,16 +183,17 @@ jobs:
 
     - name: Configure CMake
       run: |
-        cmake -B build -S . \
+        cmake -B build/shared/Release -S . \
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_C_COMPILER=clang \
           -DCMAKE_CXX_COMPILER=clang++ \
-          -DVNE_LOGGING_CI=ON
+          -DVNE_LOGGING_CI=ON \
+          -DVNE_LOGGING_LIB_TYPE=shared
 
     - name: Build
-      run: cmake --build build --config Release --parallel
+      run: cmake --build build/shared/Release --config Release --parallel
 
     - name: Run clang-tidy (project .clang-tidy)
       run: |
         find src -type f \( -name '*.cpp' -o -name '*.h' \) -print0 \
-          | xargs -0 -r clang-tidy -p build
+          | xargs -0 -r clang-tidy -p build/shared/Release

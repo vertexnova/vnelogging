@@ -10,6 +10,7 @@
  * ----------------------------------------------------------------------
  */
 
+#include "vertexnova/logging/export.h"
 #include "vertexnova/logging/core/logger.h"
 #include "vertexnova/logging/core/log_level.h"
 #include "vertexnova/logging/core/console_log_sink.h"
@@ -28,7 +29,7 @@ namespace vne::log {
  * This class manages logging configuration such as adding sinks (console and file),
  * setting log levels, and providing access to logger instances.
  */
-class LogManager final {
+class VNE_LOGGING_API LogManager final {
    public:
     /**
      * @brief Constructor for LogManager.

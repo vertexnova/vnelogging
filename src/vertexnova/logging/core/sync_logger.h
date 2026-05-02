@@ -10,6 +10,8 @@
  * ----------------------------------------------------------------------
  */
 
+#include "vertexnova/logging/export.h"
+
 #include "logger.h"
 
 #include <mutex>
@@ -24,7 +26,7 @@ namespace vne::log {
  * This class implements the ILogger interface and provides functionality for
  * logging messages synchronously. It ensures thread safety using a mutex.
  */
-class SyncLogger : public ILogger {
+class VNE_LOGGING_API SyncLogger : public ILogger {
    public:
     /**
      * @brief Constructor for SyncLogger.

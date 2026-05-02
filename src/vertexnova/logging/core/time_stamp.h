@@ -10,6 +10,8 @@
  * ----------------------------------------------------------------------
  */
 
+#include "vertexnova/logging/export.h"
+
 #include <chrono>
 #include <iomanip>
 #include <sstream>
@@ -30,7 +32,7 @@ enum class TimeStampType {
  * @class ITimeProvider
  * @brief Interface for providing the current time.
  */
-class ITimeProvider {
+class VNE_LOGGING_API ITimeProvider {
    public:
     virtual ~ITimeProvider() = default;
 
@@ -59,7 +61,7 @@ class ITimeProvider {
  * @class TimeProvider
  * @brief Default implementation of ITimeProvider using the system clock.
  */
-class TimeProvider : public ITimeProvider {
+class VNE_LOGGING_API TimeProvider : public ITimeProvider {
    public:
     [[nodiscard]] std::time_t now() const override {
         return std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -90,7 +92,7 @@ class TimeProvider : public ITimeProvider {
  * @class TimeStamp
  * @brief Generates timestamps based on the specified type (local or UTC).
  */
-class TimeStamp {
+class VNE_LOGGING_API TimeStamp {
    public:
     /**
      * @brief Constructor for TimeStamp.

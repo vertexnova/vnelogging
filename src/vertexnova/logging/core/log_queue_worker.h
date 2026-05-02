@@ -10,6 +10,8 @@
  * ----------------------------------------------------------------------
  */
 
+#include "vertexnova/logging/export.h"
+
 #include "log_queue.h"
 
 #include <thread>
@@ -31,7 +33,7 @@ namespace vne::log {
  *
  * Manages a worker thread that processes log tasks from a queue.
  */
-class LogQueueWorker {
+class VNE_LOGGING_API LogQueueWorker {
    public:
     /**
      * @brief Constructs a LogQueueWorker instance.

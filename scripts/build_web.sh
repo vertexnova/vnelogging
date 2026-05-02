@@ -46,6 +46,7 @@ show_usage() {
     echo "  -c, --clean        Clean build directory before building"
     echo "  -f, --force        Force rebuild (clean + build)"
     echo "  -j, --jobs N       Number of parallel jobs (default: auto-detect)"
+    echo "      --lib-type T   Library type: static or shared (default: static)"
     echo "  -h, --help         Show this help message"
     echo ""
     echo "Build types:"
@@ -76,6 +77,7 @@ get_cpu_cores() {
 
 # Parse command line arguments
 BUILD_TYPE="Debug"
+LIB_TYPE="static"
 CLEAN_BUILD=false
 FORCE_REBUILD=false
 JOBS=$(get_cpu_cores)
@@ -99,6 +101,10 @@ while [[ $# -gt 0 ]]; do
                 print_error "Invalid number of jobs: $2"
                 exit 1
             fi
+            ;;
+        --lib-type)
+            LIB_TYPE="$2"
+            shift 2
             ;;
         -j*)
             JOBS="${1#-j}"
@@ -124,6 +130,11 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+if [[ "$LIB_TYPE" != "static" && "$LIB_TYPE" != "shared" ]]; then
+    print_error "Invalid --lib-type: $LIB_TYPE (expected static or shared)"
+    exit 1
+fi
+
 # Get script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
@@ -131,6 +142,7 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 print_status "VneLogging Web Build Script"
 print_status "Project root: $PROJECT_ROOT"
 print_status "Build type: $BUILD_TYPE"
+print_status "Library type: $LIB_TYPE"
 print_status "Parallel jobs: $JOBS"
 print_status "Clean build: $CLEAN_BUILD"
 print_status "Force rebuild: $FORCE_REBUILD"
@@ -237,7 +249,7 @@ if [[ -z "$EMCC_VERSION_NUM" ]]; then
 fi
 
 # Create build directory with consistent format
-BUILD_DIR="$PROJECT_ROOT/build/${BUILD_TYPE}/build-web-emscripten-${EMCC_VERSION_NUM}"
+BUILD_DIR="$PROJECT_ROOT/build/${LIB_TYPE}/${BUILD_TYPE}/build-web-emscripten-${EMCC_VERSION_NUM}"
 print_status "Build directory: $BUILD_DIR"
 
 # Handle clean build
@@ -269,6 +281,7 @@ if [[ "$FORCE_REBUILD" == true ]] || [[ ! -f "CMakeCache.txt" ]] || ! grep -q "E
         -G "Unix Makefiles" \
         -DCMAKE_TOOLCHAIN_FILE="$EMSDK_DIR/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake" \
         -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
+        -DVNE_LOGGING_LIB_TYPE=$LIB_TYPE \
         -DBUILD_TESTS=ON
 
     # Verify Emscripten toolchain is being used

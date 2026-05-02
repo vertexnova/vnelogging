@@ -10,6 +10,8 @@
  * ----------------------------------------------------------------------
  */
 
+#include "vertexnova/logging/export.h"
+
 #include "logger.h"
 #include "log_dispatcher.h"
 
@@ -26,7 +28,7 @@ namespace vne::log {
  * This logger asynchronously dispatches log messages to a worker queue for processing.
  * It manages log sinks, log levels, and provides methods to log messages and flush logs.
  */
-class AsyncLogger : public ILogger {
+class VNE_LOGGING_API AsyncLogger : public ILogger {
    public:
     /**
      * @brief Constructor.

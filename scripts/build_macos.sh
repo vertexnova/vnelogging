@@ -66,6 +66,7 @@ usage() {
   echo "  -clean             Clean the build directory before performing the action"
   echo "  -interactive       Run in interactive mode to choose options"
   echo "  -j <jobs>          Number of parallel jobs (default: 10)"
+  echo "  -l|--lib-type      Library type: static or shared (default: static)"
   echo "  -xcode             Generate Xcode project in addition to regular build"
   echo "  -xcode-only        Only generate Xcode project (skip regular build)"
   echo ""
@@ -174,6 +175,7 @@ interactive_mode() {
 BUILD_TYPE="Debug"
 ACTION="configure_and_build"
 COMPILER="clang"
+LIB_TYPE="static"
 CLEAN_BUILD=false
 INTERACTIVE_MODE=false
 GENERATE_XCODE=false
@@ -188,6 +190,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     -a|--action)
       ACTION="$2"
+      shift 2
+      ;;
+    -l|--lib-type)
+      LIB_TYPE="$2"
       shift 2
       ;;
     -clean|--clean)
@@ -216,6 +222,11 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+if [[ "$LIB_TYPE" != "static" && "$LIB_TYPE" != "shared" ]]; then
+  echo "Invalid --lib-type: $LIB_TYPE (expected static or shared)"
+  exit 1
+fi
 
 # Check for interactive mode
 if [ "$INTERACTIVE_MODE" = true ]; then
@@ -250,11 +261,11 @@ echo "$PLATFORM :: $COMPILER-${COMPILER_VERSION}"
 # Store project root directory
 PROJECT_ROOT=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 
-# Set the build directory based on build type and compiler
+# Set the build directory: build/<static|shared>/<BuildType>/...
 if [ "$GENERATE_XCODE" = true ]; then
-  BUILD_DIR="$PROJECT_ROOT/build/${BUILD_TYPE}/xcode-macos-$COMPILER-${COMPILER_VERSION}"
+  BUILD_DIR="$PROJECT_ROOT/build/${LIB_TYPE}/${BUILD_TYPE}/xcode-macos-$COMPILER-${COMPILER_VERSION}"
 else
-  BUILD_DIR="$PROJECT_ROOT/build/${BUILD_TYPE}/build-macos-$COMPILER-${COMPILER_VERSION}"
+  BUILD_DIR="$PROJECT_ROOT/build/${LIB_TYPE}/${BUILD_TYPE}/build-macos-$COMPILER-${COMPILER_VERSION}"
 fi
 
 # Build CMake command
@@ -263,9 +274,9 @@ build_cmake_command() {
 
   # Choose generator based on Xcode flag
   if [ "$GENERATE_XCODE" = true ]; then
-    base_cmd="cmake -G Xcode -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DBUILD_TESTS=ON"
+    base_cmd="cmake -G Xcode -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DBUILD_TESTS=ON -DVNE_LOGGING_LIB_TYPE=$LIB_TYPE"
   else
-    base_cmd="cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DBUILD_TESTS=ON"
+    base_cmd="cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DBUILD_TESTS=ON -DVNE_LOGGING_LIB_TYPE=$LIB_TYPE"
   fi
 
   echo "$base_cmd $PROJECT_ROOT"

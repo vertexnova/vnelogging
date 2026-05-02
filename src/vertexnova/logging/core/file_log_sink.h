@@ -10,6 +10,8 @@
  * ----------------------------------------------------------------------
  */
 
+#include "vertexnova/logging/export.h"
+
 #include "log_sink.h"
 
 #include <fstream>
@@ -24,7 +26,7 @@ namespace vne::log {
  * outputs log messages to a specified file and allows for log
  * pattern customization.
  */
-class FileLogSink : public ILogSink {
+class VNE_LOGGING_API FileLogSink : public ILogSink {
    public:
     /**
      * @brief Constructs a FileLogSink with the specified file name.

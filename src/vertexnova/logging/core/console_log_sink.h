@@ -10,6 +10,8 @@
  * ----------------------------------------------------------------------
  */
 
+#include "vertexnova/logging/export.h"
+
 #include "log_sink.h"
 
 #include <string>
@@ -23,7 +25,7 @@ namespace vne::log {
  * This class provides a console-based logging implementation. It
  * outputs log messages to the standard console.
  */
-class ConsoleLogSink : public ILogSink {
+class VNE_LOGGING_API ConsoleLogSink : public ILogSink {
    public:
     /**
      * @brief Constructor.

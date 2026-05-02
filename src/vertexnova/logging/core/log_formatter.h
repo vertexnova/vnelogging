@@ -10,6 +10,8 @@
  * ----------------------------------------------------------------------
  */
 
+#include "vertexnova/logging/export.h"
+
 #include "log_level.h"
 #include "time_stamp.h"
 
@@ -21,7 +23,7 @@ namespace vne::log {
  * @class LogFormatter
  * @brief A class for formatting log messages.
  */
-class LogFormatter {
+class VNE_LOGGING_API LogFormatter {
    public:
     /**
      * @brief Formats a log message according to the specified format.
