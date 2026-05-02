@@ -1,5 +1,4 @@
-# VertexNova .clang-tidy configuration
-# Enforces naming conventions and modern C++ practices
+# VertexNova — clang-tidy
 
 Checks: >
   -*,
@@ -29,7 +28,8 @@ Checks: >
 
 WarningsAsErrors: ''
 
-HeaderFilterRegex: 'src/vertexnova/.*'
+# Project sources and public headers under vertexnova/.
+HeaderFilterRegex: '(src/vertexnova/.*|include/vertexnova/.*)'
 
 CheckOptions:
   # Classes/Structs: PascalCase (no suffix)
