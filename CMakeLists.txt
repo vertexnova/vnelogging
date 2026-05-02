@@ -352,3 +352,10 @@ install(EXPORT VneLoggingTargets
 install(FILES cmake/FindVneLogging.cmake
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/VneLogging
 )
+
+if(EXISTS "${PROJECT_SOURCE_DIR}/LICENSE")
+    install(FILES "${PROJECT_SOURCE_DIR}/LICENSE" DESTINATION .)
+endif()
+if(EXISTS "${PROJECT_SOURCE_DIR}/CHANGELOG.md")
+    install(FILES "${PROJECT_SOURCE_DIR}/CHANGELOG.md" DESTINATION .)
+endif()

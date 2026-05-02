@@ -1,0 +1,75 @@
+# ----------------------------------------------------------------------
+# Copyright (c) 2026 Ajeet Singh Yadav. All rights reserved.
+# Licensed under the Apache License, Version 2.0 (the "License")
+#
+# Autodoc:   yes
+# ----------------------------------------------------------------------
+#
+# CodeQL security analysis (C++). Push/PR to main + weekly schedule.
+
+name: CodeQL
+
+on:
+  push:
+    branches: ["main"]
+    paths-ignore:
+      - "CHANGELOG.md"
+      - "VERSION"
+      - ".release-please-manifest.json"
+      - ".github/release-please-config.json"
+      - "docs/**"
+      - "**/*.md"
+      - "deps/external/**"
+  pull_request:
+    branches: ["main"]
+    paths-ignore:
+      - "deps/external/**"
+  schedule:
+    - cron: "0 3 * * 1"
+
+concurrency:
+  group: codeql-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  security-events: write
+  contents: read
+
+jobs:
+  analyze:
+    name: "Security / CodeQL (C++)"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Use HTTPS for GitHub
+        run: git config --global url."https://github.com/".insteadOf "git@github.com:"
+
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install build dependencies
+        run: sudo apt-get update -qq && sudo apt-get install -y build-essential cmake
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: cpp
+          queries: security-extended
+          config-file: .github/codeql/codeql-config.yml
+
+      - name: Build (traced by CodeQL)
+        run: |
+          cmake -B build/shared/Release -S . \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_COMPILER=gcc \
+            -DCMAKE_CXX_COMPILER=g++ \
+            -DVNE_LOGGING_CI=ON \
+            -DVNE_LOGGING_LIB_TYPE=shared \
+            -DENABLE_IPO=OFF
+          cmake --build build/shared/Release --config Release --parallel
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:cpp"
