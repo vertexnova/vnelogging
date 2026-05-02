@@ -14,6 +14,14 @@ cmake_minimum_required(VERSION 3.16)
 # Project declaration
 project(vnelogging VERSION 1.0.0 LANGUAGES CXX)
 
+# iOS: default install prefix under the build tree. A relative -DCMAKE_INSTALL_PREFIX=...
+# is also resolved relative to CMAKE_BINARY_DIR (not the source tree), so release jobs
+# should still pass an absolute prefix or use cmake --install --prefix <abs path>.
+if(CMAKE_SYSTEM_NAME STREQUAL "iOS" AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install"
+        CACHE PATH "Install prefix for iOS builds (override with -DCMAKE_INSTALL_PREFIX)" FORCE)
+endif()
+
 # Set the C++ standard
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -317,23 +325,32 @@ endif()
 
 include(GNUInstallDirs)
 
-install(TARGETS vnelogging Warnings BuildSettings
+# Install the static/shared library artifact (ARCHIVE covers iOS/macOS .a static libs).
+install(TARGETS vnelogging
     EXPORT VneLoggingTargets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+# INTERFACE targets: export only (no lib/ artifact). Kept separate so install rules stay
+# unambiguous for multi-config generators (Xcode) and static archive installs.
+install(TARGETS Warnings BuildSettings
+    EXPORT VneLoggingTargets
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
 # Install public headers from include/
-install(DIRECTORY include/vertexnova/
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/vertexnova/"
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova
     FILES_MATCHING PATTERN "*.h"
 )
 
-# Install internal headers from src/ (needed for implementation)
-install(DIRECTORY src/vertexnova/
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova
+# Internal API headers from src/ (needed when linking the static library)
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src/vertexnova/logging/"
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova/logging
     FILES_MATCHING PATTERN "*.h"
 )
 

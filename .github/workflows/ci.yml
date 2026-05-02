@@ -410,6 +410,16 @@ jobs:
           export VERBOSE=1
           cmake --build build/static/Release --config Release --parallel --verbose
 
+      - name: Install (Release) and verify static layout
+        shell: bash
+        run: |
+          set -euo pipefail
+          STAGE="${GITHUB_WORKSPACE}/install-ios-static"
+          rm -rf "$STAGE"
+          cmake --install build/static/Release --config Release --prefix "$STAGE"
+          test -d "$STAGE/include/vertexnova/logging"
+          test -n "$(find "$STAGE" -name '*.a' -print -quit)"
+
   build-android:
     name: "Build / Android (arm64-v8a)"
     needs: [detect-release, pre-checks-gate]
