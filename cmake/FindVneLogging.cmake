@@ -12,23 +12,23 @@
 #   VneLogging_LIBRARIES - Libraries to link against
 #   VneLogging_IS_SHARED - TRUE if the found library is a shared library
 #
-# Usage:
-#   find_package(VneLogging REQUIRED)
+# Usage (installed CMake package — preferred):
+#   find_package(VneLogging CONFIG REQUIRED)
 #   target_link_libraries(your_target PRIVATE vne::logging)
+# CMake searches <prefix>/lib/cmake/VneLogging/VneLoggingConfig.cmake via CMAKE_PREFIX_PATH.
 #
-# Prefer an installed CMake package (VneLoggingConfig.cmake) from install(EXPORT);
-# this module is a fallback for manual prefix layouts.
+# This Find module runs only in MODULE mode (find_package without CONFIG, with this file on
+# CMAKE_MODULE_PATH). It tries CONFIG first, then manual find_library/find_path.
 #==============================================================================
 
 include(FindPackageHandleStandardArgs)
-include(CMakeFindDependencyMacro)
 
-# Try to find the config file first (for installed packages)
-find_package(VneLogging QUIET NO_MODULE PATHS
-    ${CMAKE_CURRENT_LIST_DIR}/../..
-    ${CMAKE_CURRENT_LIST_DIR}/../../..
-    ${CMAKE_INSTALL_PREFIX}
-    ${CMAKE_INSTALL_PREFIX}/lib/cmake/VneLogging
+# Prefer CONFIG package from cmake --install (VneLoggingConfig.cmake loads VneCommonTargets).
+find_package(VneLogging CONFIG QUIET
+    PATHS
+        "${CMAKE_CURRENT_LIST_DIR}"
+        "${CMAKE_CURRENT_LIST_DIR}/../.."
+        "${CMAKE_INSTALL_PREFIX}"
 )
 
 if(VneLogging_FOUND)

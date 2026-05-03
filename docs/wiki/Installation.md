@@ -35,10 +35,18 @@ cmake --build build
 sudo cmake --install build
 ```
 
-In your `CMakeLists.txt`:
+In your `CMakeLists.txt`, use **CONFIG** mode so CMake loads `VneLoggingConfig.cmake` from `<prefix>/lib/cmake/VneLogging/`. Module mode (`find_package` without `CONFIG`) looks for `FindVneLogging.cmake` only on `CMAKE_MODULE_PATH`, not under the install tree.
+
 ```cmake
-find_package(VneLogging REQUIRED)
+find_package(VneLogging CONFIG REQUIRED)
 target_link_libraries(your_target PRIVATE vne::logging)
+```
+
+Custom install prefix:
+
+```cmake
+list(APPEND CMAKE_PREFIX_PATH "/path/to/prefix")
+find_package(VneLogging CONFIG REQUIRED)
 ```
 
 ---
@@ -56,5 +64,5 @@ target_link_libraries(your_target PRIVATE vne::logging)
 ## Requirements
 
 - C++17 or later
-- CMake 3.16+
+- CMake 3.19+
 - GCC 9+, Clang 10+, or MSVC 2019+

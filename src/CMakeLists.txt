@@ -91,5 +91,11 @@ endif()
 # Set compile features
 target_compile_features(vnelogging PUBLIC cxx_std_20)
 
-# Link against warnings, build settings, and common utilities
-target_link_libraries(vnelogging PUBLIC vne::logging::Warnings vne::logging::BuildSettings vne::common)
+# Link against warnings, build settings, and common utilities.
+# Build: vne::common (alias). Install: vne::vnecommon from VneCommonTargets (see VneLoggingConfig.cmake).
+target_link_libraries(vnelogging PUBLIC
+    vne::logging::Warnings
+    vne::logging::BuildSettings
+    $<BUILD_INTERFACE:vne::common>
+    $<INSTALL_INTERFACE:vne::vnecommon>
+)

@@ -180,6 +180,15 @@ jobs:
         working-directory: build/shared/Release
         run: ctest --output-on-failure --timeout 300 --verbose
 
+      - name: Install and verify find_package(VneLogging) consumer
+        run: |
+          set -euo pipefail
+          rm -rf "${GITHUB_WORKSPACE}/install-consumer-test"
+          cmake --install build/shared/Release --prefix "${GITHUB_WORKSPACE}/install-consumer-test"
+          bash scripts/ci_verify_vnelogging_package.sh \
+            "${GITHUB_WORKSPACE}/install-consumer-test" \
+            "${GITHUB_WORKSPACE}"
+
   build-linux-clang:
     name: "Build+Test / Linux Clang (static)"
     needs: [detect-release, pre-checks-gate]
@@ -211,6 +220,15 @@ jobs:
       - name: Test
         working-directory: build/static/Release
         run: ctest --output-on-failure --timeout 300 --verbose
+
+      - name: Install and verify find_package(VneLogging) consumer
+        run: |
+          set -euo pipefail
+          rm -rf "${GITHUB_WORKSPACE}/install-consumer-test"
+          cmake --install build/static/Release --prefix "${GITHUB_WORKSPACE}/install-consumer-test"
+          bash scripts/ci_verify_vnelogging_package.sh \
+            "${GITHUB_WORKSPACE}/install-consumer-test" \
+            "${GITHUB_WORKSPACE}"
 
   coverage:
     name: "Build+Test / Coverage"
@@ -297,6 +315,15 @@ jobs:
         working-directory: build/static/Release
         run: ctest --output-on-failure --timeout 300 --verbose
 
+      - name: Install and verify find_package(VneLogging) consumer
+        run: |
+          set -euo pipefail
+          rm -rf "${GITHUB_WORKSPACE}/install-consumer-test"
+          cmake --install build/static/Release --prefix "${GITHUB_WORKSPACE}/install-consumer-test"
+          bash scripts/ci_verify_vnelogging_package.sh \
+            "${GITHUB_WORKSPACE}/install-consumer-test" \
+            "${GITHUB_WORKSPACE}"
+
   windows:
     name: "Build+Test / Windows"
     needs: [detect-release, pre-checks-gate]
@@ -321,6 +348,16 @@ jobs:
       - name: Test
         working-directory: build/shared/Release
         run: ctest --output-on-failure --timeout 300 --verbose -C Release
+
+      - name: Install and verify find_package(VneLogging) consumer
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf "${GITHUB_WORKSPACE}/install-consumer-test"
+          cmake --install build/shared/Release --config Release --prefix "${GITHUB_WORKSPACE}/install-consumer-test"
+          bash scripts/ci_verify_vnelogging_package.sh \
+            "${GITHUB_WORKSPACE}/install-consumer-test" \
+            "${GITHUB_WORKSPACE}"
 
   build-web:
     name: "Build / Web (Emscripten)"

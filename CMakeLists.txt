@@ -9,7 +9,7 @@
 #==============================================================================
 
 # Minimum required CMake version
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.19)
 
 # Project declaration
 project(vnelogging VERSION 1.0.0 LANGUAGES CXX)
@@ -47,16 +47,29 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/vnecmake/modules")
 # Project-specific modules
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
+# Must be defined before add_subdirectory(vnecommon): that subproject registers
+# install() when VNE_COMMON_SKIP_INSTALL is OFF; align with this skip flag.
+option(VNE_LOGGING_SKIP_INSTALL "Skip install rules when used as a subdependency" OFF)
+
 #==============================================================================
 # Internal Libraries (deps/internal) - use if already in build, else add
 #==============================================================================
 set(VNE_DEPS_INTERNAL_DIR ${PROJECT_SOURCE_DIR}/deps/internal)
+# Default: submodule at deps/internal/vnecommon. Override for a sibling/out-of-tree
+# clone, e.g. -DVNE_VNECOMMON_ROOT=/Users/you/workspace/github/vne/vnecommon
+set(VNE_VNECOMMON_ROOT "${VNE_DEPS_INTERNAL_DIR}/vnecommon" CACHE PATH
+    "Path to vnecommon sources (submodule default; set to a standalone repo for local dev)")
 include(VneUseDep)
 
 function(_vnelogging_configure_vnecommon_dep)
     set(_vnelogging_build_examples_saved "${BUILD_EXAMPLES}")
-    vne_use_dep(TARGET vne::common SUBDIR "${VNE_DEPS_INTERNAL_DIR}/vnecommon" BINARY_DIR "${CMAKE_BINARY_DIR}/deps/internal/vnecommon"
-        CACHE_VARS BUILD_EXAMPLES OFF)
+    if(VNE_LOGGING_SKIP_INSTALL)
+        vne_use_dep(TARGET vne::common SUBDIR "${VNE_VNECOMMON_ROOT}" BINARY_DIR "${CMAKE_BINARY_DIR}/deps/internal/vnecommon"
+            CACHE_VARS BUILD_EXAMPLES OFF VNE_COMMON_SKIP_INSTALL ON)
+    else()
+        vne_use_dep(TARGET vne::common SUBDIR "${VNE_VNECOMMON_ROOT}" BINARY_DIR "${CMAKE_BINARY_DIR}/deps/internal/vnecommon"
+            CACHE_VARS BUILD_EXAMPLES OFF)
+    endif()
     set(BUILD_EXAMPLES "${_vnelogging_build_examples_saved}" CACHE BOOL "" FORCE)
 endfunction()
 
@@ -187,15 +200,17 @@ if(VNE_LOGGING_CI)
     set(VNE_LOGGING_DEV OFF CACHE BOOL "Dev build: enable examples and tests (local development)" FORCE)
 endif()
 # CMake Options and Presets:
-# | Option / Preset   | Default        | Description                                                      |
-# |-------------------|----------------|------------------------------------------------------------------|
-# | VNE_LOGGING_DEV   | ON (top-level) | Dev preset: BUILD_TESTS=ON, BUILD_EXAMPLES=ON                    |
-# | VNE_LOGGING_CI    | OFF            | CI preset: BUILD_TESTS=ON, BUILD_EXAMPLES=OFF                    |
-# | BUILD_TESTS       | ON             | Build the test suite                                             |
-# | VNE_LOGGING_TESTS | ON             | Build vnelogging test suite (can be set to OFF by parent projects) |
-# | BUILD_EXAMPLES    | OFF            | Build example programs                                           |
-# | ENABLE_COVERAGE   | OFF            | Enable code coverage reporting                                   |
-# | VNE_LOGGING_LIB_TYPE | static      | Library artifact: static or shared                               |
+# | Option / Preset            | Default        | Description                                                      |
+# |----------------------------|----------------|------------------------------------------------------------------|
+# | VNE_LOGGING_DEV            | ON (top-level) | Dev preset: BUILD_TESTS=ON, BUILD_EXAMPLES=ON                    |
+# | VNE_LOGGING_CI             | OFF            | CI preset: BUILD_TESTS=ON, BUILD_EXAMPLES=OFF                    |
+# | BUILD_TESTS                | ON             | Build the test suite                                             |
+# | VNE_LOGGING_TESTS          | ON             | Build vnelogging test suite (can be set to OFF by parent projects) |
+# | BUILD_EXAMPLES             | OFF            | Build example programs                                           |
+# | ENABLE_COVERAGE            | OFF            | Enable code coverage reporting                                   |
+# | VNE_LOGGING_LIB_TYPE       | static         | Library artifact: static or shared                               |
+# | VNE_LOGGING_SKIP_INSTALL   | OFF            | Skip install() for vnelogging and bundled vnecommon (subproject) |
+# (Declared near the top of this file, before add_subdirectory vnecommon.)
 option(BUILD_TESTS "Build the test suite" ON)
 option(VNE_LOGGING_TESTS "Build vnelogging test suite (can be set to OFF by parent projects)" ON)
 option(BUILD_EXAMPLES "Build example programs" OFF)
@@ -341,72 +356,85 @@ if(NOT CMAKE_INSTALL_INCLUDEDIR)
     set(CMAKE_INSTALL_INCLUDEDIR "include")
 endif()
 
-# Install the static/shared library artifact (ARCHIVE covers iOS/macOS .a static libs).
-install(TARGETS vnelogging
-    EXPORT VneLoggingTargets
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
+if(NOT VNE_LOGGING_SKIP_INSTALL)
+    include(CMakePackageConfigHelpers)
 
-# INTERFACE targets: export only (no lib/ artifact). Kept separate so install rules stay
-# unambiguous for multi-config generators (Xcode) and static archive installs.
-install(TARGETS Warnings BuildSettings
-    EXPORT VneLoggingTargets
-    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
+    # Installed targets use namespace vne:: (matches README / find_package(VneLogging) consumers).
+    # EXPORT_NAME maps the internal vnelogging target to imported target vne::logging; artifact stays OUTPUT_NAME vnelogging.
+    set_target_properties(vnelogging PROPERTIES EXPORT_NAME logging)
+    set_target_properties(Warnings PROPERTIES EXPORT_NAME logging_Warnings)
+    set_target_properties(BuildSettings PROPERTIES EXPORT_NAME logging_BuildSettings)
 
-# Install public headers from include/
-install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/vertexnova/"
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova
-    FILES_MATCHING PATTERN "*.h"
-)
+    # Install the static/shared library artifact (ARCHIVE covers iOS/macOS .a static libs).
+    install(TARGETS vnelogging
+        EXPORT VneLoggingTargets
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
 
-# Internal API headers from src/ (needed when linking the static library; must populate
-# include/vertexnova/logging for iOS static and other archive installs.)
-install(DIRECTORY "${PROJECT_SOURCE_DIR}/src/vertexnova/logging/"
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova/logging
-    FILES_MATCHING PATTERN "*.h"
-)
+    # INTERFACE targets: export only (no lib/ artifact). Kept separate so install rules stay
+    # unambiguous for multi-config generators (Xcode) and static archive installs.
+    install(TARGETS Warnings BuildSettings
+        EXPORT VneLoggingTargets
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
 
-# vnecommon is header-only (PUBLIC link of vnelogging). Ship its headers so installed
-# consumers get vertexnova/common/ without a separate vnecommon library under lib/.
-set(VNECOMMON_PUBLIC_HEADERS_DIR
-    "${PROJECT_SOURCE_DIR}/deps/internal/vnecommon/include/vertexnova/common")
-if(NOT EXISTS "${VNECOMMON_PUBLIC_HEADERS_DIR}")
-    message(FATAL_ERROR
-        "Required public dependency headers were not found: "
-        "${VNECOMMON_PUBLIC_HEADERS_DIR}. "
-        "vnelogging publicly depends on vnecommon and installed consumers require "
-        "vertexnova/common headers. Ensure the source tree is complete and the "
-        "vnecommon dependency/submodule is available.")
-endif()
-install(DIRECTORY "${VNECOMMON_PUBLIC_HEADERS_DIR}/"
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova/common
-    FILES_MATCHING PATTERN "*.h"
-)
+    # Install public headers from include/
+    install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/vertexnova/"
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova
+        FILES_MATCHING PATTERN "*.h"
+    )
 
-# Install config.h
-install(FILES ${CMAKE_BINARY_DIR}/config.h
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova/logging
-)
+    # Internal API headers from src/ (needed when linking the static library; must populate
+    # include/vertexnova/logging for iOS static and other archive installs.)
+    install(DIRECTORY "${PROJECT_SOURCE_DIR}/src/vertexnova/logging/"
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova/logging
+        FILES_MATCHING PATTERN "*.h"
+    )
 
-install(EXPORT VneLoggingTargets
-    FILE VneLoggingTargets.cmake
-    NAMESPACE vnelogging::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/VneLogging
-)
+    # vnecommon: install headers + VneCommonTargets.cmake via deps/internal/vnecommon
+    # (VNE_COMMON_SKIP_INSTALL=OFF). Do not duplicate vertexnova/common headers here.
 
-# Install CMake module
-install(FILES cmake/FindVneLogging.cmake
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/VneLogging
-)
+    # Install config.h
+    install(FILES ${CMAKE_BINARY_DIR}/config.h
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova/logging
+    )
 
-if(EXISTS "${PROJECT_SOURCE_DIR}/LICENSE")
-    install(FILES "${PROJECT_SOURCE_DIR}/LICENSE" DESTINATION .)
-endif()
-if(EXISTS "${PROJECT_SOURCE_DIR}/CHANGELOG.md")
-    install(FILES "${PROJECT_SOURCE_DIR}/CHANGELOG.md" DESTINATION .)
+    set(_VNE_LOGGING_CMAKE_PKG_DEST "${CMAKE_INSTALL_LIBDIR}/cmake/VneLogging")
+    install(EXPORT VneLoggingTargets
+        FILE VneLoggingTargets.cmake
+        NAMESPACE vne::
+        DESTINATION ${_VNE_LOGGING_CMAKE_PKG_DEST}
+    )
+
+    configure_package_config_file(
+        cmake/VneLoggingConfig.cmake.in
+        "${CMAKE_CURRENT_BINARY_DIR}/VneLoggingConfig.cmake"
+        INSTALL_DESTINATION ${_VNE_LOGGING_CMAKE_PKG_DEST}
+    )
+    write_basic_package_version_file(
+        "${CMAKE_CURRENT_BINARY_DIR}/VneLoggingConfigVersion.cmake"
+        VERSION ${PROJECT_VERSION}
+        COMPATIBILITY SameMajorVersion
+    )
+    install(FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/VneLoggingConfig.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/VneLoggingConfigVersion.cmake"
+        DESTINATION ${_VNE_LOGGING_CMAKE_PKG_DEST}
+    )
+
+    # Install CMake module (fallback when package config is not used)
+    install(FILES cmake/FindVneLogging.cmake
+        DESTINATION ${_VNE_LOGGING_CMAKE_PKG_DEST}
+    )
+
+    if(EXISTS "${PROJECT_SOURCE_DIR}/LICENSE")
+        install(FILES "${PROJECT_SOURCE_DIR}/LICENSE" DESTINATION .)
+    endif()
+    if(EXISTS "${PROJECT_SOURCE_DIR}/CHANGELOG.md")
+        install(FILES "${PROJECT_SOURCE_DIR}/CHANGELOG.md" DESTINATION .)
+    endif()
 endif()

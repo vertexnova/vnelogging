@@ -324,6 +324,13 @@ jobs:
               ;;
           esac
 
+      - name: Verify find_package(VneLogging) consumer (host toolchain)
+        if: matrix.platform == 'linux-gcc' || matrix.platform == 'macos' || matrix.platform == 'windows'
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/ci_verify_vnelogging_package.sh "${{ github.workspace }}/install" "${{ github.workspace }}"
+
       - name: Compute artifact detail suffix
         shell: bash
         env:
