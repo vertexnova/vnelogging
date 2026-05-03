@@ -12,3 +12,4 @@
 [submodule "deps/internal/vnecommon"]
 	path = deps/internal/vnecommon
 	url = git@github.com:vertexnova/vnecommon.git
+	branch = main
