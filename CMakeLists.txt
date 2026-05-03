@@ -14,12 +14,24 @@ cmake_minimum_required(VERSION 3.16)
 # Project declaration
 project(vnelogging VERSION 1.0.0 LANGUAGES CXX)
 
-# iOS: default install prefix under the build tree. A relative -DCMAKE_INSTALL_PREFIX=...
-# is also resolved relative to CMAKE_BINARY_DIR (not the source tree), so release jobs
-# should still pass an absolute prefix or use cmake --install --prefix <abs path>.
-if(CMAKE_SYSTEM_NAME STREQUAL "iOS" AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install"
-        CACHE PATH "Install prefix for iOS builds (override with -DCMAKE_INSTALL_PREFIX)" FORCE)
+# iOS: pick a default install prefix that matches common packaging checks.
+# - GitHub Actions sets CI + GITHUB_WORKSPACE; workflows often validate
+#   "$GITHUB_WORKSPACE/install/include/..." after `cmake --install` without --prefix.
+# - Local/dev builds default to "<binary-dir>/install".
+# A relative -DCMAKE_INSTALL_PREFIX=... is resolved relative to CMAKE_BINARY_DIR.
+if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
+    if(DEFINED ENV{CI} AND DEFINED ENV{GITHUB_WORKSPACE})
+        file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}" _VNE_GITHUB_WORKSPACE)
+        set(_VNE_IOS_CI_INSTALL_PREFIX "${_VNE_GITHUB_WORKSPACE}/install")
+        if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT
+                OR CMAKE_INSTALL_PREFIX STREQUAL "${CMAKE_BINARY_DIR}/install")
+            set(CMAKE_INSTALL_PREFIX "${_VNE_IOS_CI_INSTALL_PREFIX}"
+                CACHE PATH "Install prefix for iOS on CI (workspace/install)" FORCE)
+        endif()
+    elseif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+        set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install"
+            CACHE PATH "Install prefix for iOS builds (override with -DCMAKE_INSTALL_PREFIX)" FORCE)
+    endif()
 endif()
 
 # Set the C++ standard
@@ -324,6 +336,10 @@ endif()
 #==============================================================================
 
 include(GNUInstallDirs)
+# Rare toolchains leave this unset; packaging expects headers under <prefix>/include/...
+if(NOT CMAKE_INSTALL_INCLUDEDIR)
+    set(CMAKE_INSTALL_INCLUDEDIR "include")
+endif()
 
 # Install the static/shared library artifact (ARCHIVE covers iOS/macOS .a static libs).
 install(TARGETS vnelogging
@@ -343,13 +359,14 @@ install(TARGETS Warnings BuildSettings
 )
 
 # Install public headers from include/
-install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/vertexnova/"
+install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/vertexnova/"
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova
     FILES_MATCHING PATTERN "*.h"
 )
 
-# Internal API headers from src/ (needed when linking the static library)
-install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src/vertexnova/logging/"
+# Internal API headers from src/ (needed when linking the static library; must populate
+# include/vertexnova/logging for iOS static and other archive installs.)
+install(DIRECTORY "${PROJECT_SOURCE_DIR}/src/vertexnova/logging/"
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova/logging
     FILES_MATCHING PATTERN "*.h"
 )

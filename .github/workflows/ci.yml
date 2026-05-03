@@ -419,6 +419,11 @@ jobs:
           cmake --install build/static/Release --config Release --prefix "$STAGE"
           test -d "$STAGE/include/vertexnova/logging"
           test -n "$(find "$STAGE" -name '*.a' -print -quit)"
+          # Same layout release jobs validate: default CMAKE_INSTALL_PREFIX → workspace/install
+          rm -rf "${GITHUB_WORKSPACE}/install"
+          cmake --install build/static/Release --config Release
+          test -d "${GITHUB_WORKSPACE}/install/include/vertexnova/logging"
+          test -n "$(find "${GITHUB_WORKSPACE}/install" -name '*.a' -print -quit)"
 
   build-android:
     name: "Build / Android (arm64-v8a)"
