@@ -9,7 +9,7 @@
 #==============================================================================
 
 # Minimum required CMake version
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.19)
 
 # Project declaration
 project(vnelogging VERSION 1.0.0 LANGUAGES CXX)
@@ -200,15 +200,17 @@ if(VNE_LOGGING_CI)
     set(VNE_LOGGING_DEV OFF CACHE BOOL "Dev build: enable examples and tests (local development)" FORCE)
 endif()
 # CMake Options and Presets:
-# | Option / Preset   | Default        | Description                                                      |
-# |-------------------|----------------|------------------------------------------------------------------|
-# | VNE_LOGGING_DEV   | ON (top-level) | Dev preset: BUILD_TESTS=ON, BUILD_EXAMPLES=ON                    |
-# | VNE_LOGGING_CI    | OFF            | CI preset: BUILD_TESTS=ON, BUILD_EXAMPLES=OFF                    |
-# | BUILD_TESTS       | ON             | Build the test suite                                             |
-# | VNE_LOGGING_TESTS | ON             | Build vnelogging test suite (can be set to OFF by parent projects) |
-# | BUILD_EXAMPLES    | OFF            | Build example programs                                           |
-# | ENABLE_COVERAGE   | OFF            | Enable code coverage reporting                                   |
-# | VNE_LOGGING_LIB_TYPE | static      | Library artifact: static or shared                               |
+# | Option / Preset            | Default        | Description                                                      |
+# |----------------------------|----------------|------------------------------------------------------------------|
+# | VNE_LOGGING_DEV            | ON (top-level) | Dev preset: BUILD_TESTS=ON, BUILD_EXAMPLES=ON                    |
+# | VNE_LOGGING_CI             | OFF            | CI preset: BUILD_TESTS=ON, BUILD_EXAMPLES=OFF                    |
+# | BUILD_TESTS                | ON             | Build the test suite                                             |
+# | VNE_LOGGING_TESTS          | ON             | Build vnelogging test suite (can be set to OFF by parent projects) |
+# | BUILD_EXAMPLES             | OFF            | Build example programs                                           |
+# | ENABLE_COVERAGE            | OFF            | Enable code coverage reporting                                   |
+# | VNE_LOGGING_LIB_TYPE       | static         | Library artifact: static or shared                               |
+# | VNE_LOGGING_SKIP_INSTALL   | OFF            | Skip install() for vnelogging and bundled vnecommon (subproject) |
+# (Declared near the top of this file, before add_subdirectory vnecommon.)
 option(BUILD_TESTS "Build the test suite" ON)
 option(VNE_LOGGING_TESTS "Build vnelogging test suite (can be set to OFF by parent projects)" ON)
 option(BUILD_EXAMPLES "Build example programs" OFF)
@@ -357,6 +359,12 @@ endif()
 if(NOT VNE_LOGGING_SKIP_INSTALL)
     include(CMakePackageConfigHelpers)
 
+    # Installed targets use namespace vne:: (matches README / find_package(VneLogging) consumers).
+    # EXPORT_NAME maps the internal vnelogging target to imported target vne::logging; artifact stays OUTPUT_NAME vnelogging.
+    set_target_properties(vnelogging PROPERTIES EXPORT_NAME logging)
+    set_target_properties(Warnings PROPERTIES EXPORT_NAME logging_Warnings)
+    set_target_properties(BuildSettings PROPERTIES EXPORT_NAME logging_BuildSettings)
+
     # Install the static/shared library artifact (ARCHIVE covers iOS/macOS .a static libs).
     install(TARGETS vnelogging
         EXPORT VneLoggingTargets
@@ -398,7 +406,7 @@ if(NOT VNE_LOGGING_SKIP_INSTALL)
     set(_VNE_LOGGING_CMAKE_PKG_DEST "${CMAKE_INSTALL_LIBDIR}/cmake/VneLogging")
     install(EXPORT VneLoggingTargets
         FILE VneLoggingTargets.cmake
-        NAMESPACE vnelogging::
+        NAMESPACE vne::
         DESTINATION ${_VNE_LOGGING_CMAKE_PKG_DEST}
     )
 

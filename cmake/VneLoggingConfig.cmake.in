@@ -1,7 +1,7 @@
 @PACKAGE_INIT@
 include(CMakeFindDependencyMacro)
 
-# Static vnelogging export carries INTERFACE_LINK_LIBRARIES usage on Threads::Threads (Unix).
+# Static vne::logging export may carry INTERFACE_LINK_LIBRARIES usage on Threads::Threads (Unix).
 find_dependency(Threads)
 
 # Public dependency: vnecommon installs VneCommonTargets.cmake beside this package

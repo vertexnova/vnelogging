@@ -71,9 +71,19 @@ cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local
 cmake --build build
 sudo cmake --install build
 
-# In your CMakeLists.txt
-find_package(VneLogging REQUIRED)
+# In your project's CMakeLists.txt — use CONFIG mode so CMake loads
+# <prefix>/lib/cmake/VneLogging/VneLoggingConfig.cmake (discovered via CMAKE_PREFIX_PATH).
+# Plain find_package(VneLogging) uses MODULE mode and looks for FindVneLogging.cmake on
+# CMAKE_MODULE_PATH only; it does not search lib/cmake/VneLogging/.
+find_package(VneLogging CONFIG REQUIRED)
 target_link_libraries(your_target PRIVATE vne::logging)
+```
+
+If you installed to a **custom prefix** (not already on CMake’s search path), point consumers at it before `find_package`:
+
+```cmake
+list(APPEND CMAKE_PREFIX_PATH "/path/to/your/prefix")
+find_package(VneLogging CONFIG REQUIRED)
 ```
 
 ## Building
@@ -216,7 +226,7 @@ Or set the `NO_COLOR` environment variable.
 ## Requirements
 
 - C++17 or later (C++20 preferred)
-- CMake 3.16+
+- CMake 3.19+
 - Compiler: GCC 9+, Clang 10+, MSVC 2019+
 
 ## License
