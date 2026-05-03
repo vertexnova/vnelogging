@@ -51,11 +51,15 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 # Internal Libraries (deps/internal) - use if already in build, else add
 #==============================================================================
 set(VNE_DEPS_INTERNAL_DIR ${PROJECT_SOURCE_DIR}/deps/internal)
+# Default: submodule at deps/internal/vnecommon. Override for a sibling/out-of-tree
+# clone, e.g. -DVNE_VNECOMMON_ROOT=/Users/you/workspace/github/vne/vnecommon
+set(VNE_VNECOMMON_ROOT "${VNE_DEPS_INTERNAL_DIR}/vnecommon" CACHE PATH
+    "Path to vnecommon sources (submodule default; set to a standalone repo for local dev)")
 include(VneUseDep)
 
 function(_vnelogging_configure_vnecommon_dep)
     set(_vnelogging_build_examples_saved "${BUILD_EXAMPLES}")
-    vne_use_dep(TARGET vne::common SUBDIR "${VNE_DEPS_INTERNAL_DIR}/vnecommon" BINARY_DIR "${CMAKE_BINARY_DIR}/deps/internal/vnecommon"
+    vne_use_dep(TARGET vne::common SUBDIR "${VNE_VNECOMMON_ROOT}" BINARY_DIR "${CMAKE_BINARY_DIR}/deps/internal/vnecommon"
         CACHE_VARS BUILD_EXAMPLES OFF)
     set(BUILD_EXAMPLES "${_vnelogging_build_examples_saved}" CACHE BOOL "" FORCE)
 endfunction()
@@ -200,6 +204,7 @@ option(BUILD_TESTS "Build the test suite" ON)
 option(VNE_LOGGING_TESTS "Build vnelogging test suite (can be set to OFF by parent projects)" ON)
 option(BUILD_EXAMPLES "Build example programs" OFF)
 option(ENABLE_COVERAGE "Enable code coverage reporting" OFF)
+option(VNE_LOGGING_SKIP_INSTALL "Skip install rules when used as a subdependency" OFF)
 
 # Apply CI or DEV preset (CI takes precedence; DEV is ignored when CI is active)
 if(VNE_LOGGING_CI)
@@ -341,72 +346,74 @@ if(NOT CMAKE_INSTALL_INCLUDEDIR)
     set(CMAKE_INSTALL_INCLUDEDIR "include")
 endif()
 
-# Install the static/shared library artifact (ARCHIVE covers iOS/macOS .a static libs).
-install(TARGETS vnelogging
-    EXPORT VneLoggingTargets
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
+if(NOT VNE_LOGGING_SKIP_INSTALL)
+    # Install the static/shared library artifact (ARCHIVE covers iOS/macOS .a static libs).
+    install(TARGETS vnelogging
+        EXPORT VneLoggingTargets
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
 
-# INTERFACE targets: export only (no lib/ artifact). Kept separate so install rules stay
-# unambiguous for multi-config generators (Xcode) and static archive installs.
-install(TARGETS Warnings BuildSettings
-    EXPORT VneLoggingTargets
-    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
+    # INTERFACE targets: export only (no lib/ artifact). Kept separate so install rules stay
+    # unambiguous for multi-config generators (Xcode) and static archive installs.
+    install(TARGETS Warnings BuildSettings
+        EXPORT VneLoggingTargets
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
 
-# Install public headers from include/
-install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/vertexnova/"
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova
-    FILES_MATCHING PATTERN "*.h"
-)
+    # Install public headers from include/
+    install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/vertexnova/"
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova
+        FILES_MATCHING PATTERN "*.h"
+    )
 
-# Internal API headers from src/ (needed when linking the static library; must populate
-# include/vertexnova/logging for iOS static and other archive installs.)
-install(DIRECTORY "${PROJECT_SOURCE_DIR}/src/vertexnova/logging/"
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova/logging
-    FILES_MATCHING PATTERN "*.h"
-)
+    # Internal API headers from src/ (needed when linking the static library; must populate
+    # include/vertexnova/logging for iOS static and other archive installs.)
+    install(DIRECTORY "${PROJECT_SOURCE_DIR}/src/vertexnova/logging/"
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova/logging
+        FILES_MATCHING PATTERN "*.h"
+    )
 
-# vnecommon is header-only (PUBLIC link of vnelogging). Ship its headers so installed
-# consumers get vertexnova/common/ without a separate vnecommon library under lib/.
-set(VNECOMMON_PUBLIC_HEADERS_DIR
-    "${PROJECT_SOURCE_DIR}/deps/internal/vnecommon/include/vertexnova/common")
-if(NOT EXISTS "${VNECOMMON_PUBLIC_HEADERS_DIR}")
-    message(FATAL_ERROR
-        "Required public dependency headers were not found: "
-        "${VNECOMMON_PUBLIC_HEADERS_DIR}. "
-        "vnelogging publicly depends on vnecommon and installed consumers require "
-        "vertexnova/common headers. Ensure the source tree is complete and the "
-        "vnecommon dependency/submodule is available.")
-endif()
-install(DIRECTORY "${VNECOMMON_PUBLIC_HEADERS_DIR}/"
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova/common
-    FILES_MATCHING PATTERN "*.h"
-)
+    # vnecommon is header-only (PUBLIC link of vnelogging). Ship its headers so installed
+    # consumers get vertexnova/common/ without a separate vnecommon library under lib/.
+    set(VNECOMMON_PUBLIC_HEADERS_DIR
+        "${VNE_VNECOMMON_ROOT}/include/vertexnova/common")
+    if(NOT EXISTS "${VNECOMMON_PUBLIC_HEADERS_DIR}")
+        message(FATAL_ERROR
+            "Required public dependency headers were not found: "
+            "${VNECOMMON_PUBLIC_HEADERS_DIR}. "
+            "vnelogging publicly depends on vnecommon and installed consumers require "
+            "vertexnova/common headers. Ensure the source tree is complete and the "
+            "vnecommon dependency/submodule is available.")
+    endif()
+    install(DIRECTORY "${VNECOMMON_PUBLIC_HEADERS_DIR}/"
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova/common
+        FILES_MATCHING PATTERN "*.h"
+    )
 
-# Install config.h
-install(FILES ${CMAKE_BINARY_DIR}/config.h
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova/logging
-)
+    # Install config.h
+    install(FILES ${CMAKE_BINARY_DIR}/config.h
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vertexnova/logging
+    )
 
-install(EXPORT VneLoggingTargets
-    FILE VneLoggingTargets.cmake
-    NAMESPACE vnelogging::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/VneLogging
-)
+    install(EXPORT VneLoggingTargets
+        FILE VneLoggingTargets.cmake
+        NAMESPACE vnelogging::
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/VneLogging
+    )
 
-# Install CMake module
-install(FILES cmake/FindVneLogging.cmake
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/VneLogging
-)
+    # Install CMake module
+    install(FILES cmake/FindVneLogging.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/VneLogging
+    )
 
-if(EXISTS "${PROJECT_SOURCE_DIR}/LICENSE")
-    install(FILES "${PROJECT_SOURCE_DIR}/LICENSE" DESTINATION .)
-endif()
-if(EXISTS "${PROJECT_SOURCE_DIR}/CHANGELOG.md")
-    install(FILES "${PROJECT_SOURCE_DIR}/CHANGELOG.md" DESTINATION .)
+    if(EXISTS "${PROJECT_SOURCE_DIR}/LICENSE")
+        install(FILES "${PROJECT_SOURCE_DIR}/LICENSE" DESTINATION .)
+    endif()
+    if(EXISTS "${PROJECT_SOURCE_DIR}/CHANGELOG.md")
+        install(FILES "${PROJECT_SOURCE_DIR}/CHANGELOG.md" DESTINATION .)
+    endif()
 endif()
