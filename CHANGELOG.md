@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/vertexnova/vnelogging/compare/v1.2.0...v1.2.1) (2026-05-03)
+
+
+### Bug Fixes
+
+* Enhance CMake installation for iOS and improve header organization ([#12](https://github.com/vertexnova/vnelogging/issues/12)) ([0914ac3](https://github.com/vertexnova/vnelogging/commit/0914ac3c72ca5b5820d8457fdf72f09b5e8d6d4f))
+
 ## [1.2.0](https://github.com/vertexnova/vnelogging/compare/v1.1.0...v1.2.0) (2026-05-03)
 
 
