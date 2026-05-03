@@ -15,7 +15,7 @@
 
 Tarballs contain the CMake install prefix: `include/vertexnova/logging/`, `include/vertexnova/common/` (headers from the bundled header-only **vnecommon** dependency — no separate `lib/` entry for vnecommon), the **vnelogging** static or shared library under `lib/` (e.g. `libvnelogging.a` for iOS static Release), `LICENSE`, `CHANGELOG.md`, and `lib/cmake/VneLogging/` export files.
 
-For **iOS (Xcode)**, use `cmake --build <build> --config Release` then `cmake --install <build> --config Release`. Pass an **absolute** `-DCMAKE_INSTALL_PREFIX=...` or `cmake --install ... --prefix <abs path>` so staging paths match your packaging checks; the project defaults iOS installs to `<binary-dir>/install` when the prefix was left at CMake’s default.
+For **iOS (Xcode)**, use `cmake --build <build> --config Release` then `cmake --install <build> --config Release`. On **GitHub Actions** (`CI` + `GITHUB_WORKSPACE` set), configure defaults `CMAKE_INSTALL_PREFIX` to **`$GITHUB_WORKSPACE/install`**, so a bare `cmake --install` matches checks for **`install/include/vertexnova/logging`**. Locally, the default is **`<binary-dir>/install`** unless you override the prefix. You can still pass **`cmake --install`** with an explicit **`--prefix`** absolute path.
 
 ## Troubleshooting
 
