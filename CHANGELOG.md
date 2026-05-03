@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/vertexnova/vnelogging/compare/v1.2.1...v1.2.2) (2026-05-03)
+
+
+### Bug Fixes
+
+* added validation step and documentation to find the relase issue ([#14](https://github.com/vertexnova/vnelogging/issues/14)) ([f9645bb](https://github.com/vertexnova/vnelogging/commit/f9645bb65216c2cce6520baff19c838fb430605e))
+
 ## [1.2.1](https://github.com/vertexnova/vnelogging/compare/v1.2.0...v1.2.1) (2026-05-03)
 
 
