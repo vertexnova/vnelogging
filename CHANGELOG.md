@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/vertexnova/vnelogging/compare/v1.2.2...v1.3.0) (2026-05-03)
+
+
+### Features
+
+* enhance CMake configuration for vnelogging installation and vnecommon integration ([#16](https://github.com/vertexnova/vnelogging/issues/16)) ([75a96ec](https://github.com/vertexnova/vnelogging/commit/75a96ecf9dea805a6130b69c0492221ec8eac333))
+
 ## [1.2.2](https://github.com/vertexnova/vnelogging/compare/v1.2.1...v1.2.2) (2026-05-03)
 
 
