@@ -7,6 +7,13 @@
 # Usage: ci_artifact_detail.sh <platform>
 #   platform: linux-gcc | macos | windows | web-emscripten | ios-static | android | generic
 #
+# Environment (platform-specific):
+#   android — REQUIRED: ANDROID_PLATFORM=android-<API> (e.g. android-24), same form as CMake
+#             -DANDROID_PLATFORM. The API level is embedded in the artifact slug; without this
+#             set, the script exits with an error (do not rely on passing only "android").
+#             Optional: ANDROID_NDK_ROOT → include Pkg.Revision in the slug when source.properties
+#             exists (e.g. ...-ndk27.2.12479018-...); if unset, the slug omits the ndk segment.
+#
 # Writes ARTIFACT_DETAIL=<slug> to stdout and appends to GITHUB_ENV when set.
 # ----------------------------------------------------------------------
 set -euo pipefail
@@ -92,14 +99,22 @@ case "$base" in
   android)
     android_plat="${ANDROID_PLATFORM:-}"
     if [[ -z "$android_plat" ]]; then
-      echo "::error::ANDROID_PLATFORM is unset or empty; expected android-<API> (e.g. android-24)." >&2
+      echo "::error::ANDROID_PLATFORM is required for android artifact name generation." >&2
       exit 1
     fi
-    if [[ ! "$android_plat" =~ ^android-[0-9]+$ ]]; then
-      echo "::error::ANDROID_PLATFORM='${android_plat}' is invalid; expected pattern android-<API> (digits only, e.g. android-24)." >&2
+    if [[ "$android_plat" != android-* ]]; then
+      echo "::error::ANDROID_PLATFORM must start with 'android-'; got '${android_plat}'." >&2
       exit 1
     fi
     api="${android_plat#android-}"
+    if [[ -z "$api" ]]; then
+      echo "::error::ANDROID_PLATFORM must include an API level after 'android-'; got '${android_plat}'." >&2
+      exit 1
+    fi
+    if [[ ! "$api" =~ ^[0-9]+$ ]]; then
+      echo "::error::ANDROID_PLATFORM API level must be numeric (e.g. android-24); got '${android_plat}'." >&2
+      exit 1
+    fi
     abi_slug="arm64v8a"
     ndk_root="${ANDROID_NDK_ROOT:-}"
     ndk_rev=""

@@ -9,7 +9,7 @@
 ### Workflows in this repository
 
 - **[`.github/workflows/ci.yml`](../workflows/ci.yml)** runs on pushes and PRs to `main`. It includes **Build / iOS**, which configures with **`CI=true`**, installs twice (explicit prefix and default prefix), and verifies **`install/include/vertexnova/logging`**, **`install/include/vertexnova/common`**, and at least one **`*.a`**.
-- **[`.github/workflows/release-please.yml`](../workflows/release-please.yml)** is the workflow that publishes the platform tarballs. Reuse the same install verification there before packing so release artifacts always ship **vnecommon** headers. For **`ios-static`** tarball naming, prefer **`scripts/ci_artifact_detail.sh ios-static`** instead of raw **`xcodebuild -version`** in the workflow: **`MD_APPLE_SDK_ROOT`** / **`SDKROOT`** can make **`xcodebuild`** abort with **SIGABRT** (shell exit **134**) on some runners.
+- **[`.github/workflows/release-please.yml`](../workflows/release-please.yml)** is the workflow that publishes the platform tarballs. Reuse the same install verification there before packing so release artifacts always ship **vnecommon** headers. For **`ios-static`** tarball naming, prefer **`scripts/ci_artifact_detail.sh ios-static`** instead of raw **`xcodebuild -version`** in the workflow: **`MD_APPLE_SDK_ROOT`**, **`SDKROOT`**, or **`IOS_SDK_VERSION`** can make **`xcodebuild`** abort with **SIGABRT** (shell exit **134**) on some runners.
 
 ## Repo settings
 
@@ -22,13 +22,28 @@ Public installs **require** the **vnecommon** submodule under **`deps/internal/v
 
 ## Artifact naming helper
 
-**[`scripts/ci_artifact_detail.sh`](../../scripts/ci_artifact_detail.sh)** prints **`ARTIFACT_DETAIL=<slug>`** and appends it to **`GITHUB_ENV`** when set. It clears **`MD_APPLE_SDK_ROOT`**, **`SDKROOT`**, and **`IOS_SDK_VERSION`** before probing Xcode and falls back to **`Info.plist`** when needed. Example:
+**[`scripts/ci_artifact_detail.sh`](../../scripts/ci_artifact_detail.sh)** prints **`ARTIFACT_DETAIL=<slug>`** and appends it to **`GITHUB_ENV`** when set. For Apple platforms it clears **`MD_APPLE_SDK_ROOT`**, **`SDKROOT`**, and **`IOS_SDK_VERSION`** before probing Xcode and falls back to **`Info.plist`** when needed.
+
+Pass **`linux-gcc`**, **`macos`**, **`windows`**, **`web-emscripten`**, **`ios-static`**, **`android`**, or **`generic`** to match your publish matrix **`platform`** label.
+
+**Examples:**
 
 ```bash
 ./scripts/ci_artifact_detail.sh ios-static
 ```
 
-Pass **`linux-gcc`**, **`macos`**, **`windows`**, **`web-emscripten`**, **`ios-static`**, **`android`**, or **`generic`** to match your publish matrix **`platform`** label.
+**Android** is not just `./scripts/ci_artifact_detail.sh android`. The **`android`** branch **requires** **`ANDROID_PLATFORM`** in the same form CMake uses (e.g. **`android-24`**). That value supplies the API level in the slug (e.g. **`android24-…`**). If **`ANDROID_PLATFORM`** is unset, empty, or not matching **`android-<digits>`**, the script **fails with an error** — it will not infer the API from the argument alone.
+
+Optionally set **`ANDROID_NDK_ROOT`** to your NDK root so the slug can include the revision from **`source.properties`** (e.g. **`…-ndk27.2.12479018-arm64v8a`**). If **`ANDROID_NDK_ROOT`** is unset or **`source.properties`** is missing, the slug still includes the API level but **omits** the **`ndk<rev>`** segment (e.g. **`android24-arm64v8a`**), which is weaker for reproducibility.
+
+In **GitHub Actions**, mirror **`release-please.yml`** by exporting both in the step that runs the script, for example:
+
+```yaml
+env:
+  ANDROID_NDK_ROOT: ${{ steps.setup-ndk.outputs.ndk-path }}
+  ANDROID_PLATFORM: ${{ matrix.android_platform }}
+run: ./scripts/ci_artifact_detail.sh android
+```
 
 ## Install layout
 
@@ -39,5 +54,5 @@ For **iOS (Xcode)**, use `cmake --build <build> --config Release` then `cmake --
 ## Troubleshooting
 
 - **iOS / Xcode**: CI uses `-DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO`. For device builds locally, configure signing in Xcode.
-- **`xcodebuild` exit 134 / SIGABRT**: Often triggered when environment variables point at an Xcode **`.app`** bundle inconsistently. Use **`scripts/ci_artifact_detail.sh`** or **`env -u MD_APPLE_SDK_ROOT -u SDKROOT xcodebuild -version`** for version probes.
+- **`xcodebuild` exit 134 / SIGABRT**: Often triggered when environment variables point at an Xcode **`.app`** bundle inconsistently. Use **`scripts/ci_artifact_detail.sh`** or **`env -u MD_APPLE_SDK_ROOT -u SDKROOT -u IOS_SDK_VERSION xcodebuild -version`** for version probes (match **CI** and **`_xcode_version_raw`** in **`ci_artifact_detail.sh`**).
 - **Release builds** pass `-DVNE_LOGGING_DEV=OFF` so the default dev preset does not force tests/examples on.
