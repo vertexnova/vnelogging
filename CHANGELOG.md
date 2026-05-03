@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/vertexnova/vnelogging/compare/v1.1.0...v1.2.0) (2026-05-03)
+
+
+### Features
+
+* enhance CMake installation to include vnecommon headers ([#10](https://github.com/vertexnova/vnelogging/issues/10)) ([28cd336](https://github.com/vertexnova/vnelogging/commit/28cd336cda986a610fcbe057ac1e82e6b5669d25))
+
 ## [1.1.0](https://github.com/vertexnova/vnelogging/compare/v1.0.0...v1.1.0) (2026-05-02)
 
 
