@@ -376,7 +376,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if ! out="$(xcodebuild -version 2>&1)"; then
+          # Avoid SIGABRT (exit 134) when MD_APPLE_SDK_ROOT/SDKROOT disagree with DEVELOPER_DIR.
+          if ! out="$(env -u MD_APPLE_SDK_ROOT -u SDKROOT -u IOS_SDK_VERSION xcodebuild -version 2>&1)"; then
             echo "::error::xcodebuild -version failed (exit non-zero)."
             echo "$out"
             exit 1
@@ -389,6 +390,8 @@ jobs:
           fi
 
       - name: Configure CMake (iOS)
+        env:
+          CI: true
         run: |
           cmake -B build/static/Release -S . \
             -G Xcode \
@@ -412,17 +415,23 @@ jobs:
 
       - name: Install (Release) and verify static layout
         shell: bash
+        env:
+          CI: true
         run: |
           set -euo pipefail
           STAGE="${GITHUB_WORKSPACE}/install-ios-static"
           rm -rf "$STAGE"
           cmake --install build/static/Release --config Release --prefix "$STAGE"
           test -d "$STAGE/include/vertexnova/logging"
+          test -d "$STAGE/include/vertexnova/common"
+          test -n "$(find "$STAGE/include/vertexnova/common" -name '*.h' -print -quit)"
           test -n "$(find "$STAGE" -name '*.a' -print -quit)"
           # Same layout release jobs validate: default CMAKE_INSTALL_PREFIX → workspace/install
           rm -rf "${GITHUB_WORKSPACE}/install"
           cmake --install build/static/Release --config Release
           test -d "${GITHUB_WORKSPACE}/install/include/vertexnova/logging"
+          test -d "${GITHUB_WORKSPACE}/install/include/vertexnova/common"
+          test -n "$(find "${GITHUB_WORKSPACE}/install/include/vertexnova/common" -name '*.h' -print -quit)"
           test -n "$(find "${GITHUB_WORKSPACE}/install" -name '*.a' -print -quit)"
 
   build-android:
