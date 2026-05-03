@@ -22,12 +22,6 @@ _xcode_version_raw() {
       v="$(defaults read "$inf" CFBundleShortVersionString 2>/dev/null || true)"
     fi
   fi
-  if [[ -z "$v" && -n "${DEVELOPER_DIR:-}" ]]; then
-    inf="${DEVELOPER_DIR%/}/../../../Info.plist"
-    if [[ -f "$inf" ]]; then
-      v="$(defaults read "$inf" CFBundleShortVersionString 2>/dev/null || true)"
-    fi
-  fi
   printf '%s' "$v"
 }
 
@@ -90,13 +84,21 @@ case "$base" in
     xv_raw="$(_xcode_version_raw)"
     if [[ -z "$xv_raw" || "$xv_raw" == "unknown" ]]; then
       echo "::warning::Could not read Xcode version for ios-static artifact name; using ios-arm64 fallback."
-      detail="ios-arm64${arch_suffix}"
+      detail="ios-arm64"
     else
       detail="xcode${xv_raw}-arm64"
     fi
     ;;
   android)
     android_plat="${ANDROID_PLATFORM:-}"
+    if [[ -z "$android_plat" ]]; then
+      echo "::error::ANDROID_PLATFORM is unset or empty; expected android-<API> (e.g. android-24)." >&2
+      exit 1
+    fi
+    if [[ ! "$android_plat" =~ ^android-[0-9]+$ ]]; then
+      echo "::error::ANDROID_PLATFORM='${android_plat}' is invalid; expected pattern android-<API> (digits only, e.g. android-24)." >&2
+      exit 1
+    fi
     api="${android_plat#android-}"
     abi_slug="arm64v8a"
     ndk_root="${ANDROID_NDK_ROOT:-}"

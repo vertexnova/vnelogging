@@ -124,7 +124,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if ! out="$(xcodebuild -version 2>&1)"; then
+          if ! out="$(env -u MD_APPLE_SDK_ROOT -u SDKROOT -u IOS_SDK_VERSION xcodebuild -version 2>&1)"; then
             echo "::error::xcodebuild -version failed."
             echo "$out"
             exit 1
@@ -227,10 +227,10 @@ jobs:
         if: matrix.platform == 'ios-static'
         shell: bash
         env:
+          CI: true
           INSTALL_PREFIX: ${{ github.workspace }}/install
         run: |
           set -euxo pipefail
-          xcodebuild -version
           cmake -B "${{ matrix.build_dir }}" -S . \
             -G Xcode \
             -DCMAKE_SYSTEM_NAME=iOS \
@@ -278,6 +278,15 @@ jobs:
             find "$INSTALL" -type f 2>/dev/null | sort | head -50
             exit 1
           fi
+          if [[ ! -d "$INSTALL/include/vertexnova/common" ]]; then
+            echo "::error::Expected install/include/vertexnova/common missing (vnecommon headers must ship in the tarball)."
+            find "$INSTALL" -type f 2>/dev/null | sort | head -50
+            exit 1
+          fi
+          if [[ -z "$(find "$INSTALL/include/vertexnova/common" -name '*.h' -print -quit)" ]]; then
+            echo "::error::No vnecommon headers under install/include/vertexnova/common."
+            exit 1
+          fi
           for f in LICENSE CHANGELOG.md; do
             if [[ ! -f "$INSTALL/$f" ]]; then
               echo "::error::Expected install/$f missing."
@@ -319,83 +328,10 @@ jobs:
         shell: bash
         env:
           ANDROID_NDK_ROOT: ${{ steps.setup-ndk.outputs.ndk-path }}
+          ANDROID_PLATFORM: ${{ matrix.android_platform }}
         run: |
-          set -e
-          base="${{ matrix.platform }}"
-          arch="$(uname -m 2>/dev/null || true)"
-          arch="${arch//$'\r'/}"
-          arch="${arch//[[:space:]]/}"
-          if [[ -z "$arch" || "$(printf '%s' "$arch" | tr '[:upper:]' '[:lower:]')" == "unknown" ]]; then
-            arch=""
-          fi
-          arch_suffix=""
-          if [[ -n "$arch" ]]; then
-            arch_suffix="-${arch}"
-          fi
-          case "$base" in
-            linux-gcc)
-              . /etc/os-release 2>/dev/null || true
-              vid="${VERSION_ID:-}"
-              gcv="$(gcc -dumpfullversion 2>/dev/null || gcc -dumpversion 2>/dev/null || true)"
-              if [[ -n "$gcv" && -n "$vid" ]]; then
-                detail="ubuntu${vid}-gcc${gcv}${arch_suffix}"
-              elif [[ -n "$gcv" ]]; then
-                detail="gcc${gcv}${arch_suffix}"
-              else
-                detail="linux-gcc${arch_suffix}"
-              fi
-              ;;
-            macos)
-              macv="$(sw_vers -productVersion 2>/dev/null || true)"
-              macv="${macv//$'\r'/}"
-              xv_raw="$(xcodebuild -version 2>/dev/null | awk '/^Xcode /{print $2; exit}')"
-              if [[ -n "$xv_raw" && -n "$macv" ]]; then
-                detail="macos${macv}-xcode${xv_raw}${arch_suffix}"
-              elif [[ -n "$macv" ]]; then
-                detail="macos${macv}${arch_suffix}"
-              else
-                detail="macos${arch_suffix}"
-              fi
-              ;;
-            windows)
-              detail="vs2022-x64"
-              ;;
-            web-emscripten)
-              emv="$(emcc -dumpversion 2>/dev/null || true)"
-              if [[ -z "$emv" ]]; then
-                echo "::error::emcc -dumpversion failed"
-                exit 1
-              fi
-              detail="emcc${emv}${arch_suffix}"
-              ;;
-            ios-static)
-              xv_raw="$(xcodebuild -version 2>/dev/null | awk '/^Xcode /{print $2; exit}')"
-              if [[ -z "$xv_raw" ]]; then
-                echo "::error::Xcode version not found for iOS artifact name"
-                exit 1
-              fi
-              detail="xcode${xv_raw}-arm64"
-              ;;
-            android)
-              android_plat="${{ matrix.android_platform }}"
-              api="${android_plat#android-}"
-              abi_slug="arm64v8a"
-              ndk_root="${ANDROID_NDK_ROOT:-}"
-              ndk_rev=""
-              if [[ -n "$ndk_root" && -f "$ndk_root/source.properties" ]]; then
-                ndk_rev="$(grep -E '^[[:space:]]*Pkg.Revision[[:space:]]*=' "$ndk_root/source.properties" | head -1 | cut -d= -f2- | tr -d ' \t\r\n')"
-              fi
-              if [[ -n "$ndk_rev" ]]; then
-                detail="android${api}-ndk${ndk_rev}-${abi_slug}"
-              else
-                detail="android${api}-${abi_slug}"
-              fi
-              ;;
-            *)
-              detail="generic${arch_suffix}"
-              ;;
-          esac
-          echo "ARTIFACT_DETAIL=${detail}" >> "$GITHUB_ENV"
+          set -euo pipefail
+          "${GITHUB_WORKSPACE}/scripts/ci_artifact_detail.sh" "${{ matrix.platform }}"
 
       - name: Package artifact
         shell: bash

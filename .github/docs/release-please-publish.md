@@ -9,7 +9,7 @@
 ### Workflows in this repository
 
 - **[`.github/workflows/ci.yml`](../workflows/ci.yml)** runs on pushes and PRs to `main`. It includes **Build / iOS**, which configures with **`CI=true`**, installs twice (explicit prefix and default prefix), and verifies **`install/include/vertexnova/logging`**, **`install/include/vertexnova/common`**, and at least one **`*.a`**.
-- If you add or restore a separate **publish / release-please** workflow that uploads platform tarballs, reuse the same install verification before packing so release artifacts always ship **vnecommon** headers. For **`ios-static`** tarball naming, prefer **`scripts/ci_artifact_detail.sh ios-static`** instead of raw **`xcodebuild -version`** in the workflow: **`MD_APPLE_SDK_ROOT`** / **`SDKROOT`** can make **`xcodebuild`** abort with **SIGABRT** (shell exit **134**) on some runners.
+- **[`.github/workflows/release-please.yml`](../workflows/release-please.yml)** is the workflow that publishes the platform tarballs. Reuse the same install verification there before packing so release artifacts always ship **vnecommon** headers. For **`ios-static`** tarball naming, prefer **`scripts/ci_artifact_detail.sh ios-static`** instead of raw **`xcodebuild -version`** in the workflow: **`MD_APPLE_SDK_ROOT`** / **`SDKROOT`** can make **`xcodebuild`** abort with **SIGABRT** (shell exit **134**) on some runners.
 
 ## Repo settings
 
