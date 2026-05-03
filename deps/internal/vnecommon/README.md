@@ -1,4 +1,10 @@
-# VertexNova Common (vnecommon)
+<p align="center">
+  <img src="icons/vertexnova_logo_medallion_with_text.svg" alt="VertexNova Common" width="320"/>
+</p>
+
+<p align="center">
+  <strong>Common utilities for VertexNova projects</strong>
+</p>
 
 <p align="center">
   <a href="https://github.com/vertexnova/vnecommon/actions/workflows/ci.yml">
@@ -9,7 +15,11 @@
   <img src="https://img.shields.io/badge/license-Apache%202.0-green.svg" alt="License"/>
 </p>
 
-Header-only library providing common utilities for VertexNova projects.
+---
+
+## About
+
+Header-only library providing platform detection, macros, and base classes (e.g. NonCopyable) for VertexNova projects.
 
 ## Features
 
@@ -18,6 +28,7 @@ Header-only library providing common utilities for VertexNova projects.
 - **Architecture Detection** - x64, x86, ARM64, ARM
 - **Assertions** - Debug-only assertions with messages
 - **Utility Macros** - Force inline, branch hints, unused variable marking
+- **NonCopyable / NonMovable / NonCopyableNonMovable** - Base classes to disable copy and/or move; inherit privately
 
 ## Headers
 
@@ -26,19 +37,20 @@ Header-only library providing common utilities for VertexNova projects.
 | `vertexnova/common/common.h` | Main include (includes all headers) |
 | `vertexnova/common/platform.h` | Platform, compiler, architecture detection |
 | `vertexnova/common/macros.h` | Assertions and utility macros |
+| `vertexnova/common/noncopyable.h` | NonCopyable, NonMovable, NonCopyableNonMovable base classes |
 
 ## Usage
 
-Add as a submodule (e.g. under `deps/internal` for VertexNova layout):
+Add as a submodule:
 
 ```bash
-git submodule add git@github.com:vertexnova/vnecommon.git deps/internal/vnecommon
+git submodule add git@github.com:vertexnova/vnecommon.git libs/vnecommon
 ```
 
 In your CMakeLists.txt:
 
 ```cmake
-add_subdirectory(deps/internal/vnecommon)
+add_subdirectory(libs/vnecommon)
 target_link_libraries(your_target PRIVATE vne::common)
 ```
 
@@ -50,11 +62,15 @@ In your C++ code:
 void example() {
     VNE_ASSERT_MSG(ptr != nullptr, "Pointer must not be null");
     VNE_UNUSED(some_variable);
-    
+
 #if defined(VNE_PLATFORM_MACOS)
     // macOS-specific code
 #endif
 }
+
+// Disable copy/move via base classes (inherit privately)
+class UniqueResource : private vertexnova::NonCopyable { /* ... */ };
+class Singleton : private vertexnova::NonCopyableNonMovable { /* ... */ };
 ```
 
 ## Building
@@ -100,4 +116,10 @@ cmake --build build --config Release
 
 ## License
 
-Apache License 2.0 - See [LICENSE](LICENSE) for details.
+Apache License 2.0 — See [LICENSE](LICENSE) for details.
+
+---
+
+<p align="center">
+  Part of the <a href="https://github.com/vertexnova">VertexNova</a> project
+</p>

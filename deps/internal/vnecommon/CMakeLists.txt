@@ -22,6 +22,7 @@ set(CMAKE_CXX_EXTENSIONS False)
 #==============================================================================
 
 option(BUILD_EXAMPLES "Build example programs" OFF)
+option(VNE_COMMON_SKIP_INSTALL "Skip install rules when used as a subdependency" OFF)
 
 #==============================================================================
 # Header-Only Library
@@ -41,20 +42,22 @@ target_include_directories(vnecommon INTERFACE
 
 include(GNUInstallDirs)
 
-install(TARGETS vnecommon
-    EXPORT VneCommonTargets
-    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
+if(NOT VNE_COMMON_SKIP_INSTALL)
+    install(TARGETS vnecommon
+        EXPORT VneCommonTargets
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
 
-install(DIRECTORY include/
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
+    install(DIRECTORY include/
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
 
-install(EXPORT VneCommonTargets
-    FILE VneCommonTargets.cmake
-    NAMESPACE vne::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/vnecommon
-)
+    install(EXPORT VneCommonTargets
+        FILE VneCommonTargets.cmake
+        NAMESPACE vne::
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/vnecommon
+    )
+endif()
 
 #==============================================================================
 # Examples

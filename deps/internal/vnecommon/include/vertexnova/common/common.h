@@ -19,3 +19,4 @@
 
 #include "vertexnova/common/platform.h"
 #include "vertexnova/common/macros.h"
+#include "vertexnova/common/noncopyable.h"
