@@ -64,12 +64,13 @@ void ConsoleLogSink::log(const std::string& name,
     std::ostringstream oss;
     oss << color << formatted_log << getResetSequence() << '\n';
 
-    // Single atomic write to stdout
-    std::cout << oss.str();
+    // Write to stderr: unbuffered on all platforms so output is visible immediately
+    // through any pipe (Qt Creator, IDE output windows, CI log captures, etc.).
+    std::cerr << oss.str();
 }
 
 void ConsoleLogSink::flush() {
-    // No need to flush for console log
+    std::cerr.flush();
 }
 
 std::string ConsoleLogSink::getPattern() const {
