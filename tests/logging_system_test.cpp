@@ -3,6 +3,8 @@
 
 #include <filesystem>
 #include <fstream>
+#include <iostream>
+#include <sstream>
 
 using namespace vne;
 namespace fs = std::filesystem;
@@ -12,15 +14,17 @@ constexpr const char* kTestDir = "test_dir";
 
 CREATE_VNE_LOGGER_CATEGORY("logging.system.test");
 
-// Redirects cout to a string stream for capturing console output
-class CoutRedirect {
+// Redirects cout/cerr to a string stream for capturing console output
+class StreamRedirect {
    public:
-    CoutRedirect(std::streambuf* new_buffer)
-        : old_(std::cout.rdbuf(new_buffer)) {}
+    StreamRedirect(std::ios& stream, std::streambuf* new_buffer)
+        : stream_(stream)
+        , old_(stream.rdbuf(new_buffer)) {}
 
-    ~CoutRedirect() { std::cout.rdbuf(old_); }
+    ~StreamRedirect() { stream_.rdbuf(old_); }
 
    private:
+    std::ios& stream_;
     std::streambuf* old_;
 };
 
@@ -30,8 +34,8 @@ class CoutRedirect {
 class LoggingSystemTest : public ::testing::Test {
    protected:
     void SetUp() override {
-        // Redirect std::cout to capture console output
-        redirect_ = new CoutRedirect(cout_buffer_.rdbuf());
+        cout_redirect_ = new StreamRedirect(std::cout, cout_buffer_.rdbuf());
+        cerr_redirect_ = new StreamRedirect(std::cerr, cerr_buffer_.rdbuf());
     }
 
     void TearDown() override {
@@ -42,12 +46,24 @@ class LoggingSystemTest : public ::testing::Test {
             std::cerr << "Exception during TearDown(): " << e.what() << std::endl;
         }
 
-        delete redirect_;
+        delete cout_redirect_;
+        delete cerr_redirect_;
     }
+
+    void clearCapturedOutput() {
+        cout_buffer_.str("");
+        cout_buffer_.clear();
+        cerr_buffer_.str("");
+        cerr_buffer_.clear();
+    }
+
+    std::string capturedConsoleOutput() const { return cout_buffer_.str() + cerr_buffer_.str(); }
 
    protected:
     std::stringstream cout_buffer_;
-    CoutRedirect* redirect_;
+    std::stringstream cerr_buffer_;
+    StreamRedirect* cout_redirect_ = nullptr;
+    StreamRedirect* cerr_redirect_ = nullptr;
 };
 
 TEST_F(LoggingSystemTest, StartUpAndShutDown) {
@@ -80,7 +96,7 @@ TEST_F(LoggingSystemTest, ConfigureLoggerAndLogMessage) {
     VNE_LOG_INFO << msg;
 
     // Verify console sink setup
-    std::string output = cout_buffer_.str();
+    std::string output = capturedConsoleOutput();
     EXPECT_NE(output.find(msg), std::string::npos);
 
 #ifndef VNE_PLATFORM_WEB
@@ -183,8 +199,7 @@ TEST_F(LoggingSystemTest, LoggerSpecificMacros) {
 
     log::Logging::configureLogger(cfg2);
 
-    // Reset the console capture
-    cout_buffer_.str("");
+    clearCapturedOutput();
 
     // Use logger-specific macros
     CREATE_VNE_LOGGER_CATEGORY("test_category");
@@ -202,7 +217,7 @@ TEST_F(LoggingSystemTest, LoggerSpecificMacros) {
     log::Logging::shutdown();  // Ensure all loggers are properly shutdown
 
     // Verify console output
-    std::string output = cout_buffer_.str();
+    std::string output = capturedConsoleOutput();
     EXPECT_NE(output.find("[L1] Message to logger 1"), std::string::npos);
     EXPECT_NE(output.find("[L2] Message to logger 2"), std::string::npos);
     EXPECT_NE(output.find("[L1] Message to logger 1 with category 1"), std::string::npos);
@@ -243,8 +258,7 @@ TEST_F(LoggingSystemTest, DefaultAndClientLoggers) {
     client_cfg.async = false;
     log::Logging::configureLogger(client_cfg);
 
-    // Reset the console capture
-    cout_buffer_.str("");
+    clearCapturedOutput();
 
 // Define custom macros for client logger
 #define CLIENT_LOG_TRACE VNE_LOG_TRACE_L(kClientLoggerName)
@@ -262,8 +276,8 @@ TEST_F(LoggingSystemTest, DefaultAndClientLoggers) {
     CLIENT_LOG_INFO << "Message using client logger";
     CLIENT_LOG_ERROR << "Error message using client logger";
 
-    // Verify console output
-    std::string output = cout_buffer_.str();
+    // Verify console output (info on stdout, errors on stderr)
+    std::string output = capturedConsoleOutput();
 
     // Default logger messages should have [DEFAULT] prefix
     EXPECT_NE(output.find("[DEFAULT] Message using default logger"), std::string::npos);
@@ -303,7 +317,7 @@ TEST_F(LoggingSystemTest, WebPlatformConsoleOnlyLogging) {
     VNE_LOG_INFO_L("web_test_logger") << msg;
 
     // Verify console output (should work even though we tried to use file sink)
-    std::string output = cout_buffer_.str();
+    std::string output = capturedConsoleOutput();
     EXPECT_NE(output.find(msg), std::string::npos);
     EXPECT_NE(output.find("[WEB]"), std::string::npos);
 
@@ -327,7 +341,7 @@ TEST_F(LoggingSystemTest, WebPlatformDefaultConfig) {
     std::string msg = "Default web config test";
     VNE_LOG_INFO << msg;
 
-    std::string output = cout_buffer_.str();
+    std::string output = capturedConsoleOutput();
     EXPECT_NE(output.find(msg), std::string::npos);
 
     log::Logging::shutdown();
