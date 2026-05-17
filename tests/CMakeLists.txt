@@ -22,23 +22,35 @@ endif()
 # Setup Google Test
 #==============================================================================
 
-# Try to find GoogleTest in system first
-find_package(GTest QUIET)
+# Default: bundled googletest (static) so TestVneLogging runs from the terminal
+# without DYLD_LIBRARY_PATH. System GTest is often shared (@rpath) and fails at
+# runtime when launched outside Qt Creator / ctest.
+option(VNE_USE_SYSTEM_GTEST "Use system-installed Google Test instead of bundled deps/external/googletest" OFF)
 
-if(NOT GTest_FOUND)
-    # Use deps/external googletest if available
+set(_vne_use_bundled_gtest FALSE)
+
+if(VNE_USE_SYSTEM_GTEST)
+    find_package(GTest QUIET)
+    if(GTest_FOUND)
+        message(STATUS "Using system Google Test (VNE_USE_SYSTEM_GTEST=ON)")
+        set(GTEST_LIBRARIES GTest::gtest_main GTest::gmock)
+    else()
+        message(WARNING "VNE_USE_SYSTEM_GTEST is ON but GTest was not found; falling back to bundled Google Test")
+    endif()
+endif()
+
+if(NOT VNE_USE_SYSTEM_GTEST OR NOT GTest_FOUND)
     if(EXISTS "${CMAKE_SOURCE_DIR}/deps/external/googletest/CMakeLists.txt")
-        message(STATUS "Using Google Test from deps/external directory")
+        message(STATUS "Using bundled Google Test from deps/external (static)")
+        set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
         add_subdirectory(${CMAKE_SOURCE_DIR}/deps/external/googletest ${CMAKE_BINARY_DIR}/deps/external/googletest)
         include(GoogleTest)
-        # Note: gtest_main already links gtest, so we only need gtest_main and gmock
         set(GTEST_LIBRARIES gtest_main gmock)
-        set(GTEST_INCLUDE_DIRS 
-            ${CMAKE_SOURCE_DIR}/deps/external/googletest/googletest/include 
+        set(GTEST_INCLUDE_DIRS
+            ${CMAKE_SOURCE_DIR}/deps/external/googletest/googletest/include
             ${CMAKE_SOURCE_DIR}/deps/external/googletest/googlemock/include
         )
     else()
-        # Fallback to FetchContent if deps/external not available
         message(STATUS "deps/external/googletest not found, using FetchContent")
         include(FetchContent)
         FetchContent_Declare(
@@ -46,15 +58,11 @@ if(NOT GTest_FOUND)
             GIT_REPOSITORY https://github.com/google/googletest.git
             GIT_TAG        v1.14.0
         )
+        set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
         FetchContent_MakeAvailable(googletest)
-        # Note: gtest_main already links gtest, so we only need gtest_main and gmock
         set(GTEST_LIBRARIES gtest_main gmock)
         set(GTEST_INCLUDE_DIRS ${googletest_SOURCE_DIR}/googletest/include ${googletest_SOURCE_DIR}/googlemock/include)
     endif()
-else()
-    message(STATUS "Using system Google Test")
-    set(GTEST_LIBRARIES GTest::gtest_main GTest::gmock)
-    set(GTEST_INCLUDE_DIRS ${GTEST_INCLUDE_DIRS})
 endif()
 
 #==============================================================================
@@ -143,4 +151,5 @@ add_test(NAME vnelogging.test COMMAND TestVneLogging --gtest_print_time=1)
 set_tests_properties(vnelogging.test PROPERTIES
     TIMEOUT 300
     ENVIRONMENT "GTEST_COLOR=1"
+    WORKING_DIRECTORY "$<TARGET_FILE_DIR:TestVneLogging>"
 )
