@@ -11,41 +11,40 @@
 
 #include <gtest/gtest.h>
 
+#include <iostream>
+#include <memory>
+#include <sstream>
+
+#include "stream_redirect.h"
 #include "vertexnova/logging/core/console_log_sink.h"
 #include "vertexnova/logging/core/text_color.h"
 
 using namespace vne;
-
-// Redirects cout to a string stream for capturing console output
-class CoutRedirect {
-   public:
-    CoutRedirect(std::streambuf* new_buffer)
-        : old_(std::cout.rdbuf(new_buffer)) {}
-
-    ~CoutRedirect() { std::cout.rdbuf(old_); }
-
-   private:
-    std::streambuf* old_;
-};
 
 class ConsoleLogSinkTest : public ::testing::Test {
    protected:
     void SetUp() override {
         // Force colors on for testing (tests run without TTY)
         log::setColorEnabled(true);
-        // Redirect std::cout to capture console output
-        redirect_ = new CoutRedirect(cout_buffer_.rdbuf());
+        cout_redirect_ = std::make_unique<StreamRedirect>(std::cout, cout_buffer_.rdbuf());
+        cerr_redirect_ = std::make_unique<StreamRedirect>(std::cerr, cerr_buffer_.rdbuf());
     }
 
     void TearDown() override {
-        delete redirect_;
-        // Reset colors
+        cout_redirect_.reset();
+        cerr_redirect_.reset();
         log::setColorEnabled(true);
+    }
+
+    std::stringstream& outputBufferFor(log::LogLevel level) {
+        return level >= log::LogLevel::eError ? cerr_buffer_ : cout_buffer_;
     }
 
    protected:
     std::stringstream cout_buffer_;
-    CoutRedirect* redirect_;
+    std::stringstream cerr_buffer_;
+    std::unique_ptr<StreamRedirect> cout_redirect_;
+    std::unique_ptr<StreamRedirect> cerr_redirect_;
 };
 
 TEST_F(ConsoleLogSinkTest, ConstructorSetsDefaultPattern) {
@@ -62,7 +61,8 @@ TEST_F(ConsoleLogSinkTest, LogOutputsFormattedMessage) {
         console_log_sink
             .log("DefualtLogger", level, log::TimeStampType::eLocal, "Test message", "TestFile", "TestFunction", 42);
 
-        std::string output = cout_buffer_.str();
+        std::stringstream& buffer = outputBufferFor(level);
+        std::string output = buffer.str();
         // Check if the logged message contains the expected message part
         EXPECT_NE(output.find("Test message"), std::string::npos);
 
@@ -99,8 +99,8 @@ TEST_F(ConsoleLogSinkTest, LogOutputsFormattedMessage) {
         }
 
         // Clear the stringstream buffer for the next log message
-        cout_buffer_.str("");
-        cout_buffer_.clear();
+        buffer.str("");
+        buffer.clear();
     }
 }
 

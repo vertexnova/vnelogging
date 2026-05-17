@@ -150,6 +150,7 @@ TEST_F(TextColorTest, StreamOperator) {
 // Test self-assignment
 TEST_F(TextColorTest, SelfAssignment) {
     log::TextColor text_color(log::DisplayAttributes::eBold, log::FGColorCode::eRed, log::BGColorCode::eDefault);
-    text_color = text_color;  // Self-assignment
+    log::TextColor& self = text_color;
+    text_color = self;
     EXPECT_EQ(captureStream(text_color), "\033[1m\033[31m\033[49m");
 }
