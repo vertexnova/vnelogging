@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/vertexnova/vnelogging/compare/v1.3.0...v1.3.1) (2026-05-17)
+
+
+### Bug Fixes
+
+* Fixed the console logs flushing logic. ([#18](https://github.com/vertexnova/vnelogging/issues/18)) ([9e20c66](https://github.com/vertexnova/vnelogging/commit/9e20c66b9f7ccdd7bf0ce59981b545da7fa84943))
+
 ## [1.3.0](https://github.com/vertexnova/vnelogging/compare/v1.2.2...v1.3.0) (2026-05-03)
 
 
