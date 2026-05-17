@@ -64,12 +64,21 @@ void ConsoleLogSink::log(const std::string& name,
     std::ostringstream oss;
     oss << color << formatted_log << getResetSequence() << '\n';
 
-    // Single atomic write to stdout
-    std::cout << oss.str();
+    const std::string output = oss.str();
+    // Errors and fatals go to stderr; everything else goes to stdout.
+    // Flush after each write so output is visible immediately in IDE/CI pipes.
+    if (level >= LogLevel::eError) {
+        std::cerr << output;
+        std::cerr.flush();
+    } else {
+        std::cout << output;
+        std::cout.flush();
+    }
 }
 
 void ConsoleLogSink::flush() {
-    // No need to flush for console log
+    std::cout.flush();
+    std::cerr.flush();
 }
 
 std::string ConsoleLogSink::getPattern() const {
