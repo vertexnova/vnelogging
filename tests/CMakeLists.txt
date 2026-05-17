@@ -27,8 +27,6 @@ endif()
 # runtime when launched outside Qt Creator / ctest.
 option(VNE_USE_SYSTEM_GTEST "Use system-installed Google Test instead of bundled deps/external/googletest" OFF)
 
-set(_vne_use_bundled_gtest FALSE)
-
 if(VNE_USE_SYSTEM_GTEST)
     find_package(GTest QUIET)
     if(GTest_FOUND)
