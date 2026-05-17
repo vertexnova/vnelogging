@@ -4,7 +4,10 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <sstream>
+
+#include "stream_redirect.h"
 
 using namespace vne;
 namespace fs = std::filesystem;
@@ -13,41 +16,26 @@ namespace {
 constexpr const char* kTestDir = "test_dir";
 
 CREATE_VNE_LOGGER_CATEGORY("logging.system.test");
-
-// Redirects cout/cerr to a string stream for capturing console output
-class StreamRedirect {
-   public:
-    StreamRedirect(std::ios& stream, std::streambuf* new_buffer)
-        : stream_(stream)
-        , old_(stream.rdbuf(new_buffer)) {}
-
-    ~StreamRedirect() { stream_.rdbuf(old_); }
-
-   private:
-    std::ios& stream_;
-    std::streambuf* old_;
-};
-
 }  // namespace
 
 // Define a test fixture for Logging
 class LoggingSystemTest : public ::testing::Test {
    protected:
     void SetUp() override {
-        cout_redirect_ = new StreamRedirect(std::cout, cout_buffer_.rdbuf());
-        cerr_redirect_ = new StreamRedirect(std::cerr, cerr_buffer_.rdbuf());
+        cout_redirect_ = std::make_unique<StreamRedirect>(std::cout, cout_buffer_.rdbuf());
+        cerr_redirect_ = std::make_unique<StreamRedirect>(std::cerr, cerr_buffer_.rdbuf());
     }
 
     void TearDown() override {
-        // Remove the test directory and clean up
+        // Reset redirects first so exception messages reach the console.
+        cout_redirect_.reset();
+        cerr_redirect_.reset();
+
         try {
             std::filesystem::remove_all(kTestDir);
         } catch (const std::exception& e) {
             std::cerr << "Exception during TearDown(): " << e.what() << std::endl;
         }
-
-        delete cout_redirect_;
-        delete cerr_redirect_;
     }
 
     void clearCapturedOutput() {
@@ -62,8 +50,8 @@ class LoggingSystemTest : public ::testing::Test {
    protected:
     std::stringstream cout_buffer_;
     std::stringstream cerr_buffer_;
-    StreamRedirect* cout_redirect_ = nullptr;
-    StreamRedirect* cerr_redirect_ = nullptr;
+    std::unique_ptr<StreamRedirect> cout_redirect_;
+    std::unique_ptr<StreamRedirect> cerr_redirect_;
 };
 
 TEST_F(LoggingSystemTest, StartUpAndShutDown) {

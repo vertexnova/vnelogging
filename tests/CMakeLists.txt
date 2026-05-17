@@ -73,6 +73,7 @@ endif()
 set(TEST_INCLUDES
     core/mocks/log_sink_mock.h
     core/mocks/time_stamp_provider_mock.h
+    stream_redirect.h
 )
 
 set(TEST_SOURCES
@@ -109,6 +110,7 @@ target_include_directories(TestVneLogging
     SYSTEM PUBLIC
         ${GTEST_INCLUDE_DIRS}
     PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<BUILD_INTERFACE:${VNE_INCLUDE_DIR}>
         $<BUILD_INTERFACE:${VNE_SRC_DIR}>
 )

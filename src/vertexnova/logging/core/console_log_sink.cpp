@@ -66,13 +66,11 @@ void ConsoleLogSink::log(const std::string& name,
 
     const std::string output = oss.str();
     // Errors and fatals go to stderr; everything else goes to stdout.
-    // Flush after each write so output is visible immediately in IDE/CI pipes.
+    // Flushing is handled separately via ConsoleLogSink::flush().
     if (level >= LogLevel::eError) {
         std::cerr << output;
-        std::cerr.flush();
     } else {
         std::cout << output;
-        std::cout.flush();
     }
 }
 

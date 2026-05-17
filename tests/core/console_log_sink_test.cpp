@@ -12,39 +12,27 @@
 #include <gtest/gtest.h>
 
 #include <iostream>
+#include <memory>
 #include <sstream>
 
+#include "stream_redirect.h"
 #include "vertexnova/logging/core/console_log_sink.h"
 #include "vertexnova/logging/core/text_color.h"
 
 using namespace vne;
-
-// Redirects cout/cerr to a string stream for capturing console output
-class StreamRedirect {
-   public:
-    StreamRedirect(std::ios& stream, std::streambuf* new_buffer)
-        : stream_(stream)
-        , old_(stream.rdbuf(new_buffer)) {}
-
-    ~StreamRedirect() { stream_.rdbuf(old_); }
-
-   private:
-    std::ios& stream_;
-    std::streambuf* old_;
-};
 
 class ConsoleLogSinkTest : public ::testing::Test {
    protected:
     void SetUp() override {
         // Force colors on for testing (tests run without TTY)
         log::setColorEnabled(true);
-        cout_redirect_ = new StreamRedirect(std::cout, cout_buffer_.rdbuf());
-        cerr_redirect_ = new StreamRedirect(std::cerr, cerr_buffer_.rdbuf());
+        cout_redirect_ = std::make_unique<StreamRedirect>(std::cout, cout_buffer_.rdbuf());
+        cerr_redirect_ = std::make_unique<StreamRedirect>(std::cerr, cerr_buffer_.rdbuf());
     }
 
     void TearDown() override {
-        delete cout_redirect_;
-        delete cerr_redirect_;
+        cout_redirect_.reset();
+        cerr_redirect_.reset();
         log::setColorEnabled(true);
     }
 
@@ -55,8 +43,8 @@ class ConsoleLogSinkTest : public ::testing::Test {
    protected:
     std::stringstream cout_buffer_;
     std::stringstream cerr_buffer_;
-    StreamRedirect* cout_redirect_ = nullptr;
-    StreamRedirect* cerr_redirect_ = nullptr;
+    std::unique_ptr<StreamRedirect> cout_redirect_;
+    std::unique_ptr<StreamRedirect> cerr_redirect_;
 };
 
 TEST_F(ConsoleLogSinkTest, ConstructorSetsDefaultPattern) {
