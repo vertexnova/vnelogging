@@ -74,9 +74,12 @@ void ConsoleLogSink::log(const std::string& name,
     }
 }
 
-void ConsoleLogSink::flush() {
-    std::cout.flush();
-    std::cerr.flush();
+void ConsoleLogSink::flush(LogLevel level) {
+    if (level >= LogLevel::eError) {
+        std::cerr.flush();
+    } else {
+        std::cout.flush();
+    }
 }
 
 std::string ConsoleLogSink::getPattern() const {

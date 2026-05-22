@@ -59,7 +59,7 @@ void SyncLogger::log(const std::string& category_name,
         }
         if (level >= flush_level_) {
             for (auto& sink : log_sinks_) {
-                sink->flush();
+                sink->flush(level);
             }
         }
     }
@@ -68,7 +68,8 @@ void SyncLogger::log(const std::string& category_name,
 void SyncLogger::flush() {
     std::lock_guard<std::mutex> lock(mutex_);
     for (auto& sink : log_sinks_) {
-        sink->flush();
+        sink->flush(LogLevel::eTrace);  // flush cout (cout is the buffered stream)
+        sink->flush(LogLevel::eError);  // flush cerr (unbuffered in practice, but be explicit)
     }
 }
 

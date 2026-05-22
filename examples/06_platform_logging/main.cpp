@@ -6,11 +6,11 @@
  * Created:   May 2026
  *
  * Autodoc:   yes
- * 
+ *
  * ----------------------------------------------------------------------
  */
 
- /* ----------------------------------------------------------------------
+/* ----------------------------------------------------------------------
  * Example: Cross-platform logging setup
  *
  * Demonstrates how to initialise the logger on each supported platform.

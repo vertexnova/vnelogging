@@ -46,10 +46,10 @@ void LogDispatcher::dispatch(const std::vector<std::unique_ptr<ILogSink>>& log_s
     });
 }
 
-void LogDispatcher::flush(const std::vector<std::unique_ptr<ILogSink>>& log_sinks) {
+void LogDispatcher::flush(const std::vector<std::unique_ptr<ILogSink>>& log_sinks, LogLevel level) {
     log_queue_worker_.flush();
     for (auto& sink : log_sinks) {
-        sink->flush();
+        sink->flush(level);
     }
 }
 

@@ -61,7 +61,7 @@ TEST_F(FileLogSinkTest, LogWritesToFile) {
                       "TestFile",
                       "TestFunction",
                       42);
-        file_sync.flush();
+        file_sync.flush(log::LogLevel::eTrace);
     }
     std::ifstream infile(unique_file);
     std::string line;
@@ -154,7 +154,7 @@ TEST_F(FileLogSinkTest, FlushWritesToFile) {
     EXPECT_FALSE(found_before) << "Message should not be present before flush.";
 
     // Now flush and check for the message, retry a few times for robustness
-    file_sink.flush();
+    file_sink.flush(log::LogLevel::eTrace);
     bool found_after = false;
     for (int attempt = 0; attempt < 3 && !found_after; ++attempt) {
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
@@ -184,7 +184,7 @@ TEST_F(FileLogSinkTest, SetPatternChangesLogFormat) {
                       "TestFile",
                       "TestFunction",
                       42);
-        file_sink.flush();
+        file_sink.flush(log::LogLevel::eTrace);
     }
     std::ifstream infile(unique_file);
     std::string line;

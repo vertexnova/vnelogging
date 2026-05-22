@@ -54,7 +54,7 @@ class LogSinkMock : public ILogSink {
     /**
      * @brief Mock method to flush the log sink.
      */
-    MOCK_METHOD(void, flush, (), (override));
+    MOCK_METHOD(void, flush, (LogLevel level), (override));
 
     /**
      * @brief Gets the log pattern (mock implementation).

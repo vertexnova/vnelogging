@@ -70,11 +70,14 @@ class VNE_LOGGING_API FileLogSink : public ILogSink {
              uint32_t line) override;
 
     /**
-     * @brief Flushes the file output.
+     * @brief Flushes the log file.
      *
-     * Ensures that all log messages have been written to the file.
+     * The level parameter is accepted for interface compatibility but is not
+     * used — there is only one output stream.
+     *
+     * @param level Unused.
      */
-    void flush() override;
+    void flush(LogLevel level) override;
 
     /**
      * @brief Gets the current log pattern.

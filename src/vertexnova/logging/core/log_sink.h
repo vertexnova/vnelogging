@@ -60,13 +60,15 @@ class VNE_LOGGING_API ILogSink {
                      uint32_t line) = 0;
 
     /**
-     * @brief Flushes the log output.
+     * @brief Flushes the output stream that corresponds to the given log level.
      *
-     * Pure virtual function that must be implemented by derived classes.
-     * This function is used to ensure that all log messages have been
-     * processed and output.
+     * Implementations should flush only the stream the level was written to
+     * (e.g. ConsoleLogSink flushes std::cerr for errors, std::cout otherwise).
+     * File sinks ignore the level and always flush their file stream.
+     *
+     * @param level The level of the message that triggered the flush.
      */
-    virtual void flush() = 0;
+    virtual void flush(LogLevel level) = 0;
 
     /**
      * @brief Gets the log pattern.

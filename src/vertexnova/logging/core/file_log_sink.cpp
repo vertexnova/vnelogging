@@ -64,7 +64,7 @@ void FileLogSink::log(const std::string& name,
     file_stream_ << formatted_log << '\n';
 }
 
-void FileLogSink::flush() {
+void FileLogSink::flush(LogLevel /*level*/) {
     if (file_stream_.is_open()) {
         file_stream_.flush();
     }

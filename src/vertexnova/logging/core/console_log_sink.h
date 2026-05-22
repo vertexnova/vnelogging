@@ -71,11 +71,13 @@ class VNE_LOGGING_API ConsoleLogSink : public ILogSink {
              uint32_t line) override;
 
     /**
-     * @brief Flushes the console output.
+     * @brief Flushes the console stream that the given level writes to.
      *
-     * Ensures that all log messages have been output to the console.
+     * Flushes std::cerr for eError / eFatal, std::cout for all other levels.
+     *
+     * @param level The level of the message that triggered the flush.
      */
-    void flush() override;
+    void flush(LogLevel level) override;
 
     /**
      * @brief Gets the current log pattern.

@@ -76,14 +76,14 @@ class VNE_LOGGING_API LogDispatcher {
                   uint32_t line);
 
     /**
-     * @brief Flushes all pending log messages in the log_sinks.
+     * @brief Drains the queue and flushes the stream matching the given level.
      *
      * @param log_sinks The collection of log sinks to flush.
-     *
-     * This method ensures that all log messages currently in the queue are
-     * processed and written out by the log sinks.
+     * @param level The level that triggered the flush — forwarded to each sink
+     *              so only the relevant output stream is flushed.
+     *              Defaults to eTrace (flushes std::cout).
      */
-    void flush(const std::vector<std::unique_ptr<ILogSink>>& log_sinks);
+    void flush(const std::vector<std::unique_ptr<ILogSink>>& log_sinks, LogLevel level = LogLevel::eTrace);
 
    private:
     // Deleted copy constructor and assignment operator
