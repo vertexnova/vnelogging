@@ -5,6 +5,12 @@
  * Author:    Ajeet Singh Yadav
  * Created:   May 2026
  *
+ * Autodoc:   yes
+ * 
+ * ----------------------------------------------------------------------
+ */
+
+ /* ----------------------------------------------------------------------
  * Example: Cross-platform logging setup
  *
  * Demonstrates how to initialise the logger on each supported platform.
@@ -91,6 +97,7 @@ int main() {
         config.file_path = log_dir + "/platform_example.log";
     }
     config.log_level = vne::log::LogLevel::eTrace;
+    config.file_append = false;  // overwrite on each launch; set true to keep history across runs
 
     vne::log::Logging::configureLogger(config);
 

@@ -60,10 +60,10 @@ void LogManager::addConsoleSink(const std::string& logger_name) {
     }
 }
 
-void LogManager::addFileSink(const std::string& logger_name, const std::string& log_file_path) {
+void LogManager::addFileSink(const std::string& logger_name, const std::string& log_file_path, bool append) {
     auto logger = getLogger(logger_name);
     if (logger) {
-        auto file_sink = std::make_unique<FileLogSink>(log_file_path);
+        auto file_sink = std::make_unique<FileLogSink>(log_file_path, append);
         logger->addLogSink(std::move(file_sink));
     }
 }

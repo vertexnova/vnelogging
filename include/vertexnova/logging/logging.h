@@ -55,6 +55,7 @@ struct VNE_LOGGING_API LoggerConfig {
                                                //!< warn, error, fatal).
     LogLevel flush_level = LogLevel::eTrace;   //!< The log level at which the logger will flush its output.
     bool async = false;                        //!< Flag indicating whether the logger operates asynchronously.
+    bool file_append = true;                   //!< If false, the log file is truncated on open (overwrite mode).
 };
 
 inline constexpr const char* kDefaultLoggerName = "vertexnova";  //!< Default logger name.
@@ -139,7 +140,7 @@ class VNE_LOGGING_API Logging {
      * @param logger_name The name of the logger to which the file sink will be added.
      * @param file The name of the file where logs will be written.
      */
-    static void addFileSink(const std::string& logger_name, const std::string& file);
+    static void addFileSink(const std::string& logger_name, const std::string& file, bool append = true);
 
     /**
      * @brief Sets the console pattern for the logger.

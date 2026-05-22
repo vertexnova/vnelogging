@@ -126,11 +126,11 @@ void Logging::addConsoleSink(const std::string& logger_name) {
     s_log_manager->addConsoleSink(logger_name);
 }
 
-void Logging::addFileSink(const std::string& logger_name, const std::string& file) {
+void Logging::addFileSink(const std::string& logger_name, const std::string& file, bool append) {
     if (!s_log_manager) {
         s_log_manager = std::make_shared<LogManager>();
     }
-    s_log_manager->addFileSink(logger_name, file);
+    s_log_manager->addFileSink(logger_name, file, append);
 }
 
 void Logging::setConsolePattern(const std::string& logger_name, const std::string& pattern) {
@@ -204,7 +204,7 @@ void Logging::configureLogger(const LoggerConfig& cfg) {
 #ifndef VNE_PLATFORM_WEB
     if (cfg.sink == LogSinkType::eFile || cfg.sink == LogSinkType::eBoth) {
         if (!cfg.file_path.empty()) {
-            addFileSink(cfg.name, cfg.file_path);
+            addFileSink(cfg.name, cfg.file_path, cfg.file_append);
             if (!cfg.file_pattern.empty()) {
                 setFilePattern(cfg.name, cfg.file_pattern);
             }
