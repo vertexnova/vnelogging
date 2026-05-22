@@ -15,7 +15,6 @@
 #include <cstdlib>
 #include <type_traits>
 
-
 namespace {
 
 /**
