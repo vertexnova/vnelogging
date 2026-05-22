@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/vertexnova/vnelogging/compare/v1.3.1...v1.3.2) (2026-05-22)
+
+
+### Bug Fixes
+
+* Enhance logging examples and configuration for cross-platform use ([#20](https://github.com/vertexnova/vnelogging/issues/20)) ([967e449](https://github.com/vertexnova/vnelogging/commit/967e4495e670d001bb48cab2dec5dba54de29e38))
+
 ## [1.3.1](https://github.com/vertexnova/vnelogging/compare/v1.3.0...v1.3.1) (2026-05-17)
 
 
