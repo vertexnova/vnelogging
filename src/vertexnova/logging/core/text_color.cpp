@@ -50,23 +50,22 @@ std::atomic<int> g_color_detected{-1};
  * - iOS / visionOS: Xcode console doesn't support ANSI codes
  * - Android: logcat doesn't support ANSI codes
  *
- * On other platforms, runtime detection is also performed:
- * - Respects NO_COLOR env var (https://no-color.org/)
- * - Checks isatty(stdout) to disable colors in Xcode debugger, piped
- *   output, and CI environments that redirect stdout.
+ * On other platforms:
+ * - Respects the NO_COLOR env var (https://no-color.org/)
  *
  * Colors can be overridden at runtime with setColorEnabled().
+ * Note: isatty() is intentionally NOT used — IDE output panels (Qt Creator,
+ * CLion, etc.) redirect stdout without being a real TTY, yet they render ANSI
+ * color codes correctly.
  */
 bool detectColorSupport() {
 #if defined(VNE_PLATFORM_WEB) || defined(VNE_PLATFORM_IOS) || defined(VNE_PLATFORM_VISIONOS) \
     || defined(VNE_PLATFORM_ANDROID)
     return false;
 #else
-#if !defined(VNE_PLATFORM_WIN) && !defined(_WIN32)
-    if (!::isatty(::fileno(::stdout))) {
+    if (std::getenv("NO_COLOR") != nullptr) {
         return false;
     }
-#endif
     return true;
 #endif
 }
