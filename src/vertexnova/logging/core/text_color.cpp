@@ -66,9 +66,6 @@ bool detectColorSupport() {
     || defined(VNE_PLATFORM_ANDROID)
     return false;
 #else
-    if (std::getenv("NO_COLOR") != nullptr) {
-        return false;
-    }
 #if !defined(VNE_PLATFORM_WIN) && !defined(_WIN32)
     if (!::isatty(::fileno(::stdout))) {
         return false;
