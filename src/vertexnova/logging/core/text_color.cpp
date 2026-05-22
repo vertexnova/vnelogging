@@ -12,11 +12,11 @@
 #include "text_color.h"
 
 #include <atomic>
-#include <cstdio>
 #include <cstdlib>
 #include <type_traits>
 
 #if !defined(VNE_PLATFORM_WIN) && !defined(_WIN32)
+#include <cstdio>
 #include <unistd.h>
 #endif
 
@@ -70,7 +70,7 @@ bool detectColorSupport() {
         return false;
     }
 #if !defined(VNE_PLATFORM_WIN) && !defined(_WIN32)
-    if (!isatty(fileno(stdout))) {
+    if (!::isatty(::fileno(::stdout))) {
         return false;
     }
 #endif
