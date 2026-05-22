@@ -15,6 +15,10 @@
 #include <cstdlib>
 #include <type_traits>
 
+#if !defined(VNE_PLATFORM_WIN) && !defined(_WIN32)
+#include <unistd.h>
+#endif
+
 namespace {
 
 /**
@@ -44,22 +48,31 @@ std::atomic<int> g_color_detected{-1};
 /**
  * @brief Detects if the terminal supports ANSI colors.
  *
- * Colors are enabled by default on most platforms. Disabled on:
- * - Web (Emscripten): Browser console doesn't support ANSI codes
- * - iOS: Xcode console doesn't support ANSI codes
+ * Colors are disabled at compile time on platforms with no ANSI support:
+ * - Web (Emscripten): browser console doesn't support ANSI codes
+ * - iOS / visionOS: Xcode console doesn't support ANSI codes
+ * - Android: logcat doesn't support ANSI codes
  *
- * Note: Some terminals (like Xcode debugger on macOS) may show raw escape
- * codes instead of colors. Use setColorEnabled(false) to disable colors
- * programmatically, or set the NO_COLOR environment variable.
+ * On other platforms, runtime detection is also performed:
+ * - Respects NO_COLOR env var (https://no-color.org/)
+ * - Checks isatty(stdout) to disable colors in Xcode debugger, piped
+ *   output, and CI environments that redirect stdout.
+ *
+ * Colors can be overridden at runtime with setColorEnabled().
  */
 bool detectColorSupport() {
-#if defined(VNE_PLATFORM_WEB) || defined(VNE_PLATFORM_IOS)
+#if defined(VNE_PLATFORM_WEB) || defined(VNE_PLATFORM_IOS) || defined(VNE_PLATFORM_VISIONOS) \
+    || defined(VNE_PLATFORM_ANDROID)
     return false;
 #else
-    // Check NO_COLOR environment variable (https://no-color.org/)
     if (std::getenv("NO_COLOR") != nullptr) {
         return false;
     }
+#if !defined(VNE_PLATFORM_WIN) && !defined(_WIN32)
+    if (!isatty(fileno(stdout))) {
+        return false;
+    }
+#endif
     return true;
 #endif
 }
