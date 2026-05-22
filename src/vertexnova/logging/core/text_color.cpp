@@ -15,10 +15,6 @@
 #include <cstdlib>
 #include <type_traits>
 
-#if !defined(VNE_PLATFORM_WIN) && !defined(_WIN32)
-#include <cstdio>
-#include <unistd.h>
-#endif
 
 namespace {
 
