@@ -81,9 +81,8 @@ class VNE_LOGGING_API LogDispatcher {
      * @param log_sinks The collection of log sinks to flush.
      * @param level The level that triggered the flush — forwarded to each sink
      *              so only the relevant output stream is flushed.
-     *              Defaults to eTrace (flushes std::cout).
      */
-    void flush(const std::vector<std::unique_ptr<ILogSink>>& log_sinks, LogLevel level = LogLevel::eTrace);
+    void flush(const std::vector<std::unique_ptr<ILogSink>>& log_sinks, LogLevel level);
 
    private:
     // Deleted copy constructor and assignment operator
