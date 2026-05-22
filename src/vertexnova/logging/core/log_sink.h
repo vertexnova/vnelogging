@@ -62,8 +62,9 @@ class VNE_LOGGING_API ILogSink {
     /**
      * @brief Flushes the output stream that corresponds to the given log level.
      *
-     * Implementations should flush only the stream the level was written to
-     * (e.g. ConsoleLogSink flushes std::cerr for errors, std::cout otherwise).
+     * Implementations flush the stream(s) appropriate for the level. ConsoleLogSink
+     * flushes std::cout for sub-error levels; for eError and above it flushes both
+     * std::cout and std::cerr so prior stdout output is not left buffered.
      * File sinks ignore the level and always flush their file stream.
      *
      * @param level The level of the message that triggered the flush.
