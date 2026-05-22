@@ -16,3 +16,6 @@ add_subdirectory(04_benchmark)
 
 # 05 - Multithreaded: Thread-safe logging from concurrent threads
 add_subdirectory(05_multithreaded)
+
+# 06 - Platform Logging: Cross-platform init with setAppLogDirectory (desktop only)
+add_subdirectory(06_platform_logging)

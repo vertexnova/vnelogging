@@ -56,7 +56,7 @@ void AsyncLogger::log(const std::string& category_name,
     if (level >= current_log_level_) {
         dispatcher_->dispatch(log_sinks_, category_name, level, time_stamp_type, message, file, function, line);
         if (level >= flush_level_) {
-            dispatcher_->flush(log_sinks_);
+            dispatcher_->flush(log_sinks_, level);
         }
     }
 }

@@ -21,13 +21,13 @@ namespace vne::log {
 class LoggingPathTest : public ::testing::Test {
    protected:
     void SetUp() override {
-        // Clean up any existing test directories
+        Logging::setAppLogDirectory("");
         cleanupTestDirectories();
     }
 
     void TearDown() override {
-        // Shutdown logging and clean up test files
         Logging::shutdown();
+        Logging::setAppLogDirectory("");
         cleanupTestDirectories();
     }
 
@@ -69,6 +69,30 @@ TEST_F(LoggingPathTest, GetLogDirectory_DelegatesToPlatformSpecific) {
     std::string log_dir1 = Logging::getLogDirectory();
     std::string log_dir2 = Logging::getPlatformSpecificLogDirectory();
     EXPECT_EQ(log_dir1, log_dir2);
+}
+
+TEST_F(LoggingPathTest, SetAppLogDirectory_ReturnsAppProvidedPath) {
+    const std::string app_dir = "test_logs/app_override";
+    ASSERT_TRUE(Logging::ensureLogDirectoryExists(app_dir));
+
+    Logging::setAppLogDirectory(app_dir);
+
+    EXPECT_EQ(Logging::getPlatformSpecificLogDirectory(), app_dir);
+    EXPECT_EQ(Logging::getLogDirectory(), app_dir);
+    EXPECT_TRUE(std::filesystem::exists(app_dir));
+}
+
+TEST_F(LoggingPathTest, SetAppLogDirectory_EmptyStringResetsToAutoDetection) {
+    const std::string baseline = Logging::getPlatformSpecificLogDirectory();
+    const std::string app_dir = "test_logs/app_reset";
+
+    Logging::setAppLogDirectory(app_dir);
+    ASSERT_EQ(Logging::getPlatformSpecificLogDirectory(), app_dir);
+
+    Logging::setAppLogDirectory("");
+
+    EXPECT_EQ(Logging::getPlatformSpecificLogDirectory(), baseline);
+    EXPECT_EQ(Logging::getLogDirectory(), baseline);
 }
 
 //==============================================================================

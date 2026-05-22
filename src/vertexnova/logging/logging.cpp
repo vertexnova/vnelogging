@@ -63,32 +63,6 @@ constexpr const char* getPathSeparator() {
 }
 
 /**
- * @brief Checks if a path looks like a build directory.
- * @param path The path to check.
- * @return True if the path appears to be a build directory.
- */
-bool isBuildDirectory(const std::string& path) {
-    return path.find("build") != std::string::npos || path.find("out") != std::string::npos
-           || path.find("bin") != std::string::npos || path.find("cmake-build") != std::string::npos;
-}
-
-/**
- * @brief Gets the current working directory.
- * @return Current working directory path.
- */
-std::string getCurrentDirectory() {
-#ifdef VNE_PLATFORM_WEB
-    return ".";
-#else
-    try {
-        return std::filesystem::current_path().string();
-    } catch (...) {
-        return ".";
-    }
-#endif
-}
-
-/**
  * @brief Creates directories recursively (portable).
  * @param path The directory path to create.
  * @return True if successful or directory already exists.
@@ -118,6 +92,7 @@ bool createDirectories(const std::string& path) {
 //==============================================================================
 
 std::shared_ptr<LogManager> Logging::s_log_manager = nullptr;
+std::string Logging::s_app_log_dir;
 
 //==============================================================================
 // Core logging functions
@@ -151,11 +126,11 @@ void Logging::addConsoleSink(const std::string& logger_name) {
     s_log_manager->addConsoleSink(logger_name);
 }
 
-void Logging::addFileSink(const std::string& logger_name, const std::string& file) {
+void Logging::addFileSink(const std::string& logger_name, const std::string& file, bool append) {
     if (!s_log_manager) {
         s_log_manager = std::make_shared<LogManager>();
     }
-    s_log_manager->addFileSink(logger_name, file);
+    s_log_manager->addFileSink(logger_name, file, append);
 }
 
 void Logging::setConsolePattern(const std::string& logger_name, const std::string& pattern) {
@@ -229,7 +204,7 @@ void Logging::configureLogger(const LoggerConfig& cfg) {
 #ifndef VNE_PLATFORM_WEB
     if (cfg.sink == LogSinkType::eFile || cfg.sink == LogSinkType::eBoth) {
         if (!cfg.file_path.empty()) {
-            addFileSink(cfg.name, cfg.file_path);
+            addFileSink(cfg.name, cfg.file_path, cfg.file_append);
             if (!cfg.file_pattern.empty()) {
                 setFilePattern(cfg.name, cfg.file_pattern);
             }
@@ -245,17 +220,27 @@ void Logging::configureLogger(const LoggerConfig& cfg) {
 // Path utility functions
 //==============================================================================
 
+void Logging::setAppLogDirectory(const std::string& path) {
+    s_app_log_dir = path;
+    if (!path.empty()) {
+        ensureLogDirectoryExists(path);
+    }
+}
+
 std::string Logging::getLogDirectory() {
-    // Delegate to platform-specific implementation
     return getPlatformSpecificLogDirectory();
 }
 
 std::string Logging::getPlatformSpecificLogDirectory() {
+    // App-provided path takes priority (required on iOS, visionOS, Android).
+    if (!s_app_log_dir.empty()) {
+        return s_app_log_dir;
+    }
+
     const std::string sep = getPathSeparator();
     const std::string home = getHomeDirectory();
 
 #if defined(VNE_PLATFORM_WIN) || defined(_WIN32)
-    // Windows: Use LocalAppData
     if (const char* appdata = std::getenv("LOCALAPPDATA")) {
         return std::string(appdata) + sep + "VertexNova" + sep + "logs";
     }
@@ -264,23 +249,22 @@ std::string Logging::getPlatformSpecificLogDirectory() {
     }
 
 #elif defined(VNE_PLATFORM_MACOS)
-    // macOS: Use ~/Library/Logs
     if (!home.empty()) {
         return home + "/Library/Logs/VertexNova";
     }
 
 #elif defined(VNE_PLATFORM_IOS)
-    // iOS: Use ~/Documents (app sandbox)
+    // Simulator fallback only. On a real device call setAppLogDirectory() with
+    // the path from FileManager.default.urls(for: .documentDirectory, ...).
     if (!home.empty()) {
         return home + "/Documents/VertexNova/logs";
     }
 
-#elif defined(VNE_PLATFORM_ANDROID)
-    // Android: App internal storage
-    return "/data/data/com.vertexnova.app/files/logs";
+#elif defined(VNE_PLATFORM_VISIONOS) || defined(VNE_PLATFORM_ANDROID) || defined(VNE_PLATFORM_WEB)
+    // Sandbox/no-filesystem platforms: file logging requires setAppLogDirectory().
+    return "";
 
 #elif defined(VNE_PLATFORM_LINUX)
-    // Linux: XDG Base Directory Specification
     if (const char* xdg = std::getenv("XDG_DATA_HOME")) {
         return std::string(xdg) + "/VertexNova/logs";
     }
@@ -288,19 +272,8 @@ std::string Logging::getPlatformSpecificLogDirectory() {
         return home + "/.local/share/VertexNova/logs";
     }
 
-#elif defined(VNE_PLATFORM_WEB)
-    // Web: No file logging
-    return "";
-
 #endif
 
-    // Fallback: Check if we're in a build directory
-    std::string cwd = getCurrentDirectory();
-    if (isBuildDirectory(cwd)) {
-        return cwd + sep + "logs";
-    }
-
-    // Final fallback
     return "logs";
 }
 

@@ -59,7 +59,7 @@ void SyncLogger::log(const std::string& category_name,
         }
         if (level >= flush_level_) {
             for (auto& sink : log_sinks_) {
-                sink->flush();
+                sink->flush(level);
             }
         }
     }

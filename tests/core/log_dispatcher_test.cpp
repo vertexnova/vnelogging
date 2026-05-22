@@ -69,7 +69,7 @@ TEST_F(LogDispatcherTest, TestDispatchAndFlush) {
                         123);
 
     // Flush log sinks
-    EXPECT_CALL(*dynamic_cast<log::LogSinkMock*>(log_sinks_[0].get()), flush());
-    EXPECT_CALL(*dynamic_cast<log::LogSinkMock*>(log_sinks_[1].get()), flush());
-    dispatcher.flush(log_sinks_);
+    EXPECT_CALL(*dynamic_cast<log::LogSinkMock*>(log_sinks_[0].get()), flush(log::LogLevel::eInfo));
+    EXPECT_CALL(*dynamic_cast<log::LogSinkMock*>(log_sinks_[1].get()), flush(log::LogLevel::eInfo));
+    dispatcher.flush(log_sinks_, log::LogLevel::eInfo);
 }

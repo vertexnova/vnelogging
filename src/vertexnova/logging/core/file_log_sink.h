@@ -70,9 +70,7 @@ class VNE_LOGGING_API FileLogSink : public ILogSink {
              uint32_t line) override;
 
     /**
-     * @brief Flushes the file output.
-     *
-     * Ensures that all log messages have been written to the file.
+     * @brief Flushes the log file.
      */
     void flush() override;
 

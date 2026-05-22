@@ -53,5 +53,12 @@ void LogDispatcher::flush(const std::vector<std::unique_ptr<ILogSink>>& log_sink
     }
 }
 
+void LogDispatcher::flush(const std::vector<std::unique_ptr<ILogSink>>& log_sinks, LogLevel level) {
+    log_queue_worker_.flush();
+    for (auto& sink : log_sinks) {
+        sink->flush(level);
+    }
+}
+
 }  // namespace log
 }  // namespace vne

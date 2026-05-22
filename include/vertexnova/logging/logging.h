@@ -55,6 +55,7 @@ struct VNE_LOGGING_API LoggerConfig {
                                                //!< warn, error, fatal).
     LogLevel flush_level = LogLevel::eError;   //!< The log level at which the logger will flush its output.
     bool async = false;                        //!< Flag indicating whether the logger operates asynchronously.
+    bool file_append = true;                   //!< If false, the log file is truncated on open (overwrite mode).
 };
 
 inline constexpr const char* kDefaultLoggerName = "vertexnova";  //!< Default logger name.
@@ -138,8 +139,10 @@ class VNE_LOGGING_API Logging {
      *
      * @param logger_name The name of the logger to which the file sink will be added.
      * @param file The name of the file where logs will be written.
+     * @param append If true (default), opens the log file in append mode; if false,
+     *                 truncates/overwrites the file on open.
      */
-    static void addFileSink(const std::string& logger_name, const std::string& file);
+    static void addFileSink(const std::string& logger_name, const std::string& file, bool append = true);
 
     /**
      * @brief Sets the console pattern for the logger.
@@ -184,28 +187,52 @@ class VNE_LOGGING_API Logging {
     static void setFlushLevel(const std::string& logger_name, LogLevel level);
 
     /**
-     * @brief Gets the appropriate log directory based on build context.
-     *
-     * Determines the best location for log files based on:
-     * 1. Build directory (if available)
-     * 2. Current working directory (if it looks like a build dir)
-     * 3. Fallback to "logfiles" in project root
-     *
-     * @return The path to the log directory.
+     * @brief Gets the platform-specific log directory (delegates to getPlatformSpecificLogDirectory).
+     * @return The path to the log directory, or "logs" as a relative fallback.
      */
     static std::string getLogDirectory();
 
     /**
+     * @brief Sets the log directory provided by the application.
+     *
+     * Mobile platforms (iOS, visionOS, Android) have sandboxed filesystems
+     * that require platform APIs to resolve the correct writable path at
+     * runtime. Call this before configureLogger() with the path obtained
+     * from the platform:
+     *
+     * iOS/visionOS (Swift):
+     * @code
+     *   let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+     *       .appendingPathComponent("logs").path
+     *   VneLogging.setAppLogDirectory(dir)
+     * @endcode
+     *
+     * Android (JNI):
+     * @code
+     *   jstring jpath = (jstring)env->CallObjectMethod(context, getFilesDirMethod);
+     *   std::string path = std::string(env->GetStringUTFChars(jpath, nullptr)) + "/logs";
+     *   vne::log::Logging::setAppLogDirectory(path);
+     * @endcode
+     *
+     * @param path Absolute writable path for log files. Empty string resets to auto-detection.
+     *
+     * @note Thread-safety: call during startup before logger configuration.
+     *       Concurrent calls with logging/configuration APIs are not guaranteed to be safe.
+     */
+    static void setAppLogDirectory(const std::string& path);
+
+    /**
      * @brief Gets platform-specific log directory with enhanced mobile support.
      *
-     * Provides platform-aware log directory paths following best practices:
+     * Returns the app-provided directory (set via setAppLogDirectory) if one
+     * has been set. Otherwise falls back to platform conventions:
      * - Windows: AppData\Local\VertexNova\logs
      * - macOS: ~/Library/Logs/VertexNova
      * - Linux: ~/.local/share/VertexNova/logs (XDG compliant)
-     * - Android: /data/data/com.vertexnova.app/files/logs (app-private)
-     * - iOS: ~/Documents/VertexNova/logs (app-private, backed up)
+     * - iOS: ~/Documents/VertexNova/logs (simulator only; use setAppLogDirectory on device)
+     * - visionOS / Android / Web: returns "" (use setAppLogDirectory)
      *
-     * @return The platform-specific path to the log directory.
+     * @return The platform-specific path to the log directory, or "" if unavailable.
      */
     static std::string getPlatformSpecificLogDirectory();
 
@@ -255,6 +282,7 @@ class VNE_LOGGING_API Logging {
 
    private:
     static std::shared_ptr<LogManager> s_log_manager;  //!< The LogManager instance for managing logging operations.
+    static std::string s_app_log_dir;                  //!< App-provided log directory (set via setAppLogDirectory).
 };
 
 }  // namespace vne::log

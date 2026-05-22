@@ -79,8 +79,9 @@ class VNE_LOGGING_API LogManager final {
      *
      * @param logger_name The name of the logger to which the file sink should be added.
      * @param log_file_path The path where the log file should be created.
+     * @param append Whether to append to the existing log file (true) or overwrite it (false). Default is true.
      */
-    void addFileSink(const std::string& logger_name, const std::string& log_file_path);
+    void addFileSink(const std::string& logger_name, const std::string& log_file_path, bool append = true);
 
     /**
      * @brief Sets the pattern for the console sink of a logger.

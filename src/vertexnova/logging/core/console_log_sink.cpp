@@ -79,6 +79,17 @@ void ConsoleLogSink::flush() {
     std::cerr.flush();
 }
 
+void ConsoleLogSink::flush(LogLevel level) {
+    if (level >= LogLevel::eError) {
+        // Error-triggered flush must drain stdout too — prior info/warn lines may still
+        // be buffered on cout when the error is written to cerr (e.g. before crash).
+        std::cout.flush();
+        std::cerr.flush();
+    } else {
+        std::cout.flush();
+    }
+}
+
 std::string ConsoleLogSink::getPattern() const {
     return pattern_;
 }
