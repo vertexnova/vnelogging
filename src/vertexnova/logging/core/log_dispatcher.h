@@ -76,6 +76,13 @@ class VNE_LOGGING_API LogDispatcher {
                   uint32_t line);
 
     /**
+     * @brief Drains the queue and fully flushes every sink.
+     *
+     * @param log_sinks The collection of log sinks to flush.
+     */
+    void flush(const std::vector<std::unique_ptr<ILogSink>>& log_sinks);
+
+    /**
      * @brief Drains the queue and flushes the stream matching the given level.
      *
      * @param log_sinks The collection of log sinks to flush.

@@ -123,6 +123,7 @@ TEST_F(ConsoleLogSinkTest, SetPatternChangesLogFormat) {
 
 TEST_F(ConsoleLogSinkTest, FlushDoesNotThrow) {
     log::ConsoleLogSink console_log_sink;
+    EXPECT_NO_THROW(console_log_sink.flush());
     EXPECT_NO_THROW(console_log_sink.flush(log::LogLevel::eInfo));
 }
 

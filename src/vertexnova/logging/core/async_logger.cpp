@@ -62,8 +62,7 @@ void AsyncLogger::log(const std::string& category_name,
 }
 
 void AsyncLogger::flush() {
-    dispatcher_->flush(log_sinks_, LogLevel::eTrace);  // flush cout
-    dispatcher_->flush(log_sinks_, LogLevel::eError);  // flush cerr
+    dispatcher_->flush(log_sinks_);
 }
 
 std::string AsyncLogger::getName() const {

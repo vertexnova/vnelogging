@@ -52,7 +52,12 @@ class LogSinkMock : public ILogSink {
                 (override));
 
     /**
-     * @brief Mock method to flush the log sink.
+     * @brief Mock method to fully flush the log sink.
+     */
+    MOCK_METHOD(void, flush, (), (override));
+
+    /**
+     * @brief Mock method to flush for a log level (auto-flush path).
      */
     MOCK_METHOD(void, flush, (LogLevel level), (override));
 

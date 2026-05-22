@@ -71,13 +71,8 @@ class VNE_LOGGING_API FileLogSink : public ILogSink {
 
     /**
      * @brief Flushes the log file.
-     *
-     * The level parameter is accepted for interface compatibility but is not
-     * used — there is only one output stream.
-     *
-     * @param level Unused.
      */
-    void flush(LogLevel level) override;
+    void flush() override;
 
     /**
      * @brief Gets the current log pattern.

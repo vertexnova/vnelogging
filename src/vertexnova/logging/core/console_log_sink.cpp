@@ -74,6 +74,11 @@ void ConsoleLogSink::log(const std::string& name,
     }
 }
 
+void ConsoleLogSink::flush() {
+    std::cout.flush();
+    std::cerr.flush();
+}
+
 void ConsoleLogSink::flush(LogLevel level) {
     if (level >= LogLevel::eError) {
         // Error-triggered flush must drain stdout too — prior info/warn lines may still
