@@ -139,6 +139,8 @@ class VNE_LOGGING_API Logging {
      *
      * @param logger_name The name of the logger to which the file sink will be added.
      * @param file The name of the file where logs will be written.
+     * @param append If true (default), opens the log file in append mode; if false,
+     *                 truncates/overwrites the file on open.
      */
     static void addFileSink(const std::string& logger_name, const std::string& file, bool append = true);
 
@@ -213,6 +215,9 @@ class VNE_LOGGING_API Logging {
      * @endcode
      *
      * @param path Absolute writable path for log files. Empty string resets to auto-detection.
+     *
+     * @note Thread-safety: call during startup before logger configuration.
+     *       Concurrent calls with logging/configuration APIs are not guaranteed to be safe.
      */
     static void setAppLogDirectory(const std::string& path);
 

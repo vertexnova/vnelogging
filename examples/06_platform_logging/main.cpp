@@ -59,6 +59,8 @@
  * ----------------------------------------------------------------------
  */
 
+#include <filesystem>
+
 #include <vertexnova/logging/logging.h>
 
 namespace {
@@ -94,7 +96,7 @@ int main() {
     vne::log::LoggerConfig config = vne::log::Logging::defaultLoggerConfig();
     config.sink = chooseSink();
     if (!log_dir.empty()) {
-        config.file_path = log_dir + "/platform_example.log";
+        config.file_path = (std::filesystem::path(log_dir) / "platform_example.log").string();
     }
     config.log_level = vne::log::LogLevel::eTrace;
     config.file_append = false;  // overwrite on each launch; set true to keep history across runs
