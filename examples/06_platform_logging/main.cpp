@@ -22,19 +22,24 @@
  * Platform bridging snippets
  * --------------------------
  *
- * iOS / visionOS (Swift, call before your C++ init):
+ * iOS / visionOS (export a C wrapper from C++, call it from Swift before init):
  *
- *   import Foundation
- *   // expose a C symbol that the Swift layer can call
- *   @_silgen_name("vne_set_log_dir")
- *   func vneSetLogDir(_ path: UnsafePointer<CChar>) {
- *       vne::log::Logging::setAppLogDirectory(String(cString: path))
+ *   // C++ side (in your library/app, exported for Swift to call)
+ *   extern "C" void vne_set_log_dir(const char* path) {
+ *       if (path != nullptr) {
+ *           vne::log::Logging::setAppLogDirectory(path);
+ *       }
  *   }
+ *
+ *   // Swift side (declare the C function and pass the resolved path)
+ *   import Foundation
+ *   func vne_set_log_dir(_ path: UnsafePointer<CChar>)
+ *
  *   // --- in AppDelegate / @main ---
  *   let dir = FileManager.default
  *       .urls(for: .documentDirectory, in: .userDomainMask)[0]
  *       .appendingPathComponent("logs").path
- *   dir.withCString { vneSetLogDir($0) }
+ *   dir.withCString { vne_set_log_dir($0) }
  *
  * Android (JNI, call from your Activity / Application.onCreate):
  *
