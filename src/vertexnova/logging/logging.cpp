@@ -171,7 +171,7 @@ LoggerConfig Logging::defaultLoggerConfig() {
     config.console_pattern = "%x [%l] %v";
     config.file_pattern = "%x [%n] [%l] [%!] %v";
     config.log_level = LogLevel::eInfo;
-    config.flush_level = LogLevel::eTrace;
+    config.flush_level = LogLevel::eError;
     config.async = false;
 
 #ifdef VNE_PLATFORM_WEB

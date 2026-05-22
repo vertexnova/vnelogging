@@ -224,7 +224,7 @@ TEST_F(LoggingPathTest, DefaultLoggerConfig_HasValidDefaults) {
     EXPECT_FALSE(config.console_pattern.empty());
     EXPECT_FALSE(config.file_pattern.empty());
     EXPECT_EQ(config.log_level, LogLevel::eInfo);
-    EXPECT_EQ(config.flush_level, LogLevel::eTrace);
+    EXPECT_EQ(config.flush_level, LogLevel::eError);
     EXPECT_FALSE(config.async);
 
 #ifdef VNE_PLATFORM_WEB

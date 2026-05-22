@@ -53,7 +53,7 @@ struct VNE_LOGGING_API LoggerConfig {
     std::string file_path;                     //!< The path to the file where logs will be written, if applicable.
     LogLevel log_level = LogLevel::eInfo;      //!< The log level for filtering messages (e.g., trace, debug, info,
                                                //!< warn, error, fatal).
-    LogLevel flush_level = LogLevel::eTrace;   //!< The log level at which the logger will flush its output.
+    LogLevel flush_level = LogLevel::eError;   //!< The log level at which the logger will flush its output.
     bool async = false;                        //!< Flag indicating whether the logger operates asynchronously.
     bool file_append = true;                   //!< If false, the log file is truncated on open (overwrite mode).
 };
