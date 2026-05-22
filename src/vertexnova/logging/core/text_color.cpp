@@ -12,6 +12,7 @@
 #include "text_color.h"
 
 #include <atomic>
+#include <cstdio>
 #include <cstdlib>
 #include <type_traits>
 
