@@ -70,8 +70,9 @@ target_include_directories(vnelogging
         $<INSTALL_INTERFACE:include>
 )
 
-# Platform-specific library linking (Threads::Threads is portable for pthread)
+# Platform-specific library linking (Threads::Threads is portable across toolchains)
 if(NOT WIN32 AND NOT EMSCRIPTEN)
+    find_package(Threads REQUIRED)
     target_link_libraries(vnelogging PRIVATE Threads::Threads)
 endif()
 
