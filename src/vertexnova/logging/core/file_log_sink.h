@@ -75,6 +75,13 @@ class VNE_LOGGING_API FileLogSink : public ILogSink {
     void flush() override;
 
     /**
+     * @brief Flushes the log file. @p level is ignored; the sink has one stream.
+     *
+     * Declared so `flush()` does not hide `ILogSink::flush(LogLevel)`.
+     */
+    void flush(LogLevel level) override;
+
+    /**
      * @brief Gets the current log pattern.
      *
      * @return The current log pattern.

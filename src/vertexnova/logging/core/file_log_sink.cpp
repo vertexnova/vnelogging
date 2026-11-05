@@ -70,6 +70,10 @@ void FileLogSink::flush() {
     }
 }
 
+void FileLogSink::flush(LogLevel /*level*/) {
+    flush();
+}
+
 std::string FileLogSink::getPattern() const {
     return pattern_;
 }
