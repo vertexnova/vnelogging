@@ -74,8 +74,8 @@ class VNE_LOGGING_API ILogSink {
      * calls flush() so sinks that only implement flush() keep working.
      *
      * ConsoleLogSink flushes std::cout for sub-error levels; for eError and above
-     * it flushes both std::cout and std::cerr. File sinks typically override
-     * flush() only (level is ignored).
+     * it flushes both std::cout and std::cerr. FileLogSink overrides both and
+     * ignores the level (one stream).
      *
      * @param level The level of the message that triggered the flush.
      */
